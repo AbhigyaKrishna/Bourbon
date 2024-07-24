@@ -1,18 +1,31 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+}
+
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+    showProcessorStats = true
+}
+
+composeCompiler {
+    enableStrongSkippingMode = true
+    includeSourceInformation = true
 }
 
 android {
-    namespace = "me.abhigya.bourbon"
+    namespace = rootProject.group.toString()
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "me.abhigya.bourbon"
+        applicationId = rootProject.group.toString()
         minSdk = 24
         targetSdk = 34
         versionCode = 1
-        versionName = "1.0"
+        versionName = rootProject.version.toString()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -21,36 +34,55 @@ android {
     }
 
     buildTypes {
+        debug {
+            versionNameSuffix = "-dev"
+            applicationIdSuffix = ".debug"
+        }
+
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
+
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+
+    lint {
+        checkDependencies = true
+        checkReleaseBuilds = true
+        ignoreTestSources = true
     }
+
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.addAll(setOf(
+                "/META-INF/{AL2.0,LGPL2.1}",
+                "META-INF/*.version",
+                "META-INF/proguard/*",
+                "/*.properties",
+                "fabric/*.properties",
+                "META-INF/*.properties",
+                "META-INF/*.kotlin_module"
+            ))
         }
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
