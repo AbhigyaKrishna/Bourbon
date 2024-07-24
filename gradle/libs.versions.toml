@@ -2,6 +2,7 @@
 agp = "8.5.1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
+multidex = "2.0.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -12,6 +13,7 @@ workflow = "1.12.1-beta10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -32,12 +34,13 @@ square-workflow-ui-compose-tooling = { group = "com.squareup.workflow1", name = 
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
-android = ["androidx-core-ktx", "androidx-lifecycle-runtime-ktx", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
+android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
 android-test = ["androidx-junit", "androidx-espresso-core", "androidx-ui-test-junit4"]
 android-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
 square-workflow = ["square-workflow-core-jvm", "square-workflow-runtime-jvm", "square-workflow-ui-compose", "square-workflow-ui-compose-tooling"]

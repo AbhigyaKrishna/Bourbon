@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.ui.theme
+package me.abhigya.bourbon.core.utils.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
 }
@@ -12,6 +12,7 @@ kapt {
 
 android {
     namespace = rootProject.group.toString()
+    compileSdk = 34
 
     defaultConfig {
         javaCompileOptions {
@@ -24,6 +25,15 @@ android {
                 )
             }
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 

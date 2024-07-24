@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.ui.theme
+package me.abhigya.bourbon.core.utils.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
