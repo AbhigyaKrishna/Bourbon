@@ -21,4 +21,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "Bourbon"
 include(":app")
+include(":core")
+include(":data")
  
