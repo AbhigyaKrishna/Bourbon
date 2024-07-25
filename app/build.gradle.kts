@@ -1,8 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.jetbrains.kotlin.kapt)
-    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    bourbon.`kotlin-conventions`
+    id(libs.plugins.android.application.get().pluginId)
+    id(libs.plugins.jetbrains.kotlin.android.get().pluginId)
+    id(libs.plugins.jetbrains.kotlin.kapt.get().pluginId)
+    bourbon.`android-composable-conventions`
 }
 
 kapt {
@@ -11,21 +12,16 @@ kapt {
     showProcessorStats = true
 }
 
-composeCompiler {
-    enableStrongSkippingMode = true
-    includeSourceInformation = true
-}
-
 android {
     namespace = rootProject.group.toString()
-    compileSdk = 34
+    compileSdk = AppConfig.compileSdk
 
     defaultConfig {
         applicationId = rootProject.group.toString()
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = rootProject.version.toString()
+        minSdk = AppConfig.minSdk
+        targetSdk = AppConfig.targetSdk
+        versionCode = AppConfig.versionCode
+        versionName = AppConfig.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -36,11 +32,6 @@ android {
     }
 
     buildTypes {
-        debug {
-            versionNameSuffix = "-dev"
-            applicationIdSuffix = ".debug"
-        }
-
         release {
             isMinifyEnabled = true
             proguardFiles(
@@ -57,10 +48,6 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
-    buildFeatures {
-        compose = true
     }
 
     lint {
