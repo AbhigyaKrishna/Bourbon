@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = rootProject.group.toString()
+    namespace = "${rootProject.group}.${project.name}"
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
@@ -21,6 +21,13 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    lint {
+        checkDependencies = true
+        checkReleaseBuilds = true
+        ignoreTestSources = true
+        targetSdk = AppConfig.targetSdk
     }
 
     buildFeatures.viewBinding = true

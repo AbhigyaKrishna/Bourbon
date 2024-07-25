@@ -9,7 +9,6 @@ tasks.withType<KotlinCompile> {
 
         freeCompilerArgs.set(
             listOf(
-                "-Xallow-result-return-type",
                 "-Xcontext-receivers",
             ),
         )

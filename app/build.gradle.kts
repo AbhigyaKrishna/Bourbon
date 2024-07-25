@@ -6,8 +6,10 @@ plugins {
     bourbon.`android-composable-conventions`
 }
 
+group = rootProject.group
+
 android {
-    namespace = rootProject.group.toString()
+    namespace = group.toString()
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
