@@ -4,5 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.square.workflow)
+    implementation(libs.bundles.ballast)
+    testImplementation(libs.ballast.test)
 }

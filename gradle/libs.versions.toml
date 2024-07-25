@@ -9,7 +9,9 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
-workflow = "1.12.1-beta10"
+ballast = "4.2.1"
+arrow = "1.2.4"
+ksp = "2.0.0-1.0.23"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,10 +29,21 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
-square-workflow-core-jvm = { group = "com.squareup.workflow1", name = "workflow-core-jvm", version.ref = "workflow" }
-square-workflow-runtime-jvm = { group = "com.squareup.workflow1", name = "workflow-runtime-jvm", version.ref = "workflow" }
-square-workflow-ui-compose = { group = "com.squareup.workflow1", name = "workflow-ui-compose", version.ref = "workflow" }
-square-workflow-ui-compose-tooling = { group = "com.squareup.workflow1", name = "workflow-ui-compose-tooling", version.ref = "workflow" }
+ballast-core = { group = "io.github.copper-leaf", name = "ballast-core", version.ref = "ballast" }
+ballast-repository = { group = "io.github.copper-leaf", name = "ballast-repository", version.ref = "ballast" }
+ballast-saved-state = { group = "io.github.copper-leaf", name = "ballast-saved-state", version.ref = "ballast" }
+ballast-sync = { group = "io.github.copper-leaf", name = "ballast-sync", version.ref = "ballast" }
+ballast-undo = { group = "io.github.copper-leaf", name = "ballast-undo", version.ref = "ballast" }
+ballast-navigation = { group = "io.github.copper-leaf", name = "ballast-navigation", version.ref = "ballast" }
+ballast-schedules = { group = "io.github.copper-leaf", name = "ballast-schedules", version.ref = "ballast" }
+ballast-crash-reporting = { group = "io.github.copper-leaf", name = "ballast-crash-reporting", version.ref = "ballast" }
+ballast-analytics = { group = "io.github.copper-leaf", name = "ballast-analytics", version.ref = "ballast" }
+ballast-debugger-client = { group = "io.github.copper-leaf", name = "ballast-debugger-client", version.ref = "ballast" }
+ballast-test = { group = "io.github.copper-leaf", name = "ballast-test", version.ref = "ballast" }
+arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
+arrow-core = { group = "io.arrow-kt", name = "arrow-core" }
+arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines" }
+arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -38,10 +51,12 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
 android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
 android-test = ["androidx-junit", "androidx-espresso-core"]
 android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
-square-workflow = ["square-workflow-core-jvm", "square-workflow-runtime-jvm", "square-workflow-ui-compose", "square-workflow-ui-compose-tooling"]
+ballast = ["ballast-core", "ballast-repository", "ballast-saved-state", "ballast-sync", "ballast-undo", "ballast-navigation", "ballast-schedules", "ballast-crash-reporting", "ballast-analytics", "ballast-debugger-client"]
+arrow = ["arrow-core", "arrow-coroutines"]

@@ -3,14 +3,15 @@ plugins {
     org.jetbrains.kotlin.android
     id("bourbon.kotlin-conventions")
     id("bourbon.kotlin-kapt-conventions")
+    id("bourbon.arrow-conventions")
 }
 
 android {
     namespace = "${rootProject.group}.${project.name}"
-    compileSdk = AppConfig.compileSdk
+    compileSdk = AppConfig.COMPILE_SDK
 
     defaultConfig {
-        minSdk = AppConfig.minSdk
+        minSdk = AppConfig.MIN_SDK
         vectorDrawables.useSupportLibrary = true
     }
 
@@ -27,7 +28,7 @@ android {
         checkDependencies = true
         checkReleaseBuilds = true
         ignoreTestSources = true
-        targetSdk = AppConfig.targetSdk
+        targetSdk = AppConfig.TARGET_SDK
     }
 
     buildFeatures.viewBinding = true

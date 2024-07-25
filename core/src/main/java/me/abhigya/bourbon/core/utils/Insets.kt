@@ -1,9 +1,7 @@
 package me.abhigya.bourbon.core.utils
 
-import android.os.Build
 import android.view.View
 import android.view.View.OnAttachStateChangeListener
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -23,7 +21,6 @@ val LocalInsets = staticCompositionLocalOf {
 }
 
 @Composable
-@RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
 fun ProvideDisplayInsets(
     consumeWindowInsets: Boolean = true,
     content: @Composable () -> Unit

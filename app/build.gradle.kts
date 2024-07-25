@@ -10,14 +10,14 @@ group = rootProject.group
 
 android {
     namespace = group.toString()
-    compileSdk = AppConfig.compileSdk
+    compileSdk = AppConfig.COMPILE_SDK
 
     defaultConfig {
         applicationId = rootProject.group.toString()
-        minSdk = AppConfig.minSdk
-        targetSdk = AppConfig.targetSdk
-        versionCode = AppConfig.versionCode
-        versionName = AppConfig.versionName
+        minSdk = AppConfig.MIN_SDK
+        targetSdk = AppConfig.TARGET_SDK
+        versionCode = AppConfig.VERSION_CODE
+        versionName = AppConfig.VERSION_NAME
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -71,7 +71,8 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(libs.bundles.android)
-    implementation(libs.bundles.square.workflow)
+    implementation(libs.bundles.ballast)
     testImplementation(libs.junit)
+    testImplementation(libs.ballast.test)
     androidTestImplementation(libs.bundles.android.test)
 }
