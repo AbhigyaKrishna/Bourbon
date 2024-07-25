@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+    namespace = rootProject.group.toString()
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
@@ -23,4 +24,8 @@ android {
     }
 
     buildFeatures.viewBinding = true
+}
+
+dependencies {
+    implementation(libs.findBundle("android").get())
 }

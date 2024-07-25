@@ -2,14 +2,8 @@ plugins {
     bourbon.`kotlin-conventions`
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.jetbrains.kotlin.android.get().pluginId)
-    id(libs.plugins.jetbrains.kotlin.kapt.get().pluginId)
+    bourbon.`kotlin-kapt-conventions`
     bourbon.`android-composable-conventions`
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-    showProcessorStats = true
 }
 
 android {
@@ -75,11 +69,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":data"))
     implementation(libs.bundles.android)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.activity.compose)
     implementation(libs.bundles.square.workflow)
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    debugImplementation(libs.bundles.android.debug)
 }

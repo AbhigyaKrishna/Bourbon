@@ -40,7 +40,8 @@ jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotli
 jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 [bundles]
-android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
-android-test = ["androidx-junit", "androidx-espresso-core", "androidx-ui-test-junit4"]
-android-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
+android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
+android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
+android-test = ["androidx-junit", "androidx-espresso-core"]
+android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
 square-workflow = ["square-workflow-core-jvm", "square-workflow-runtime-jvm", "square-workflow-ui-compose", "square-workflow-ui-compose-tooling"]
