@@ -43,7 +43,7 @@ ballast-test = { group = "io.github.copper-leaf", name = "ballast-test", version
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core" }
 arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines" }
-arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin" }
+arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

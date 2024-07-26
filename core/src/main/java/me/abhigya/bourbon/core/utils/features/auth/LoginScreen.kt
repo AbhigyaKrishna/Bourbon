@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.ui.login
+package me.abhigya.bourbon.core.utils.features.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.abhigya.bourbon.R
+import me.abhigya.bourbon.core.R
 
 @Composable
 fun LoginScreen() {

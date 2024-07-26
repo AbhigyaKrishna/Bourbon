@@ -3,7 +3,7 @@ plugins {
     org.jetbrains.kotlin.android
     id("bourbon.kotlin-conventions")
     id("bourbon.kotlin-kapt-conventions")
-    id("bourbon.arrow-conventions")
+//    id("bourbon.arrow-conventions")
 }
 
 android {
