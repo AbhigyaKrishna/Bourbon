@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.core.utils.features.router
+package me.abhigya.bourbon.core.features.router
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
-import me.abhigya.bourbon.core.utils.features.auth.LoginScreen
+import me.abhigya.bourbon.core.features.auth.LoginScreen
 
 @Composable
 fun RouterScreen() {

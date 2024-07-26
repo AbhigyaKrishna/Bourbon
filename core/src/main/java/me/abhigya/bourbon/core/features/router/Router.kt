@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.core.utils.features.router
+package me.abhigya.bourbon.core.features.router
 
 import com.copperleaf.ballast.BallastViewModelConfiguration
 import com.copperleaf.ballast.EventHandler

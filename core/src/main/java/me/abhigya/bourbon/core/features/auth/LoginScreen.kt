@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.core.utils.features.auth
+package me.abhigya.bourbon.core.features.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
