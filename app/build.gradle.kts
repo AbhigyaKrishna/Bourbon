@@ -72,6 +72,7 @@ dependencies {
     implementation(project(":data"))
     implementation(libs.bundles.android)
     implementation(libs.bundles.ballast)
+    implementation(libs.koin)
     testImplementation(libs.junit)
     testImplementation(libs.ballast.test)
     androidTestImplementation(libs.bundles.android.test)

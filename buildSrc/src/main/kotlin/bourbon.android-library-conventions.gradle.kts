@@ -36,4 +36,5 @@ android {
 
 dependencies {
     implementation(libs.findBundle("android").get())
+    implementation(libs.findLibrary("koin").get())
 }

@@ -10,6 +10,7 @@ lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
 ballast = "4.2.1"
+koin = "4.0.0-RC1"
 arrow = "1.2.4"
 ksp = "2.0.0-1.0.23"
 
@@ -40,6 +41,7 @@ ballast-crash-reporting = { group = "io.github.copper-leaf", name = "ballast-cra
 ballast-analytics = { group = "io.github.copper-leaf", name = "ballast-analytics", version.ref = "ballast" }
 ballast-debugger-client = { group = "io.github.copper-leaf", name = "ballast-debugger-client", version.ref = "ballast" }
 ballast-test = { group = "io.github.copper-leaf", name = "ballast-test", version.ref = "ballast" }
+koin = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow" }
 arrow-core = { group = "io.arrow-kt", name = "arrow-core" }
 arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines" }
