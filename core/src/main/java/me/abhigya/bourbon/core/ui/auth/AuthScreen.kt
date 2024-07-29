@@ -7,7 +7,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -84,6 +83,7 @@ object AuthScreen : KoinComponent {
                     emailText = it
                     viewModel.trySend(AuthContract.Inputs.EmailChanged(it))
                 }
+
                 Separator()
 
                 var passwordText by remember { mutableStateOf("") }
@@ -147,11 +147,14 @@ object AuthScreen : KoinComponent {
                         )
                     }
                 }
+
                 Separator()
                 UIButton(
-                    text = "Log In",
+                    text = if (uiState.authType == AuthContract.AuthType.LOGIN) "Log In" else "Sign Up",
                     primary = true
-                )
+                ) {
+                    viewModel.trySend(AuthContract.Inputs.ConfirmButton)
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -165,7 +168,7 @@ object AuthScreen : KoinComponent {
                         fontWeight = FontWeight.Bold
                     )
                 }
-                UIButton(text = "Sign Up") {
+                UIButton(text = if (uiState.authType != AuthContract.AuthType.LOGIN) "Log In" else "Sign Up") {
                     viewModel.trySend(AuthContract.Inputs.SwitchAuthType(uiState.authType.inverse()))
                 }
                 Separator(thickness = 16.dp)
@@ -179,35 +182,9 @@ object AuthScreen : KoinComponent {
                         )
                     }
                 )
-                Row(
-                    modifier = Modifier
-                        .height(36.dp),
-                    verticalAlignment = Alignment.Bottom,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Text(
-                        text = "Forgotten your password? ",
-                        fontSize = 11.sp
-                    )
-                    Button(
-                        modifier = Modifier
-                            .height(25.dp),
-                        contentPadding = PaddingValues(0.dp),
-                        shape = RoundedCornerShape(0.dp),
-                        colors = ButtonDefaults.buttonColors()
-                            .copy(
-                                containerColor = MaterialTheme.colorScheme.background.copy(alpha = 0.0f),
-                                contentColor = MaterialTheme.colorScheme.primary
-                            ),
-                        onClick = {}
-                    ) {
-                        Text(
-                            text = "Reset Password",
-                            fontSize = 11.sp,
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+
+                ForgotPassword() {
+                    // TODO
                 }
             }
         }
@@ -344,6 +321,29 @@ object AuthScreen : KoinComponent {
                 VerticalDivider(thickness = 8.dp)
                 logo()
             }
+        }
+    }
+
+    @Composable
+    internal fun ForgotPassword(modifier: Modifier = Modifier, fontSize: TextUnit = 11.sp, onResetClick: () -> Unit = { }) {
+        Row(
+            modifier = modifier
+                .height(36.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Forgotten your password? ",
+                fontSize = fontSize
+            )
+            Text(
+                modifier = modifier
+                    .clickable(onClick = onResetClick),
+                text = "Reset Password",
+                fontSize = fontSize,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
