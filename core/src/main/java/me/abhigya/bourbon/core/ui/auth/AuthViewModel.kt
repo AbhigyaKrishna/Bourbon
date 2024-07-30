@@ -42,8 +42,7 @@ object AuthContract {
         data class SwitchAuthType(val authType: AuthType) : Inputs
     }
 
-    sealed interface Events {
-    }
+    sealed interface Events
 
     val module = module {
         factory {

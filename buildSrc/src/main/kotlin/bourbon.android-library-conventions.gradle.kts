@@ -2,7 +2,7 @@ plugins {
     com.android.library
     org.jetbrains.kotlin.android
     id("bourbon.kotlin-conventions")
-    id("bourbon.kotlin-kapt-conventions")
+    id("bourbon.di-conventions")
 //    id("bourbon.arrow-conventions")
 }
 
@@ -36,5 +36,4 @@ android {
 
 dependencies {
     implementation(libs.findBundle("android").get())
-    implementation(libs.findLibrary("koin").get())
 }

@@ -13,6 +13,8 @@ ballast = "4.2.1"
 koin = "4.0.0-RC1"
 arrow = "1.2.4"
 ksp = "2.0.0-1.0.23"
+google-services = "4.4.2"
+firebase = "33.1.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -46,6 +48,10 @@ arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow"
 arrow-core = { group = "io.arrow-kt", name = "arrow-core" }
 arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -54,6 +60,7 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 jetbrains-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 jetbrains-kotlin-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
 [bundles]
 android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
@@ -62,3 +69,4 @@ android-test = ["androidx-junit", "androidx-espresso-core"]
 android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
 ballast = ["ballast-core", "ballast-repository", "ballast-saved-state", "ballast-sync", "ballast-undo", "ballast-navigation", "ballast-schedules", "ballast-crash-reporting", "ballast-analytics", "ballast-debugger-client"]
 arrow = ["arrow-core", "arrow-coroutines"]
+firebase = ["firebase-analytics", "firebase-database", "firebase-auth"]

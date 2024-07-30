@@ -2,8 +2,9 @@ plugins {
     bourbon.`kotlin-conventions`
     id(libs.plugins.android.application.get().pluginId)
     id(libs.plugins.jetbrains.kotlin.android.get().pluginId)
-    bourbon.`kotlin-kapt-conventions`
+    bourbon.`di-conventions`
     bourbon.`android-composable-conventions`
+    alias(libs.plugins.google.services)
 }
 
 group = rootProject.group
@@ -69,9 +70,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":data"))
     implementation(libs.bundles.android)
-    implementation(libs.bundles.ballast)
     implementation(libs.koin)
     testImplementation(libs.junit)
     testImplementation(libs.ballast.test)

@@ -4,6 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(libs.bundles.ballast)
+    api(project(":domain"))
+    api(project(":data"))
+    api(libs.bundles.ballast)
     testImplementation(libs.ballast.test)
 }

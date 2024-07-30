@@ -7,3 +7,7 @@ kapt {
     useBuildCache = true
     showProcessorStats = true
 }
+
+dependencies {
+    implementation(libs.findLibrary("koin").get())
+}
