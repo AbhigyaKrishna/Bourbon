@@ -18,6 +18,7 @@ android {
 }
 
 dependencies {
+    api(project(":domain"))
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
 }

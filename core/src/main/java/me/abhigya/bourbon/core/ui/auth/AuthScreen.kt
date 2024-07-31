@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.R
+import me.abhigya.bourbon.core.ui.router.LocalRouter
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -68,7 +69,8 @@ object AuthScreen : KoinComponent {
                 verticalArrangement = Arrangement.Center
             ) {
                 val viewModelScope = rememberCoroutineScope()
-                val viewModel: AuthViewModel = remember(viewModelScope) { get { parametersOf(viewModelScope) } }
+                val router = LocalRouter.current
+                val viewModel: AuthViewModel = remember(viewModelScope) { get { parametersOf(viewModelScope, router) } }
                 val uiState by viewModel.observeStates().collectAsState()
 
                 Logo()

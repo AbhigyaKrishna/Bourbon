@@ -5,6 +5,10 @@ import me.abhigya.bourbon.domain.entities.User
 
 interface UserRepository {
 
-    suspend fun currentUser(): Flow<User>
+    fun isLoggedIn(): Flow<Boolean>
+
+    fun currentUser(): Flow<User>
+
+    fun googleLogin(googleSignInToken: String): Flow<Result<Boolean>>
 
 }

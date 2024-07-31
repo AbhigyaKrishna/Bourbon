@@ -7,9 +7,15 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import me.abhigya.bourbon.core.ui.router.RoutePath
+import me.abhigya.bourbon.core.ui.router.RouterViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 class AuthViewModel(
@@ -45,17 +51,17 @@ object AuthContract {
     sealed interface Events
 
     val module = module {
-        factory {
-            AuthInputHandler()
+        factory { (router: RouterViewModel) ->
+            AuthInputHandler(router)
         }
 
-        viewModel { (coroutineScope: CoroutineScope) ->
+        viewModel { (coroutineScope: CoroutineScope, router: RouterViewModel) ->
             AuthViewModel(
                 coroutineScope,
                 get<BallastViewModelConfiguration.Builder>()
                     .withViewModel(
                         initialState = State(authType = AuthType.LOGIN),
-                        inputHandler = get<AuthInputHandler>(),
+                        inputHandler = get<AuthInputHandler> { parametersOf(router) },
                         name = "AuthScreen"
                     )
                     .build()
@@ -65,7 +71,9 @@ object AuthContract {
 
 }
 
-class AuthInputHandler : InputHandler<AuthContract.Inputs, AuthContract.Events, AuthContract.State> {
+class AuthInputHandler(
+    private val router: RouterViewModel
+) : InputHandler<AuthContract.Inputs, AuthContract.Events, AuthContract.State> {
 
     override suspend fun InputHandlerScope<AuthContract.Inputs, AuthContract.Events, AuthContract.State>.handleInput(
         input: AuthContract.Inputs
@@ -84,11 +92,15 @@ class AuthInputHandler : InputHandler<AuthContract.Inputs, AuthContract.Events, 
                 )
             }
             is AuthContract.Inputs.ConfirmButton -> {
-                if (getCurrentState().authType == AuthContract.AuthType.LOGIN) {
-                    TODO() // login
-                } else {
-                    TODO() // register
+                sideJob("onboarding") {
+                    router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.ONBOARDING.directions().build()))
                 }
+//                if (getCurrentState().authType == AuthContract.AuthType.LOGIN) {
+                
+//                    TODO() // login
+//                } else {
+//                    TODO() // register
+//                }
             }
             is AuthContract.Inputs.SwitchAuthType -> updateState { it.copy(authType = input.authType) }
         }
