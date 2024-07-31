@@ -11,19 +11,19 @@ import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.runBlocking
+import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.auth.AuthScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
 import me.abhigya.bourbon.domain.UserRepository
-import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 
-object RouterScreen : KoinComponent {
+object RouterScreen : AppScreen {
 
     private val isLoggedIn = runBlocking { get<UserRepository>().isLoggedIn().single() }
 
     @Composable
-    operator fun invoke() {
+    override operator fun invoke() {
         val coroutine = rememberCoroutineScope()
         val viewModel: RouterViewModel = remember(coroutine) { get { parametersOf(coroutine, if (isLoggedIn) RoutePath.HOME else RoutePath.AUTH) } }
         val routerState: Backstack<RoutePath> by viewModel.observeStates().collectAsState()

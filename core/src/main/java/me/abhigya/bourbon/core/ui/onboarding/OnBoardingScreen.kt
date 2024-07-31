@@ -36,12 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.koin.core.component.KoinComponent
+import me.abhigya.bourbon.core.ui.AppScreen
 
-object OnBoardingScreen : KoinComponent {
+object OnBoardingScreen : AppScreen {
 
     @Composable
-    operator fun invoke() {
+    override operator fun invoke() {
         Scaffold { padding ->
             Column(
                 modifier = Modifier
