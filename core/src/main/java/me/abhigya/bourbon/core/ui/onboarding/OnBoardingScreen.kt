@@ -2,6 +2,7 @@ package me.abhigya.bourbon.core.ui.onboarding
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -26,6 +27,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -37,6 +42,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.domain.entities.Gender
+import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
 
 object OnBoardingScreen : AppScreen {
 
@@ -49,6 +57,10 @@ object OnBoardingScreen : AppScreen {
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                val coroutineScope = rememberCoroutineScope()
+                val viewModel: OnBoardingViewModel = remember(coroutineScope) { get { parametersOf(coroutineScope) } }
+                val uiState by viewModel.observeStates().collectAsState()
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -63,7 +75,9 @@ object OnBoardingScreen : AppScreen {
                     )
                 }
                 HeightAndWeightCard()
-                GenderAndDOBCard()
+                GenderAndDOBCard(uiState.gender) {
+                    viewModel.trySend(OnBoardingContract.Inputs.GenderChanged(it))
+                }
             }
         }
     }
@@ -155,7 +169,7 @@ object OnBoardingScreen : AppScreen {
     }
 
     @Composable
-    internal fun HeightAndWeightCard() {
+    internal fun HeightAndWeightCard(onWeightChanged: (Float) -> Unit = {}, onHeightChanged: (Int) -> Unit = {}) {
         @Composable
         fun BoxScope.DropButton(text: String) {
             Row(
@@ -196,14 +210,15 @@ object OnBoardingScreen : AppScreen {
     }
 
     @Composable
-    internal fun GenderAndDOBCard() {
+    internal fun GenderAndDOBCard(currentGender: Gender, onGenderChanged: (Gender) -> Unit = {}) {
         @Composable
-        fun BoxScope.GenderButton(content: String, selected: Boolean = false) {
-            Row (
+        fun BoxScope.GenderButton(gender: Gender) {
+            val genderSelected = currentGender == gender
+            Row(
                 modifier = Modifier
                     .matchParentSize()
                     .run {
-                        if (selected) {
+                        if (genderSelected) {
                             background(
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(4.dp)
@@ -211,18 +226,22 @@ object OnBoardingScreen : AppScreen {
                         } else {
                             this
                         }
+                    }
+                    .clickable {
+                        if (genderSelected) return@clickable
+                        onGenderChanged(gender)
                     },
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
                     imageVector = Icons.Filled.Check,
-                    contentDescription = content,
-                    tint = if (selected) MaterialTheme.colorScheme.background else Color.White,
+                    contentDescription = gender.name,
+                    tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
                     modifier = Modifier.size(16.dp)
                 )
                 VerticalDivider(thickness = 4.dp)
-                Text(text = content, color = if (selected) MaterialTheme.colorScheme.background else Color.White)
+                Text(text = gender.name, color = if (genderSelected) MaterialTheme.colorScheme.background else Color.White)
             }
         }
 
@@ -247,8 +266,8 @@ object OnBoardingScreen : AppScreen {
         TileCard(rows = listOf(
             {
                 TiledRow(label = "Gender", elements = listOf(
-                    { GenderButton("Male", true) },
-                    { GenderButton("Female") }
+                    { GenderButton(Gender.Male) },
+                    { GenderButton(Gender.Female) }
                 ))
             },
             {
