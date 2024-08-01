@@ -13,6 +13,7 @@ import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.database.FirebaseDatabase
 import dev.gitlive.firebase.database.database
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -59,55 +60,39 @@ class UserRepositoryImpl(
     }
 
     override fun signOut(): Flow<Result<Unit>> = flow {
-        runCatching {
+        emitCaching {
             auth.signOut()
-        }.onFailure {
-            emit(Result.failure(it))
-        }.onSuccess {
-            emit(Result.success(Unit))
         }
     }
 
     override fun loadUserData(user: User): Flow<Result<UserData>> = flow {
-        runCatching {
+        emitCaching {
             database.reference("userdata/${user.uid}")
                 .valueEvents
                 .first()
                 .value<UserData>()
-        }.onFailure {
-            emit(Result.failure(it))
-        }.onSuccess {
-            emit(Result.success(it))
         }
     }
 
     override fun saveData(user: User): Flow<Result<Unit>> = flow {
-        runCatching {
+        emitCaching {
             database.reference("userdata/${user.uid}")
                 .setValue(user.data) {
                     encodeDefaults = true
                 }
-        }.onFailure {
-            emit(Result.failure(it))
-        }.onSuccess {
-            emit(Result.success(Unit))
         }
     }
 
     inner class SignInImpl : UserRepository.SignIn {
 
         override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> = flow {
-            runCatching {
+            emitCaching {
                 auth.signInWithEmailAndPassword(email, password)
-            }.onFailure {
-                emit(Result.failure(it))
-            }.onSuccess {
-                emit(Result.success(Unit))
             }
         }
 
         override fun withGoogle(): Flow<Result<Unit>> = flow {
-            runCatching {
+            emitCaching {
                 val token = requestGoogleSignIn()
                     .getOrElse {
                         emit(Result.failure(it))
@@ -115,10 +100,6 @@ class UserRepositoryImpl(
                     }
                     .idToken
                 auth.signInWithCredential(GoogleAuthProvider.credential(token, null))
-            }.onFailure {
-                emit(Result.failure(it))
-            }.onSuccess {
-                emit(Result.success(Unit))
             }
         }
 
@@ -126,18 +107,14 @@ class UserRepositoryImpl(
 
     inner class SignUpImpl : UserRepository.SignUp {
 
-        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> = channelFlow {
-            runCatching {
+        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> = flow {
+            emitCaching {
                 auth.createUserWithEmailAndPassword(email, password)
-            }.onFailure {
-                send(Result.failure(it))
-            }.onSuccess {
-                send(Result.success(Unit))
             }
         }
 
         override fun withGoogle(): Flow<Result<Unit>> = flow {
-            runCatching {
+            emitCaching {
                 val token = requestGoogleSignIn()
                     .getOrElse {
                         emit(Result.failure(it))
@@ -145,13 +122,13 @@ class UserRepositoryImpl(
                     }
                     .idToken
                 auth.signInWithCredential(GoogleAuthProvider.credential(token, null))
-            }.onFailure {
-                emit(Result.failure(it))
-            }.onSuccess {
-                emit(Result.success(Unit))
             }
         }
 
+    }
+
+    private suspend inline fun <T> FlowCollector<Result<T>>.emitCaching(block: () -> T) {
+        emit(runCatching(block))
     }
 
     private fun FirebaseUser.into(): Result<User> {
