@@ -1,8 +1,9 @@
 package me.abhigya.bourbon.data
 
 import me.abhigya.bourbon.domain.UserRepository
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 
 val dataModules = module {
-    single<UserRepository> { UserRepositoryImpl() }
+    single<UserRepository> { UserRepositoryImpl(androidContext()) }
 }

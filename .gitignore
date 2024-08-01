@@ -12,4 +12,6 @@ local.properties
 .vscode
 .kotlin
 build
+app/debug
+app/release
 google-services.json

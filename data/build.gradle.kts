@@ -1,5 +1,6 @@
 plugins {
     bourbon.`android-library-conventions`
+    alias(libs.plugins.jetbrains.kotlinx.serialization)
 }
 
 android {
@@ -19,6 +20,10 @@ android {
 
 dependencies {
     api(project(":domain"))
-    implementation(platform(libs.firebase.bom))
+//    implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+    implementation(libs.google.play.services.auth)
+    implementation(libs.bundles.credentials)
+    implementation(platform(libs.kotlinx.serialization.bom))
+    implementation(libs.kotlinx.serialization.core)
 }
