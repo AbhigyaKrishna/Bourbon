@@ -1,37 +1,44 @@
 package me.abhigya.bourbon.data
 
 import android.content.Context
+import android.util.Log
 import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.auth.FirebaseAuth
-import dev.gitlive.firebase.auth.FirebaseUser
-import dev.gitlive.firebase.auth.GoogleAuthProvider
-import dev.gitlive.firebase.auth.auth
-import dev.gitlive.firebase.database.FirebaseDatabase
-import dev.gitlive.firebase.database.database
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.tasks.await
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.User
 import me.abhigya.bourbon.domain.entities.UserData
 import org.koin.core.component.KoinComponent
 import java.util.UUID
 
-class UserRepositoryImpl(
-    private val context: Context
-) : UserRepository, KoinComponent {
+class UserRepositoryImpl : UserRepository, KoinComponent {
 
     private val database: FirebaseDatabase = Firebase.database
     private val auth: FirebaseAuth = Firebase.auth
-    private val credentialManager: CredentialManager = CredentialManager.create(context)
 
     override fun isLoggedIn(): Flow<Boolean> {
         return flowOf(auth.currentUser != null)
@@ -41,14 +48,11 @@ class UserRepositoryImpl(
         return flowOf(auth.currentUser?.into()?.getOrNull() ?: return emptyFlow())
     }
 
-    override fun exists(email: String): Flow<Boolean> = flow {
-        runCatching {
-            auth.fetchSignInMethodsForEmail(email)
-        }.onFailure {
-            emit(false)
-        }.onSuccess {
-            emit(it.isNotEmpty())
-        }
+    override fun exists(email: String): Flow<Boolean> {
+        return auth.fetchSignInMethodsForEmail(email)
+            .handle({ false }) {
+                trySend(it.signInMethods?.isNotEmpty() == true)
+            }
     }
 
     override fun signIn(): UserRepository.SignIn {
@@ -60,46 +64,70 @@ class UserRepositoryImpl(
     }
 
     override fun signOut(): Flow<Result<Unit>> = flow {
-        emitCaching {
+        emitCatching {
             auth.signOut()
         }
     }
 
-    override fun loadUserData(user: User): Flow<Result<UserData>> = flow {
-        emitCaching {
-            database.reference("userdata/${user.uid}")
-                .valueEvents
-                .first()
-                .value<UserData>()
+    override fun hasData(user: User): Flow<Boolean> = flow {
+        runCatching {
+            database.getReference("userdata/${user.uid}")
+                .valueEventOnce()
+                .firstOrNull() != null
+        }.onFailure {
+            emit(false)
+        }.onSuccess {
+            emit(it)
         }
     }
 
+    override fun loadUserData(user: User): Flow<Result<UserData>> {
+        return database.getReference("userdata/${user.uid}")
+            .valueEventOnce()
+            .map { Result.success(it.valueOrThrow<UserData>()) }
+            .catch { emit(Result.failure(it)) }
+    }
+
     override fun saveData(user: User): Flow<Result<Unit>> = flow {
-        emitCaching {
-            database.reference("userdata/${user.uid}")
-                .setValue(user.data) {
-                    encodeDefaults = true
-                }
+        emitCatching {
+            database.getReference("userdata/${user.uid}")
+                .value(user.data)
         }
     }
 
     inner class SignInImpl : UserRepository.SignIn {
 
-        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> = flow {
-            emitCaching {
-                auth.signInWithEmailAndPassword(email, password)
-            }
+        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> {
+            return auth.signInWithEmailAndPassword(email, password)
+                .handleAsResult {
+                    it.user?.let { trySend(Result.success(Unit)) } ?: trySend(Result.failure(IllegalStateException("User is null")))
+                }
         }
 
-        override fun withGoogle(): Flow<Result<Unit>> = flow {
-            emitCaching {
-                val token = requestGoogleSignIn()
-                    .getOrElse {
+        override fun withGoogle(context: Context): Flow<Result<Unit>> {
+            return flow {
+                emitCatching {
+                    requestGoogleSignIn(context).getOrElse {
                         emit(Result.failure(it))
                         return@flow
-                    }
-                    .idToken
-                auth.signInWithCredential(GoogleAuthProvider.credential(token, null))
+                    }.idToken
+                }
+            }
+                .map {
+                    auth.signInWithCredential(GoogleAuthProvider.getCredential(it.getOrThrow(), null)).await()
+                    Result.success(Unit)
+//                        .handleAsResult {
+//                            Log.d("UserRepositoryImpl", "User: ${it.user}")
+//                            if (it.user == null) {
+//                                trySendBlocking(Result.failure(IllegalStateException("User is null")))
+//                            } else {
+//                                trySendBlocking(Result.success(Unit))
+//                            }
+//                        }
+//                        .collect(this)
+                }
+            .catch {
+                emit(Result.failure(it))
             }
         }
 
@@ -107,27 +135,16 @@ class UserRepositoryImpl(
 
     inner class SignUpImpl : UserRepository.SignUp {
 
-        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> = flow {
-            emitCaching {
-                auth.createUserWithEmailAndPassword(email, password)
-            }
-        }
-
-        override fun withGoogle(): Flow<Result<Unit>> = flow {
-            emitCaching {
-                val token = requestGoogleSignIn()
-                    .getOrElse {
-                        emit(Result.failure(it))
-                        return@flow
-                    }
-                    .idToken
-                auth.signInWithCredential(GoogleAuthProvider.credential(token, null))
-            }
+        override fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>> {
+            return auth.createUserWithEmailAndPassword(email, password)
+                .handleAsResult {
+                    it.user?.let { trySend(Result.success(Unit)) } ?: trySend(Result.failure(IllegalStateException("User is null")))
+                }
         }
 
     }
 
-    private suspend inline fun <T> FlowCollector<Result<T>>.emitCaching(block: () -> T) {
+    private suspend inline fun <T> FlowCollector<Result<T>>.emitCatching(block: () -> T) {
         emit(runCatching(block))
     }
 
@@ -139,18 +156,24 @@ class UserRepositoryImpl(
         ))
     }
 
-    private suspend fun requestGoogleSignIn(): Result<GoogleIdTokenCredential> {
-        val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-            .setFilterByAuthorizedAccounts(true)
-            .setServerClientId(context.resources.getString(R.string.web_client_id))
-            .setAutoSelectEnabled(true)
-            .setNonce(UUID.randomUUID().toString())
-            .build()
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
+    private suspend fun requestGoogleSignIn(context: Context): Result<GoogleIdTokenCredential> {
         return runCatching {
-            credentialManager.getCredential(context, request).credential as GoogleIdTokenCredential
+//            val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
+//                .setServerClientId(context.resources.getString(R.string.web_client_id))
+//                .setAutoSelectEnabled(true)
+//                .setNonce(UUID.randomUUID().toString())
+//                .build()
+            val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(context.resources.getString(R.string.web_client_id))
+                .setNonce(UUID.randomUUID().toString())
+                .build()
+
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(signInWithGoogleOption)
+                .build()
+            val credentialManager = CredentialManager.create(context.applicationContext)
+            val credentials = credentialManager.getCredential(context, request).credential as CustomCredential
+
+            GoogleIdTokenCredential.createFrom(credentials.data)
         }
     }
 }

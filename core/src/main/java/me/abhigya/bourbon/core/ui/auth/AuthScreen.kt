@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -46,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.SemiTransparentLoadingOverlay
 import me.abhigya.bourbon.core.ui.router.LocalRouter
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -60,134 +62,144 @@ object AuthScreen : AppScreen {
                 .fillMaxSize()
                 .padding(8.dp)
         ) { padding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .padding(padding)
-                    .padding(horizontal = 40.dp)
-                    .fillMaxHeight(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxSize()
             ) {
                 val viewModelScope = rememberCoroutineScope()
                 val router = LocalRouter.current
                 val viewModel: AuthViewModel = remember(viewModelScope) { get { parametersOf(viewModelScope, router) } }
                 val uiState by viewModel.observeStates().collectAsState()
+                val currentContext = LocalContext.current
 
-                Logo()
-                Separator()
-
-                var emailText by remember { mutableStateOf("") }
-                InputField(
-                    label = "Email",
-                    placeholder = "Enter Email",
-                    value = emailText
-                ) {
-                    emailText = it
-                    viewModel.trySend(AuthContract.Inputs.EmailChanged(it))
-                }
-
-                Separator()
-
-                var passwordText by remember { mutableStateOf("") }
-                InputField(
-                    label = "Password",
-                    placeholder = "Enter Password",
-                    value = passwordText,
-                    errorSuperScript = "Wrong Password",
-                    visualTransformation = uiState.passwordVisualState,
-                    trailingIcon = {
-                        Icon(
-                            modifier = Modifier
-                                .size(width = 18.dp, height = 12.dp)
-                                .clickable {
-                                    viewModel.trySend(AuthContract.Inputs.PasswordVisibilityChanged)
-                                },
-                            painter = painterResource(id = R.drawable.ic_eye),
-                            contentDescription = "Show Password",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                ) {
-                    passwordText = it
-                    viewModel.trySend(AuthContract.Inputs.PasswordChanged(it))
-                }
-
-                AnimatedVisibility(visible = uiState.authType == AuthContract.AuthType.REGISTER) {
-                    Column {
-                        var confirmPasswordText by remember { mutableStateOf("") }
-                        viewModel.trySend(AuthContract.Inputs.ConfirmPasswordChanged(confirmPasswordText))
-
-                        Separator(thickness = 16.dp)
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(60.dp),
-                            shape = RoundedCornerShape(24.dp),
-                            value = confirmPasswordText,
-                            onValueChange = {
-                                confirmPasswordText = it
-                                viewModel.trySend(AuthContract.Inputs.ConfirmPasswordChanged(it))
-                            },
-                            placeholder = {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize(),
-                                    contentAlignment = Alignment.CenterStart
-                                ) {
-                                    Text(
-                                        text = "Re-Enter Password",
-                                        fontSize = 14.sp
-                                    )
-                                }
-                            },
-                            visualTransformation = uiState.passwordVisualState,
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
-                                focusedContainerColor = MaterialTheme.colorScheme.secondary,
-                                unfocusedBorderColor = MaterialTheme.colorScheme.secondary
-                            )
-                        )
-                    }
-                }
-
-                Separator()
-                UIButton(
-                    text = if (uiState.authType == AuthContract.AuthType.LOGIN) "Log In" else "Sign Up",
-                    primary = true
-                ) {
-                    viewModel.trySend(AuthContract.Inputs.ConfirmButton)
-                }
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp),
-                    contentAlignment = Alignment.Center
+                        .padding(horizontal = 40.dp)
+                        .fillMaxHeight(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "or",
-                        fontSize = 13.sp,
-                        color = MaterialTheme.colorScheme.tertiary,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-                UIButton(text = if (uiState.authType != AuthContract.AuthType.LOGIN) "Log In" else "Sign Up") {
-                    viewModel.trySend(AuthContract.Inputs.SwitchAuthType(uiState.authType.inverse()))
-                }
-                Separator(thickness = 16.dp)
-                UIButton(
-                    text = "Sign in with Google",
-                    contentColor = Color.White,
-                    logo = {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_google),
-                            contentDescription = "Google"
+                    Logo()
+                    Separator()
+
+                    var emailText by remember { mutableStateOf("") }
+                    InputField(
+                        label = "Email",
+                        placeholder = "Enter Email",
+                        value = emailText
+                    ) {
+                        emailText = it
+                        viewModel.trySend(AuthContract.Inputs.EmailChanged(it))
+                    }
+
+                    Separator()
+
+                    var passwordText by remember { mutableStateOf("") }
+                    InputField(
+                        label = "Password",
+                        placeholder = "Enter Password",
+                        value = passwordText,
+                        errorSuperScript = "Wrong Password",
+                        visualTransformation = uiState.passwordVisualState,
+                        trailingIcon = {
+                            Icon(
+                                modifier = Modifier
+                                    .size(width = 18.dp, height = 12.dp)
+                                    .clickable {
+                                        viewModel.trySend(AuthContract.Inputs.PasswordVisibilityChanged)
+                                    },
+                                painter = painterResource(id = R.drawable.ic_eye),
+                                contentDescription = "Show Password",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    ) {
+                        passwordText = it
+                        viewModel.trySend(AuthContract.Inputs.PasswordChanged(it))
+                    }
+
+                    AnimatedVisibility(visible = uiState.authType == AuthContract.AuthType.REGISTER) {
+                        Column {
+                            var confirmPasswordText by remember { mutableStateOf("") }
+                            viewModel.trySend(AuthContract.Inputs.ConfirmPasswordChanged(confirmPasswordText))
+
+                            Separator(thickness = 16.dp)
+                            OutlinedTextField(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(60.dp),
+                                shape = RoundedCornerShape(24.dp),
+                                value = confirmPasswordText,
+                                onValueChange = {
+                                    confirmPasswordText = it
+                                    viewModel.trySend(AuthContract.Inputs.ConfirmPasswordChanged(it))
+                                },
+                                placeholder = {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxSize(),
+                                        contentAlignment = Alignment.CenterStart
+                                    ) {
+                                        Text(
+                                            text = "Re-Enter Password",
+                                            fontSize = 14.sp
+                                        )
+                                    }
+                                },
+                                visualTransformation = uiState.passwordVisualState,
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
+                                    focusedContainerColor = MaterialTheme.colorScheme.secondary,
+                                    unfocusedBorderColor = MaterialTheme.colorScheme.secondary
+                                )
+                            )
+                        }
+                    }
+
+                    Separator()
+                    UIButton(
+                        text = if (uiState.authType == AuthContract.AuthType.LOGIN) "Log In" else "Sign Up",
+                        primary = true
+                    ) {
+                        viewModel.trySend(AuthContract.Inputs.ConfirmButton)
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(64.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "or",
+                            fontSize = 13.sp,
+                            color = MaterialTheme.colorScheme.tertiary,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                )
+                    UIButton(text = if (uiState.authType != AuthContract.AuthType.LOGIN) "Log In" else "Sign Up") {
+                        viewModel.trySend(AuthContract.Inputs.SwitchAuthType(uiState.authType.inverse()))
+                    }
+                    Separator(thickness = 16.dp)
+                    UIButton(
+                        text = "Sign in with Google",
+                        contentColor = Color.White,
+                        logo = {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_google),
+                                contentDescription = "Google"
+                            )
+                        }
+                    ) {
+                        viewModel.trySend(AuthContract.Inputs.SignInByGoogle(currentContext))
+                    }
 
-                ForgotPassword() {
-                    // TODO
+                    ForgotPassword() {
+                        // TODO
+                    }
                 }
+
+                SemiTransparentLoadingOverlay(state = uiState.isLoading)
             }
         }
     }

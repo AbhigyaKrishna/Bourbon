@@ -31,13 +31,13 @@ enum class RoutePath(
 }
 
 val RouterContract.module get() = module {
-    factory { (coroutineScope: CoroutineScope, initialRoute: RoutePath?) ->
+    factory { (coroutineScope: CoroutineScope) ->
         RouterViewModel(
             coroutineScope,
             get<BallastViewModelConfiguration.Builder>()
                 .withRouter(
                     routingTable = RoutingTable.fromEnum(RoutePath.entries),
-                    initialRoute = initialRoute
+                    initialRoute = RoutePath.HOME
                 )
                 .build()
         )

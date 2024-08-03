@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     com.android.library
     org.jetbrains.kotlin.android
@@ -10,9 +12,23 @@ android {
     namespace = "${rootProject.group}.${project.name}"
     compileSdk = AppConfig.COMPILE_SDK
 
+    val props = Properties().apply {
+        load(rootDir.resolve("key.properties").reader())
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = props.getProperty("keyAlias")
+            keyPassword = props.getProperty("keyPassword")
+            storeFile = file(props.getProperty("storeFile"))
+            storePassword = props.getProperty("storePassword")
+        }
+    }
+
     defaultConfig {
         minSdk = AppConfig.MIN_SDK
         vectorDrawables.useSupportLibrary = true
+        signingConfig = signingConfigs.getByName("debug")
     }
 
     compileOptions {

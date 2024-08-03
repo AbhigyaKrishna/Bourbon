@@ -15,9 +15,11 @@ arrow = "1.2.4"
 ksp = "2.0.0-1.0.23"
 google-services = "4.4.2"
 play-services-auth = "21.2.0"
-credentials = "1.5.0-alpha03"
+credentials = "1.3.0-rc01"
 google-id = "1.1.1"
-firebase = "1.13.0"
+google-api-client = "1.32.1"
+firebase = "33.1.2"
+firebase-gitlive = "1.13.0"
 serialization = "1.7.1"
 
 [libraries]
@@ -52,15 +54,19 @@ arrow-bom = { group = "io.arrow-kt", name = "arrow-stack", version.ref = "arrow"
 arrow-core = { group = "io.arrow-kt", name = "arrow-core" }
 arrow-coroutines = { group = "io.arrow-kt", name = "arrow-fx-coroutines" }
 arrow-optics-ksp = { group = "io.arrow-kt", name = "arrow-optics-ksp-plugin", version.ref = "arrow" }
-#firebase-bom = { group = "dev.gitlive", name = "firebase-bom", version.ref = "firebase" }
-firebase-analytics = { group = "dev.gitlive", name = "firebase-analytics", version.ref = "firebase" }
-firebase-database = { group = "dev.gitlive", name = "firebase-database", version.ref = "firebase" }
-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-database = { group = "com.google.firebase", name = "firebase-database-ktx" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
+firebase-analytics-gitlive = { group = "dev.gitlive", name = "firebase-analytics", version.ref = "firebase-gitlive" }
+firebase-database-gitlive = { group = "dev.gitlive", name = "firebase-database", version.ref = "firebase-gitlive" }
+firebase-auth-gitlive = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-gitlive" }
 google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
 #noinspection CredentialDependency
 android-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 android-credentials-play-service = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 google-id = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "google-id" }
+google-api-client = { group = "com.google.api-client", name = "google-api-client", version.ref = "google-api-client" }
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "serialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
 

@@ -20,8 +20,8 @@ android {
 
 dependencies {
     api(project(":domain"))
-//    implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
+    api(platform(libs.firebase.bom))
+    api(libs.bundles.firebase)
     implementation(libs.google.play.services.auth)
     implementation(libs.bundles.credentials)
     implementation(platform(libs.kotlinx.serialization.bom))

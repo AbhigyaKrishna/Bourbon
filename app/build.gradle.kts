@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     bourbon.`kotlin-conventions`
     id(libs.plugins.android.application.get().pluginId)
@@ -10,6 +12,17 @@ plugins {
 group = rootProject.group
 
 android {
+    signingConfigs {
+        val keyStoreProperties = Properties().apply {
+            load(rootDir.resolve("key.properties").reader())
+        }
+        getByName("debug") {
+            keyAlias = keyStoreProperties.getProperty("keyAlias")
+            keyPassword = keyStoreProperties.getProperty("keyPassword")
+            storeFile = file(keyStoreProperties.getProperty("storeFile"))
+            storePassword = keyStoreProperties.getProperty("storePassword")
+        }
+    }
     namespace = group.toString()
     compileSdk = AppConfig.COMPILE_SDK
 
@@ -26,6 +39,7 @@ android {
         }
 
         multiDexEnabled = true
+        signingConfig = signingConfigs.getByName("debug")
     }
 
     buildTypes {

@@ -23,8 +23,8 @@ val coreModule = module {
 
 val modules = listOf(
     coreModule,
+    dataModules,
     RouterContract.module,
     AuthContract.module,
-    OnBoardingContract.module,
-    dataModules
+    OnBoardingContract.module
 )
