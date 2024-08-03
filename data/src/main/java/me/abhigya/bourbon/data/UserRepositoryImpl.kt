@@ -1,7 +1,6 @@
 package me.abhigya.bourbon.data
 
 import android.content.Context
-import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -14,30 +13,30 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.tasks.await
+import me.abhigya.bourbon.data.firebase.handle
+import me.abhigya.bourbon.data.firebase.handleAsResult
+import me.abhigya.bourbon.data.firebase.value
+import me.abhigya.bourbon.data.firebase.valueEventOnce
+import me.abhigya.bourbon.data.firebase.valueOrThrow
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.User
 import me.abhigya.bourbon.domain.entities.UserData
 import org.koin.core.component.KoinComponent
 import java.util.UUID
 
-class UserRepositoryImpl : UserRepository, KoinComponent {
+class UserRepositoryImpl(private val context: Context) : UserRepository, KoinComponent {
 
-    private val database: FirebaseDatabase = Firebase.database
+    private val database: FirebaseDatabase = Firebase.database(context.resources.getString(R.string.database_url))
     private val auth: FirebaseAuth = Firebase.auth
 
     override fun isLoggedIn(): Flow<Boolean> {
@@ -51,7 +50,7 @@ class UserRepositoryImpl : UserRepository, KoinComponent {
     override fun exists(email: String): Flow<Boolean> {
         return auth.fetchSignInMethodsForEmail(email)
             .handle({ false }) {
-                trySend(it.signInMethods?.isNotEmpty() == true)
+                trySendBlocking(it.signInMethods?.isNotEmpty() == true)
             }
     }
 
@@ -73,7 +72,7 @@ class UserRepositoryImpl : UserRepository, KoinComponent {
         runCatching {
             database.getReference("userdata/${user.uid}")
                 .valueEventOnce()
-                .firstOrNull() != null
+                .firstOrNull()?.value != null
         }.onFailure {
             emit(false)
         }.onSuccess {
@@ -104,10 +103,10 @@ class UserRepositoryImpl : UserRepository, KoinComponent {
                 }
         }
 
-        override fun withGoogle(context: Context): Flow<Result<Unit>> {
+        override fun withGoogle(): Flow<Result<Unit>> {
             return flow {
                 emitCatching {
-                    requestGoogleSignIn(context).getOrElse {
+                    requestGoogleSignIn().getOrElse {
                         emit(Result.failure(it))
                         return@flow
                     }.idToken
@@ -156,7 +155,7 @@ class UserRepositoryImpl : UserRepository, KoinComponent {
         ))
     }
 
-    private suspend fun requestGoogleSignIn(context: Context): Result<GoogleIdTokenCredential> {
+    private suspend fun requestGoogleSignIn(): Result<GoogleIdTokenCredential> {
         return runCatching {
 //            val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
 //                .setServerClientId(context.resources.getString(R.string.web_client_id))

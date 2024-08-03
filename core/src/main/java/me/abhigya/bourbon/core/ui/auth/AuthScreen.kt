@@ -36,6 +36,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -68,10 +69,10 @@ object AuthScreen : AppScreen {
                     .fillMaxSize()
             ) {
                 val viewModelScope = rememberCoroutineScope()
-                val router = LocalRouter.current
-                val viewModel: AuthViewModel = remember(viewModelScope) { get { parametersOf(viewModelScope, router) } }
-                val uiState by viewModel.observeStates().collectAsState()
                 val currentContext = LocalContext.current
+                val router = LocalRouter.current
+                val viewModel: AuthViewModel = remember(viewModelScope) { get { parametersOf(viewModelScope, router, currentContext) } }
+                val uiState by viewModel.observeStates().collectAsState()
 
                 Column(
                     modifier = Modifier
@@ -87,7 +88,8 @@ object AuthScreen : AppScreen {
                     InputField(
                         label = "Email",
                         placeholder = "Enter Email",
-                        value = emailText
+                        value = emailText,
+                        errorSuperScript = if (uiState.isWrongEmail) "Invalid Email" else null
                     ) {
                         emailText = it
                         viewModel.trySend(AuthContract.Inputs.EmailChanged(it))
@@ -100,7 +102,7 @@ object AuthScreen : AppScreen {
                         label = "Password",
                         placeholder = "Enter Password",
                         value = passwordText,
-                        errorSuperScript = "Wrong Password",
+                        errorSuperScript = uiState.passwordErrorState.display,
                         visualTransformation = uiState.passwordVisualState,
                         trailingIcon = {
                             Icon(
@@ -151,7 +153,8 @@ object AuthScreen : AppScreen {
                                 colors = OutlinedTextFieldDefaults.colors(
                                     unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                                     focusedContainerColor = MaterialTheme.colorScheme.secondary,
-                                    unfocusedBorderColor = MaterialTheme.colorScheme.secondary
+                                    unfocusedBorderColor = if (uiState.passwordErrorState == AuthContract.PasswordErrorType.NOT_MATCH) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.secondary,
+                                    focusedBorderColor = if (uiState.passwordErrorState == AuthContract.PasswordErrorType.NOT_MATCH) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                                 )
                             )
                         }
@@ -251,7 +254,6 @@ object AuthScreen : AppScreen {
                         text = label,
                         fontSize = fontSize
                     )
-                    // TODO Check error
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -300,7 +302,8 @@ object AuthScreen : AppScreen {
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                 focusedContainerColor = MaterialTheme.colorScheme.secondary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.secondary
+                unfocusedBorderColor = if (errorSuperScript == null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error,
+                focusedBorderColor = if (errorSuperScript == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             ),
             trailingIcon = trailingIcon
         )

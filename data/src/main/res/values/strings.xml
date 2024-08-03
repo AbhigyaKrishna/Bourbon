@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="web_client_id">986909268055-jos0o4mrj5j5oer2pnop5p0if19c9h26.apps.googleusercontent.com</string>
+    <string name="database_url">https://bourbon-60be9-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
 </resources>

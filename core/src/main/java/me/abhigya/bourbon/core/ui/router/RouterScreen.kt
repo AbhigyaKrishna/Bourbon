@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.platform.LocalContext
 import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
@@ -27,6 +28,7 @@ object RouterScreen : AppScreen {
 
     @Composable
     override operator fun invoke() {
+        val currentContext = LocalContext.current
         val coroutine = rememberCoroutineScope()
         val viewModel: RouterViewModel = remember(coroutine) { get { parametersOf(coroutine) } }
         val routerState: Backstack<RoutePath> by viewModel.observeStates().collectAsState()
@@ -46,7 +48,7 @@ object RouterScreen : AppScreen {
 
 
         LaunchedEffect(coroutine) {
-            val user = get<UserRepository>()
+            val user = get<UserRepository> { parametersOf(currentContext) }
             delay(100)
             user.signOut().single()
             if (user.isLoggedIn().single().not()) {
