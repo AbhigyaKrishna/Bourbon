@@ -241,7 +241,7 @@ object AuthScreen : AppScreen {
         errorSuperScript: String? = null,
         fontSize: TextUnit = 11.sp,
         visualTransformation: VisualTransformation = VisualTransformation.None,
-        trailingIcon: @Composable() (() -> Unit)? = null,
+        trailingIcon: (@Composable () -> Unit)? = null,
         keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
         onValueChange: (String) -> Unit = {}
     ) {

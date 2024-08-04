@@ -302,7 +302,7 @@ internal fun TileOption(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onSelect: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = modifier
@@ -319,7 +319,8 @@ internal fun TileOption(
             .clickable {
                 if (isSelected) return@clickable
                 onSelect()
-            }
+            },
+        contentAlignment = Alignment.Center
     ) {
         content()
     }

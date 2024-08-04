@@ -1,8 +1,10 @@
 package me.abhigya.bourbon.core.ui.onboarding
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -108,6 +110,7 @@ object OnBoardingScreen : AppScreen {
                 }, uiState.height.unit, {
                     viewModel.trySend(OnBoardingContract.Inputs.HeightChanged(uiState.height.copy(unit = it)))
                 })
+
                 GenderAndDOBCard(uiState.gender, {
                     viewModel.trySend(OnBoardingContract.Inputs.GenderChanged(it))
                 }, uiState.ageGroup) {
@@ -216,14 +219,21 @@ object OnBoardingScreen : AppScreen {
                         isSelected = genderSelected,
                         onSelect = { onGenderChanged(it) }
                     ) {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = it.name,
-                            tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
-                            modifier = Modifier.size(16.dp)
-                        )
-                        VerticalDivider(thickness = 4.dp)
-                        Text(text = it.name, color = if (genderSelected) MaterialTheme.colorScheme.background else Color.White)
+                        Row(
+                            modifier = Modifier
+                                .matchParentSize(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Check,
+                                contentDescription = it.name,
+                                tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            VerticalDivider(thickness = 4.dp)
+                            Text(text = it.name, color = if (genderSelected) MaterialTheme.colorScheme.background else Color.White)
+                        }
                     }
                 }
             })
