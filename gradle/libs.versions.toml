@@ -9,6 +9,7 @@ espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
+cascade = "2.3.0"
 ballast = "4.2.1"
 koin = "4.0.0-RC1"
 arrow = "1.2.4"
@@ -38,6 +39,7 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+cascade = { group = "me.saket.cascade", name = "cascade-compose", version.ref = "cascade" }
 ballast-core = { group = "io.github.copper-leaf", name = "ballast-core", version.ref = "ballast" }
 ballast-repository = { group = "io.github.copper-leaf", name = "ballast-repository", version.ref = "ballast" }
 ballast-saved-state = { group = "io.github.copper-leaf", name = "ballast-saved-state", version.ref = "ballast" }
@@ -82,7 +84,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 
 [bundles]
 android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
-android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3"]
+android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3", "cascade"]
 android-test = ["androidx-junit", "androidx-espresso-core"]
 android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
 ballast = ["ballast-core", "ballast-repository", "ballast-saved-state", "ballast-sync", "ballast-undo", "ballast-navigation", "ballast-schedules", "ballast-crash-reporting", "ballast-analytics", "ballast-debugger-client"]

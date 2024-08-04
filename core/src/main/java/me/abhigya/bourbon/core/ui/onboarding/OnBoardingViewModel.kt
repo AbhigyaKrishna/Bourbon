@@ -8,9 +8,7 @@ import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import me.abhigya.bourbon.domain.entities.AgeGroup
-import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Gender
-import me.abhigya.bourbon.domain.entities.Kilograms
 import org.koin.dsl.module
 
 class OnBoardingViewModel(
@@ -21,15 +19,35 @@ class OnBoardingViewModel(
 object OnBoardingContract {
 
     data class State(
-        val weight: Kilograms = Kilograms(),
-        val height: Centimeters = Centimeters(),
+        val weight: Weight = Weight(),
+        val height: Height = Height(),
         val gender: Gender = Gender.Male,
         val ageGroup: AgeGroup = AgeGroup._18_29
     )
 
+    enum class WeightUnit(private val display: String) {
+        Kilograms("kg"),
+        Pounds("lbs"),
+        ;
+
+        override fun toString(): String = display
+    }
+
+    enum class HeightUnit(private val display: String) {
+        Centimeters("cm"),
+        Inches("inches"),
+        ;
+
+        override fun toString(): String = display
+    }
+
+    data class Weight(val value: Int = 0, val unit: WeightUnit = WeightUnit.Kilograms)
+
+    data class Height(val value: Int = 0, val unit: HeightUnit = HeightUnit.Centimeters)
+
     sealed interface Inputs {
-        data class WeightChanged(val weight: Kilograms) : Inputs
-        data class HeightChanged(val height: Centimeters) : Inputs
+        data class WeightChanged(val weight: Weight) : Inputs
+        data class HeightChanged(val height: Height) : Inputs
         data class GenderChanged(val gender: Gender) : Inputs
         data class AgeGroupChanged(val ageGroup: AgeGroup): Inputs
         data object NextButton : Inputs

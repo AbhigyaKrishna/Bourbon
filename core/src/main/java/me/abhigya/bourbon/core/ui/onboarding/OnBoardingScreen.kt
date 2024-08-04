@@ -1,21 +1,17 @@
 package me.abhigya.bourbon.core.ui.onboarding
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,17 +20,19 @@ import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.ui.AppScreen
-import me.abhigya.bourbon.core.utils.navigationBarsHeight
 import me.abhigya.bourbon.core.utils.navigationBarsPadding
 import me.abhigya.bourbon.domain.entities.AgeGroup
 import me.abhigya.bourbon.domain.entities.Gender
@@ -57,7 +55,10 @@ object OnBoardingScreen : AppScreen {
                         modifier = Modifier
                             .width(336.dp)
                             .height(48.dp)
-                            .background(color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(4.dp)),
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(4.dp)
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -93,7 +94,20 @@ object OnBoardingScreen : AppScreen {
                         fontWeight = FontWeight.Bold,
                     )
                 }
-                HeightAndWeightCard()
+
+                var weight by remember { mutableIntStateOf(0) }
+                var height by remember { mutableIntStateOf(0) }
+                HeightAndWeightCard(weight, {
+                    weight = it
+                    viewModel.trySend(OnBoardingContract.Inputs.WeightChanged(uiState.weight.copy(value = it)))
+                }, uiState.weight.unit, {
+                    viewModel.trySend(OnBoardingContract.Inputs.WeightChanged(uiState.weight.copy(unit = it)))
+                }, height, {
+                    height = it
+                    viewModel.trySend(OnBoardingContract.Inputs.HeightChanged(uiState.height.copy(value = it)))
+                }, uiState.height.unit, {
+                    viewModel.trySend(OnBoardingContract.Inputs.HeightChanged(uiState.height.copy(unit = it)))
+                })
                 GenderAndDOBCard(uiState.gender, {
                     viewModel.trySend(OnBoardingContract.Inputs.GenderChanged(it))
                 }, uiState.ageGroup) {
@@ -104,123 +118,132 @@ object OnBoardingScreen : AppScreen {
     }
 
     @Composable
-    internal fun HeightAndWeightCard(onWeightChanged: (Float) -> Unit = {}, onHeightChanged: (Int) -> Unit = {}) {
-        @Composable
-        fun BoxScope.DropButton(text: String) {
-            Row(
-                modifier = Modifier
-                    .matchParentSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(4.dp)
-                    ),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = text, color = MaterialTheme.colorScheme.background)
-                VerticalDivider(thickness = 4.dp)
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = "Dropdown",
-                    tint = MaterialTheme.colorScheme.background,
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        }
-
+    internal fun HeightAndWeightCard(
+        weight: Int,
+        onWeightChanged: (Int) -> Unit = {},
+        weightUnit: OnBoardingContract.WeightUnit,
+        onWeightUnitChanged: (OnBoardingContract.WeightUnit) -> Unit = {},
+        height: Int,
+        onHeightChanged: (Int) -> Unit = {},
+        heightUnit: OnBoardingContract.HeightUnit,
+        onHeightUnitChanged: (OnBoardingContract.HeightUnit) -> Unit = {}
+    ) {
         TileCard {
             TiledRow(elements = listOf(
-                { Text(text = "Weight", color = Color.White) },
-                { DropButton(text = "Kg") }
+                {
+                    TileTextBox(
+                        value = if (weight <= 0f) "" else weight.toString(),
+                        onValueChange = {
+                            runCatching {
+                                if (it.isEmpty()) return@runCatching 0
+
+                                it.toInt()
+                            }.onSuccess {
+                                onWeightChanged(it)
+                            }
+                        },
+                        label = {
+                            Text(text = "Weight", textAlign = TextAlign.Center)
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                },
+                {
+                    TileDropDown(
+                        modifier = Modifier
+                            .matchParentSize(),
+                        selected = weightUnit.ordinal,
+                        entries = OnBoardingContract.WeightUnit.entries.map { it.toString() },
+                        onEntryClick = {
+                            onWeightUnitChanged(OnBoardingContract.WeightUnit.entries[it])
+                        }
+                    )
+                }
             ))
 
             TileSeparator()
 
             TiledRow(elements = listOf(
-                { Text(text = "Height", color = Color.White) },
-                { DropButton(text = "Cm") }
+                {
+                    TileTextBox(
+                        value = if (height <= 0) "" else height.toString(),
+                        onValueChange = {
+                            runCatching {
+                                if (it.isEmpty()) return@runCatching 0
+
+                                it.toInt()
+                            }.onSuccess {
+                                onHeightChanged(it)
+                            }
+                        },
+                        label = {
+                            Text(text = "Height", textAlign = TextAlign.Center)
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                },
+                {
+                    TileDropDown(
+                        modifier = Modifier
+                            .matchParentSize(),
+                        selected = heightUnit.ordinal,
+                        entries = OnBoardingContract.HeightUnit.entries.map { it.toString() },
+                        onEntryClick = {
+                            onHeightUnitChanged(OnBoardingContract.HeightUnit.entries[it])
+                        }
+                    )
+                }
             ))
         }
     }
 
     @Composable
-    internal fun GenderAndDOBCard(currentGender: Gender, onGenderChanged: (Gender) -> Unit = {}, currentAgeGroup: AgeGroup, onAgeGroupChanged: (AgeGroup) -> Unit = {}) {
-        @Composable
-        fun BoxScope.GenderButton(gender: Gender) {
-            val genderSelected = currentGender == gender
-            Row(
-                modifier = Modifier
-                    .matchParentSize()
-                    .run {
-                        if (genderSelected) {
-                            background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                        } else {
-                            this
-                        }
-                    }
-                    .clickable {
-                        if (genderSelected) return@clickable
-                        onGenderChanged(gender)
-                    },
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.Check,
-                    contentDescription = gender.name,
-                    tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
-                    modifier = Modifier.size(16.dp)
-                )
-                VerticalDivider(thickness = 4.dp)
-                Text(text = gender.name, color = if (genderSelected) MaterialTheme.colorScheme.background else Color.White)
-            }
-        }
-
-        @Composable
-        fun BoxScope.AgeGroup(ageGroup: AgeGroup) {
-            val ageSelected = currentAgeGroup == ageGroup
-            Box(
-                modifier = Modifier
-                    .matchParentSize()
-                    .run {
-                        if (ageSelected) {
-                            background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                        } else {
-                            this
-                        }
-                    }
-                    .clickable {
-                        if (ageSelected) return@clickable
-                        onAgeGroupChanged(ageGroup)
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = ageGroup.display, color = if (ageSelected) MaterialTheme.colorScheme.background else Color.White)
-            }
-        }
+    internal fun GenderAndDOBCard(
+        currentGender: Gender,
+        onGenderChanged: (Gender) -> Unit = {},
+        currentAgeGroup: AgeGroup,
+        onAgeGroupChanged: (AgeGroup) -> Unit = {}
+    ) {
 
         TileCard {
             Label(text = "Gender")
-            TiledRow(elements = listOf(
-                { GenderButton(gender = Gender.Male) },
-                { GenderButton(gender = Gender.Female) }
-            ))
+            TiledRow(elements = Gender.entries.map {
+                {
+                    val genderSelected = currentGender == it
+                    TileOption(
+                        modifier = Modifier
+                            .matchParentSize(),
+                        isSelected = genderSelected,
+                        onSelect = { onGenderChanged(it) }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Check,
+                            contentDescription = it.name,
+                            tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        VerticalDivider(thickness = 4.dp)
+                        Text(text = it.name, color = if (genderSelected) MaterialTheme.colorScheme.background else Color.White)
+                    }
+                }
+            })
 
             TileSeparator()
 
             Label(text = "Age Group")
-            TiledRow(itemsPerRow = 4, elements = listOf(
-                { AgeGroup(ageGroup = AgeGroup._18_29) },
-                { AgeGroup(ageGroup = AgeGroup._30_39) },
-                { AgeGroup(ageGroup = AgeGroup._40_49) },
-                { AgeGroup(ageGroup = AgeGroup._50) }
-            ))
+            TiledRow(itemsPerRow = 4, elements = AgeGroup.entries.map {
+                {
+                    val ageSelected = currentAgeGroup == it
+                    TileOption(
+                        modifier = Modifier
+                            .matchParentSize(),
+                        isSelected = ageSelected,
+                        onSelect = { onAgeGroupChanged(it) }
+                    ) {
+                        Text(text = it.display, color = if (ageSelected) MaterialTheme.colorScheme.background else Color.White)
+                    }
+                }
+            })
         }
     }
 

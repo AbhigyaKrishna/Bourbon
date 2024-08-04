@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
@@ -40,6 +41,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -92,7 +94,8 @@ object AuthScreen : AppScreen {
                         label = "Email",
                         placeholder = "Enter Email",
                         value = emailText,
-                        errorSuperScript = if (uiState.isWrongEmail) "Invalid Email" else null
+                        errorSuperScript = if (uiState.isWrongEmail) "Invalid Email" else null,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     ) {
                         emailText = it
                         viewModel.trySend(AuthContract.Inputs.EmailChanged(it))
@@ -118,7 +121,8 @@ object AuthScreen : AppScreen {
                                 contentDescription = "Show Password",
                                 tint = MaterialTheme.colorScheme.primary
                             )
-                        }
+                        },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     ) {
                         passwordText = it
                         viewModel.trySend(AuthContract.Inputs.PasswordChanged(it))
@@ -153,6 +157,7 @@ object AuthScreen : AppScreen {
                                     }
                                 },
                                 visualTransformation = uiState.passwordVisualState,
+                                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                                     focusedContainerColor = MaterialTheme.colorScheme.secondary,
@@ -236,11 +241,12 @@ object AuthScreen : AppScreen {
         errorSuperScript: String? = null,
         fontSize: TextUnit = 11.sp,
         visualTransformation: VisualTransformation = VisualTransformation.None,
-        trailingIcon: (@Composable () -> Unit)? = null,
+        trailingIcon: @Composable() (() -> Unit)? = null,
+        keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
         onValueChange: (String) -> Unit = {}
     ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(23.dp),
@@ -248,12 +254,11 @@ object AuthScreen : AppScreen {
         ) {
             if (errorSuperScript != null) {
                 Row(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        modifier = modifier,
                         text = label,
                         fontSize = fontSize
                     )
@@ -291,7 +296,7 @@ object AuthScreen : AppScreen {
             onValueChange = onValueChange,
             placeholder = {
                 Box(
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxSize(),
                     contentAlignment = Alignment.CenterStart
                 ) {
@@ -302,13 +307,15 @@ object AuthScreen : AppScreen {
                 }
             },
             visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
             colors = OutlinedTextFieldDefaults.colors(
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondary,
                 focusedContainerColor = MaterialTheme.colorScheme.secondary,
                 unfocusedBorderColor = if (errorSuperScript == null) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.error,
                 focusedBorderColor = if (errorSuperScript == null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             ),
-            trailingIcon = trailingIcon
+            trailingIcon = trailingIcon,
+            singleLine = true
         )
     }
 

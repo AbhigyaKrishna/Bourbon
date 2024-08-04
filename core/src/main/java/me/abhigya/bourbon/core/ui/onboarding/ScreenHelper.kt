@@ -1,36 +1,67 @@
 package me.abhigya.bourbon.core.ui.onboarding
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.saket.cascade.CascadeDropdownMenu
 
 @Composable
 internal fun TileCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
@@ -134,5 +165,162 @@ internal fun TiledRow(modifier: Modifier = Modifier, itemsPerRow: Int = 2, eleme
                 HorizontalDivider(thickness = 16.dp)
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+internal fun TileTextBox(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: (@Composable () -> Unit)? = null,
+    placeholder: (@Composable () -> Unit)? = null,
+    textStyle: TextStyle = LocalTextStyle.current,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
+        unfocusedContainerColor = Color.Transparent,
+        focusedContainerColor = Color.Transparent,
+        unfocusedBorderColor = Color.Transparent,
+        focusedBorderColor = Color.Transparent,
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White,
+    )
+) {
+    val textColor = textStyle.color.takeOrElse {
+        val focused by interactionSource.collectIsFocusedAsState()
+        val targetValue = if (focused) {
+            colors.focusedTextColor
+        } else {
+            colors.unfocusedTextColor
+        }
+        rememberUpdatedState(newValue = targetValue).value
+    }
+    val mergedTextStyle = textStyle.merge(TextStyle(color = textColor))
+    CompositionLocalProvider(LocalTextSelectionColors provides colors.textSelectionColors) {
+        BasicTextField(
+            value = value,
+            modifier = if (label != null) {
+                modifier
+                    // Merge semantics at the beginning of the modifier chain to ensure padding is
+                    // considered part of the text field.
+                    .semantics(mergeDescendants = true) {}
+                    .padding(top = 4.dp)
+            } else {
+                modifier
+            },
+            onValueChange = onValueChange,
+            enabled = true,
+            readOnly = false,
+            textStyle = mergedTextStyle,
+            cursorBrush = SolidColor(colors.cursorColor),
+            visualTransformation = visualTransformation,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            interactionSource = interactionSource,
+            singleLine = true,
+            maxLines = 1,
+            minLines = 1,
+            decorationBox = @Composable { innerTextField ->
+                OutlinedTextFieldDefaults.DecorationBox(
+                    value = value,
+                    visualTransformation = visualTransformation,
+                    innerTextField = innerTextField,
+                    placeholder = placeholder,
+                    label = label,
+                    singleLine = true,
+                    enabled = true,
+                    isError = false,
+                    interactionSource = interactionSource,
+                    colors = colors,
+                    contentPadding = PaddingValues(start = 16.dp),
+                    container = {
+                        OutlinedTextFieldDefaults.ContainerBox(
+                            enabled = true,
+                            isError = false,
+                            interactionSource,
+                            colors,
+                            RoundedCornerShape(4.dp)
+                        )
+                    }
+                )
+            }
+        )
+    }
+}
+
+@Composable
+internal fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entries: List<String>, onEntryClick: (Int) -> Unit) {
+    var menuVisible by remember { mutableStateOf(false) }
+    Row(
+        modifier = modifier
+            .background(
+                color = MaterialTheme.colorScheme.primary,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .clickable {
+                menuVisible = !menuVisible
+            },
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier.animateContentSize(),
+            text = entries[selected],
+            color = MaterialTheme.colorScheme.background
+        )
+        VerticalDivider(thickness = 4.dp)
+        Icon(
+            imageVector = Icons.Filled.KeyboardArrowDown,
+            contentDescription = "Dropdown",
+            tint = MaterialTheme.colorScheme.background,
+            modifier = Modifier.size(16.dp)
+        )
+    }
+    CascadeDropdownMenu(
+        expanded = menuVisible,
+        onDismissRequest = { menuVisible = false },
+        fixedWidth = 145.dp
+    ) {
+        for ((idx, f) in entries.withIndex()) {
+            androidx.compose.material3.DropdownMenuItem(
+                text = { Text(text = f) },
+                onClick = {
+                    menuVisible = false
+                    onEntryClick(idx)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+internal fun TileOption(
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+    onSelect: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .run {
+                if (isSelected) {
+                    background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                } else {
+                    this
+                }
+            }
+            .clickable {
+                if (isSelected) return@clickable
+                onSelect()
+            }
+    ) {
+        content()
     }
 }
