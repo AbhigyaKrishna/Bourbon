@@ -1,5 +1,11 @@
 package me.abhigya.bourbon.core.ui.router
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.EaseIn
+import androidx.compose.animation.core.EaseOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -36,10 +42,26 @@ object RouterScreen : AppScreen {
         CompositionLocalProvider(LocalRouter provides viewModel) {
             routerState.renderCurrentDestination(
                 route = {
-                    when (it) {
-                        RoutePath.HOME -> HomeScreen()
-                        RoutePath.AUTH -> AuthScreen()
-                        RoutePath.ONBOARDING -> OnBoardingScreen()
+                    AnimatedContent(
+                        targetState = it,
+                        label = "Page",
+                        transitionSpec = {
+                            slideIntoContainer(
+                                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+                                animationSpec = tween(300, easing = EaseIn)
+                            ).togetherWith(
+                                slideOutOfContainer(
+                                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                                    animationSpec = tween(300, easing = EaseOut)
+                                )
+                            )
+                        }
+                    ) { targetState ->
+                        when (targetState) {
+                            RoutePath.HOME -> HomeScreen()
+                            RoutePath.AUTH -> AuthScreen()
+                            RoutePath.ONBOARDING -> OnBoardingScreen()
+                        }
                     }
                 },
                 notFound = { }

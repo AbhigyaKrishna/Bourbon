@@ -80,8 +80,8 @@ object AuthContract {
     }
 
     val module = module {
-        factory { (router: RouterViewModel, context: Context) ->
-            AuthInputHandler(router, get { parametersOf(context) })
+        factory { (context: Context) ->
+            AuthInputHandler(get { parametersOf(context) })
         }
 
         factory { (router: RouterViewModel, context: Context) ->
@@ -94,7 +94,7 @@ object AuthContract {
                 get<BallastViewModelConfiguration.Builder>()
                     .withViewModel(
                         initialState = State(authType = AuthType.LOGIN),
-                        inputHandler = get<AuthInputHandler> { parametersOf(router, context) },
+                        inputHandler = get<AuthInputHandler> { parametersOf(context) },
                         name = "AuthScreen"
                     )
                     .build(),
@@ -106,7 +106,6 @@ object AuthContract {
 }
 
 class AuthInputHandler(
-    private val router: RouterViewModel,
     private val userRepository: UserRepository
 ) : InputHandler<AuthContract.Inputs, AuthContract.Events, AuthContract.State> {
 

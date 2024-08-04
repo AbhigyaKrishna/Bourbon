@@ -7,6 +7,7 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import me.abhigya.bourbon.domain.entities.AgeGroup
 import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Gender
 import me.abhigya.bourbon.domain.entities.Kilograms
@@ -22,13 +23,15 @@ object OnBoardingContract {
     data class State(
         val weight: Kilograms = Kilograms(),
         val height: Centimeters = Centimeters(),
-        val gender: Gender = Gender.Male
+        val gender: Gender = Gender.Male,
+        val ageGroup: AgeGroup = AgeGroup._18_29
     )
 
     sealed interface Inputs {
         data class WeightChanged(val weight: Kilograms) : Inputs
         data class HeightChanged(val height: Centimeters) : Inputs
         data class GenderChanged(val gender: Gender) : Inputs
+        data class AgeGroupChanged(val ageGroup: AgeGroup): Inputs
         data object NextButton : Inputs
     }
 
@@ -63,6 +66,7 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
             is OnBoardingContract.Inputs.WeightChanged -> updateState { it.copy(weight = input.weight) }
             is OnBoardingContract.Inputs.HeightChanged -> updateState { it.copy(height = input.height) }
             is OnBoardingContract.Inputs.GenderChanged -> updateState { it.copy(gender = input.gender) }
+            is OnBoardingContract.Inputs.AgeGroupChanged -> updateState { it.copy(ageGroup = input.ageGroup) }
             is OnBoardingContract.Inputs.NextButton -> { }
         }
     }

@@ -36,7 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,10 +45,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.SemiTransparentLoadingOverlay
 import me.abhigya.bourbon.core.ui.router.LocalRouter
+import me.abhigya.bourbon.core.ui.router.RoutePath
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 
@@ -197,8 +200,8 @@ object AuthScreen : AppScreen {
                         viewModel.trySend(AuthContract.Inputs.SignInByGoogle(currentContext))
                     }
 
-                    ForgotPassword() {
-                        // TODO
+                    ForgotPassword {
+                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.ONBOARDING.directions().build()))
                     }
                 }
 
