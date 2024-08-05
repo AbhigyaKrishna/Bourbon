@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.core.ui.onboarding
+package me.abhigya.bourbon.core.ui.components
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
@@ -65,7 +65,7 @@ import androidx.compose.ui.unit.sp
 import me.saket.cascade.CascadeDropdownMenu
 
 @Composable
-internal fun TileCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun TileCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
     Box(
         modifier = modifier
             .padding(4.dp)
@@ -73,10 +73,17 @@ internal fun TileCard(modifier: Modifier = Modifier, content: @Composable Column
         Card(
             modifier = modifier
                 .width(336.dp),
-            colors = CardDefaults.cardColors()
+            colors = CardDefaults.elevatedCardColors()
                 .copy(
                     containerColor = MaterialTheme.colorScheme.secondary,
-                )
+                ),
+            elevation = CardDefaults.elevatedCardElevation(
+                defaultElevation = 4.dp,
+                pressedElevation = 8.dp,
+                focusedElevation = 8.dp,
+                hoveredElevation = 8.dp,
+                disabledElevation = 0.dp
+            )
         ) {
             Column(
                 modifier = Modifier
@@ -91,7 +98,7 @@ internal fun TileCard(modifier: Modifier = Modifier, content: @Composable Column
 }
 
 @Composable
-internal fun TileSeparator(modifier: Modifier = Modifier, thickness: Dp = 3.dp) {
+fun TileSeparator(modifier: Modifier = Modifier, thickness: Dp = 3.dp) {
     val color = MaterialTheme.colorScheme.tertiary
     Canvas(modifier = modifier
         .height(thickness + 8.dp)
@@ -112,7 +119,7 @@ internal fun TileSeparator(modifier: Modifier = Modifier, thickness: Dp = 3.dp) 
 }
 
 @Composable
-internal fun Label(text: String) {
+fun TileLabel(text: String) {
     Text(
         modifier = Modifier
             .fillMaxWidth()
@@ -126,7 +133,7 @@ internal fun Label(text: String) {
 }
 
 @Composable
-internal fun TiledRow(modifier: Modifier = Modifier, height: Dp = 48.dp, itemsPerRow: Int = 2, elements: List<(@Composable BoxScope.() -> Unit)>) {
+fun TiledRow(modifier: Modifier = Modifier, height: Dp = 48.dp, itemsPerRow: Int = 2, elements: List<(@Composable BoxScope.() -> Unit)>) {
     val e = if (elements.size % itemsPerRow != 0) {
         elements + List(itemsPerRow - elements.size % itemsPerRow) { { } }
     } else {
@@ -169,7 +176,7 @@ internal fun TiledRow(modifier: Modifier = Modifier, height: Dp = 48.dp, itemsPe
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun TileTextBox(
+fun TileTextBox(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -252,7 +259,7 @@ internal fun TileTextBox(
 }
 
 @Composable
-internal fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entries: List<String>, onEntryClick: (Int) -> Unit) {
+fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entries: List<String>, onEntryClick: (Int) -> Unit) {
     var menuVisible by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
@@ -297,7 +304,7 @@ internal fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entr
 }
 
 @Composable
-internal fun TileOption(
+fun TileOption(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onSelect: () -> Unit,

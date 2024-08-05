@@ -11,6 +11,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import me.abhigya.bourbon.core.ui.components.TileCard
+import me.abhigya.bourbon.core.ui.components.TileDropDown
+import me.abhigya.bourbon.core.ui.components.TileSeparator
+import me.abhigya.bourbon.core.ui.components.TileTextBox
+import me.abhigya.bourbon.core.ui.components.TiledRow
 
 @Deprecated("Use WeighStepScreen and HeightStepScreen instead")
 object WeightHeightStepScreen : StepScreen {

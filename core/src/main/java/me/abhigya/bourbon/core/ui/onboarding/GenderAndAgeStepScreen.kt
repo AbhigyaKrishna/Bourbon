@@ -19,6 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import me.abhigya.bourbon.core.ui.components.Scale
+import me.abhigya.bourbon.core.ui.components.TileCard
+import me.abhigya.bourbon.core.ui.components.TileLabel
+import me.abhigya.bourbon.core.ui.components.TileOption
+import me.abhigya.bourbon.core.ui.components.TileSeparator
+import me.abhigya.bourbon.core.ui.components.TiledRow
 import me.abhigya.bourbon.domain.entities.Gender
 
 object GenderAndAgeStepScreen : StepScreen {
@@ -44,7 +49,7 @@ object GenderAndAgeStepScreen : StepScreen {
         currentGender: Gender,
         onGenderChanged: (Gender) -> Unit = {},
     ) {
-        Label(text = "Gender")
+        TileLabel(text = "Gender")
         TiledRow(elements = Gender.entries.map {
             {
                 val genderSelected = currentGender == it
@@ -79,7 +84,7 @@ object GenderAndAgeStepScreen : StepScreen {
         currentAge: Int,
         onAgeChanged: (Int) -> Unit = {}
     ) {
-        Label(text = "Age")
+        TileLabel(text = "Age")
         TiledRow(height = 350.dp, elements = listOf(
             {
                 Scale(
