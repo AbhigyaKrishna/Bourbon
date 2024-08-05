@@ -139,7 +139,7 @@ object OnBoardingScreen : AppScreen {
         OnBoardingContract.Step.BmiScale -> BmiScaleStepScreen
         OnBoardingContract.Step.GoalAndAim -> GoalAndAimStepScreen
         OnBoardingContract.Step.Training -> TrainingStepScreen
-//            OnBoardingContract.Step.ActivityLevel -> TODO()
+        OnBoardingContract.Step.ActivityLevel -> ActivityLevelStepScreen
 //            OnBoardingContract.Step.Diet -> TODO()
 //            OnBoardingContract.Step.MealFrequency -> TODO()
         else -> object : StepScreen {

@@ -121,9 +121,12 @@ fun TileSeparator(modifier: Modifier = Modifier, thickness: Dp = 3.dp) {
 }
 
 @Composable
-fun TileLabel(text: String) {
+fun TileLabel(
+    modifier: Modifier = Modifier,
+    text: String
+) {
     Text(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(start = 8.dp, top = 2.dp),
         text = text,

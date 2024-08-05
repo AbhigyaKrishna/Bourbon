@@ -8,6 +8,7 @@ import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import me.abhigya.bourbon.core.ui.AddRemove
+import me.abhigya.bourbon.domain.entities.ActivityLevel
 import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Days
 import me.abhigya.bourbon.domain.entities.DefaultTraining
@@ -46,6 +47,7 @@ object OnBoardingContract {
         val aimWeight: Kilograms = Kilograms(0),
         val training: Set<DefaultTraining> = mutableSetOf(),
         val workoutDays: Set<Days> = mutableSetOf(),
+        val activityLevel: ActivityLevel = ActivityLevel.Sedentary,
     )
 
     sealed interface Inputs {
@@ -58,6 +60,7 @@ object OnBoardingContract {
         data class AimWeightChanged(val weight: Kilograms) : Inputs
         data class TrainingChanged(val training: AddRemove<DefaultTraining>) : Inputs
         data class WorkoutDaysChanged(val days: AddRemove<Days>) : Inputs
+        data class ActivityLevelChanged(val activityLevel: ActivityLevel) : Inputs
         data object NextButton : Inputs
     }
 
@@ -108,6 +111,7 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
                     is AddRemove.Remove -> updateState { it.copy(workoutDays = it.workoutDays - days.item) }
                 }
             }
+            is OnBoardingContract.Inputs.ActivityLevelChanged -> updateState { it.copy(activityLevel = input.activityLevel) }
             is OnBoardingContract.Inputs.NextButton -> {
                 val nextStep = getCurrentState().step.next
                 if (nextStep != null) {

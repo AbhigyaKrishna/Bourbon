@@ -43,3 +43,9 @@ enum class DefaultTraining {
     Core,
     Legs
 }
+
+enum class ActivityLevel {
+    Sedentary,
+    Moderate,
+    Active,
+}
