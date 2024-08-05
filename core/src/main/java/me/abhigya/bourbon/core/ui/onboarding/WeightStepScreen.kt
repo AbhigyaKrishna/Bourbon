@@ -14,28 +14,23 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import me.abhigya.bourbon.core.ui.components.CircularScale
 import me.abhigya.bourbon.core.utils.systemBarsPadding
+import me.abhigya.bourbon.domain.entities.Kilograms
 import kotlin.math.roundToInt
 
 object WeightStepScreen : StepScreen {
 
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
-        var weight by remember { mutableIntStateOf(0) }
         WeightScreenContent(
-            currentWeight = weight,
+            currentWeight = uiState.value.weight.value,
             onWeightChanged = {
-                weight = it
-                viewModel.trySend(OnBoardingContract.Inputs.WeightChanged(uiState.value.weight.copy(value = it)))
+                viewModel.trySend(OnBoardingContract.Inputs.WeightChanged(Kilograms(it)))
             }
         )
     }

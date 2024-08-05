@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import me.abhigya.bourbon.core.ui.components.Scale
 import me.abhigya.bourbon.core.utils.systemBarsPadding
+import me.abhigya.bourbon.domain.entities.Centimeters
 
 object HeightStepScreen : StepScreen {
     @Composable
@@ -46,7 +47,7 @@ object HeightStepScreen : StepScreen {
         HeightScreenContent(
             currentHeight = uiState.value.height.value,
             onHeightChange = {
-                viewModel.trySend(OnBoardingContract.Inputs.HeightChanged(uiState.value.height.copy(value = it)))
+                viewModel.trySend(OnBoardingContract.Inputs.HeightChanged(Centimeters(it)))
             }
         )
     }

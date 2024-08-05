@@ -33,7 +33,7 @@ enum class BmiCategory(
 
 }
 
-fun calculateBmi(weightInKg: Int, heightInCm: Int): Double {
-    val heightInMeter = heightInCm / 100.0
-    return weightInKg / (heightInMeter * heightInMeter)
+fun calculateBmi(weight: Kilograms, height: Centimeters): Double {
+    val heightInMeter = height.value / 100.0
+    return weight.value / (heightInMeter * heightInMeter)
 }

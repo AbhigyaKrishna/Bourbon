@@ -35,7 +35,7 @@ object BmiScaleStepScreen : StepScreen {
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
         TileCard {
-            BmiScaleContent(bmi = calculateBmi(uiState.value.weight.value, uiState.value.height.value))
+            BmiScaleContent(bmi = calculateBmi(uiState.value.weight, uiState.value.height))
         }
     }
 

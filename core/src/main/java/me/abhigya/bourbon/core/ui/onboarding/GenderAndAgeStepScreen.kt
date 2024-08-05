@@ -31,7 +31,7 @@ object GenderAndAgeStepScreen : StepScreen {
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
         TileCard {
-            GenderAndAgeCard(uiState.value.gender) {
+            GenderCard(uiState.value.gender) {
                 viewModel.trySend(OnBoardingContract.Inputs.GenderChanged(it))
             }
 
@@ -45,7 +45,7 @@ object GenderAndAgeStepScreen : StepScreen {
     }
 
     @Composable
-    internal fun GenderAndAgeCard(
+    internal fun GenderCard(
         currentGender: Gender,
         onGenderChanged: (Gender) -> Unit = {},
     ) {

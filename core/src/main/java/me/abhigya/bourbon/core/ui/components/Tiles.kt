@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -259,14 +260,19 @@ fun TileTextBox(
 }
 
 @Composable
-fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entries: List<String>, onEntryClick: (Int) -> Unit) {
+fun TileDropDown(
+    modifier: Modifier = Modifier,
+    selected: Int,
+    entries: List<String>,
+    arrowTint: Color = MaterialTheme.colorScheme.background,
+    textColor: Color = MaterialTheme.colorScheme.background,
+    onEntryClick: (Int) -> Unit
+) {
     var menuVisible by remember { mutableStateOf(false) }
     Row(
         modifier = modifier
-            .background(
-                color = MaterialTheme.colorScheme.primary,
-                shape = RoundedCornerShape(4.dp)
-            )
+            .fillMaxSize()
+            .clip(RoundedCornerShape(4.dp))
             .clickable {
                 menuVisible = !menuVisible
             },
@@ -276,13 +282,13 @@ fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entries: List
         Text(
             modifier = Modifier.animateContentSize(),
             text = entries[selected],
-            color = MaterialTheme.colorScheme.background
+            color = textColor
         )
         VerticalDivider(thickness = 4.dp)
         Icon(
             imageVector = if (menuVisible) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
             contentDescription = "Dropdown",
-            tint = MaterialTheme.colorScheme.background,
+            tint = arrowTint,
             modifier = Modifier.size(16.dp)
         )
     }

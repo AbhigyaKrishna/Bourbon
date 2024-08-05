@@ -22,7 +22,7 @@ value class Centimeters(val value: Int = 0)
 
 @Serializable
 @JvmInline
-value class Kilograms(val value: Float = 0f)
+value class Kilograms(val value: Int = 0)
 
 enum class Gender {
     Male,
