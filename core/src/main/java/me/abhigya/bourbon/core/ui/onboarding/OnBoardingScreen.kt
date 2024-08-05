@@ -124,7 +124,7 @@ object OnBoardingScreen : AppScreen {
                                 animationSpec = tween(300)
                             )
                         ) {
-                            RenderScreen(step, viewModel, uiState)
+                            getScreen(step)(viewModel, uiState)
                         }
                     }
                 }
@@ -132,19 +132,21 @@ object OnBoardingScreen : AppScreen {
         }
     }
 
-    @Composable
-    internal fun RenderScreen(step: OnBoardingContract.Step, viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
-        when (step) {
-            OnBoardingContract.Step.Weight -> WeightStepScreen(viewModel, uiState)
-            OnBoardingContract.Step.Height -> HeightStepScreen(viewModel, uiState)
-            OnBoardingContract.Step.GenderAndAge -> GenderAndAgeStepScreen(viewModel, uiState)
-//            OnBoardingContract.Step.CircularBmiScale -> TODO()
+    private fun getScreen(step: OnBoardingContract.Step): StepScreen = when (step) {
+        OnBoardingContract.Step.Weight -> WeightStepScreen
+        OnBoardingContract.Step.Height -> HeightStepScreen
+        OnBoardingContract.Step.GenderAndAge -> GenderAndAgeStepScreen
+        OnBoardingContract.Step.BmiScale -> BmiScaleStepScreen
 //            OnBoardingContract.Step.GoalAndAim -> TODO()
 //            OnBoardingContract.Step.Training -> TODO()
 //            OnBoardingContract.Step.ActivityLevel -> TODO()
 //            OnBoardingContract.Step.Diet -> TODO()
 //            OnBoardingContract.Step.MealFrequency -> TODO()
-            else -> Unit
+        else -> object : StepScreen {
+            @Composable
+            override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
+
+            }
         }
     }
 
