@@ -7,7 +7,6 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
-import me.abhigya.bourbon.domain.entities.AgeGroup
 import me.abhigya.bourbon.domain.entities.Gender
 import org.koin.dsl.module
 
@@ -18,11 +17,25 @@ class OnBoardingViewModel(
 
 object OnBoardingContract {
 
+    enum class Step {
+        Weight,
+        Height,
+        GenderAndAge,
+        BmiScale,
+        GoalAndAim,
+        Training,
+        ActivityLevel,
+        Diet,
+        MealFrequency,
+        ;
+    }
+
     data class State(
+        val step: Step = Step.Weight,
         val weight: Weight = Weight(),
         val height: Height = Height(),
         val gender: Gender = Gender.Male,
-        val ageGroup: AgeGroup = AgeGroup._18_29
+        val age: Int = 0
     )
 
     enum class WeightUnit(private val display: String) {
@@ -46,10 +59,11 @@ object OnBoardingContract {
     data class Height(val value: Int = 0, val unit: HeightUnit = HeightUnit.Centimeters)
 
     sealed interface Inputs {
+        data class ChangeStep(val step: Step) : Inputs
         data class WeightChanged(val weight: Weight) : Inputs
         data class HeightChanged(val height: Height) : Inputs
         data class GenderChanged(val gender: Gender) : Inputs
-        data class AgeGroupChanged(val ageGroup: AgeGroup): Inputs
+        data class AgeChanged(val age: Int): Inputs
         data object NextButton : Inputs
     }
 
@@ -81,11 +95,21 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
         input: OnBoardingContract.Inputs
     ) {
         when (input) {
+            is OnBoardingContract.Inputs.ChangeStep -> updateState { it.copy(step = input.step) }
             is OnBoardingContract.Inputs.WeightChanged -> updateState { it.copy(weight = input.weight) }
             is OnBoardingContract.Inputs.HeightChanged -> updateState { it.copy(height = input.height) }
             is OnBoardingContract.Inputs.GenderChanged -> updateState { it.copy(gender = input.gender) }
-            is OnBoardingContract.Inputs.AgeGroupChanged -> updateState { it.copy(ageGroup = input.ageGroup) }
-            is OnBoardingContract.Inputs.NextButton -> { }
+            is OnBoardingContract.Inputs.AgeChanged -> updateState { it.copy(age = input.age) }
+            is OnBoardingContract.Inputs.NextButton -> {
+                val nextStep = getCurrentState().step.next
+                if (nextStep != null) {
+                    updateState { it.copy(step = nextStep) }
+                } else {
+                    // TODO
+                }
+            }
         }
     }
 }
+
+val OnBoardingContract.Step.next get() = OnBoardingContract.Step.entries.getOrNull(ordinal + 1)

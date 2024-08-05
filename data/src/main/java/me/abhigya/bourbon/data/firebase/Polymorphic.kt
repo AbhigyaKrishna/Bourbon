@@ -1,6 +1,7 @@
 package me.abhigya.bourbon.data.firebase
 
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
@@ -54,6 +55,7 @@ internal fun <T> FirebaseDecoder.decodeSerializableValuePolymorphic(
     return actualDeserializer.deserialize(this)
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 internal fun SerialDescriptor.classDiscriminator(): String {
     // Plain loop is faster than allocation of Sequence or ArrayList
     // We can rely on the fact that only one FirebaseClassDiscriminator is present —

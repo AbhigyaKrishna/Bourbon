@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -125,9 +126,9 @@ internal fun Label(text: String) {
 }
 
 @Composable
-internal fun TiledRow(modifier: Modifier = Modifier, itemsPerRow: Int = 2, elements: List<(@Composable BoxScope.() -> Unit)>) {
+internal fun TiledRow(modifier: Modifier = Modifier, height: Dp = 48.dp, itemsPerRow: Int = 2, elements: List<(@Composable BoxScope.() -> Unit)>) {
     val e = if (elements.size % itemsPerRow != 0) {
-        elements + List(itemsPerRow - elements.size % itemsPerRow) { {} }
+        elements + List(itemsPerRow - elements.size % itemsPerRow) { { } }
     } else {
         elements
     }
@@ -141,22 +142,20 @@ internal fun TiledRow(modifier: Modifier = Modifier, itemsPerRow: Int = 2, eleme
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(48.dp),
-                horizontalArrangement = Arrangement.Center,
+                    .height(height),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                for ((idx, element) in row.withIndex()) {
+                for (element in row) {
                     Box(
                         modifier = modifier
-                            .fillMaxSize()
+                            .fillMaxWidth(0.96f)
+                            .fillMaxHeight()
                             .clip(RoundedCornerShape(4.dp))
-                            .weight(1f),
+                            .weight(1f, false),
                         contentAlignment = Alignment.Center
                     ) {
                         element()
-                    }
-                    if (idx != row.size - 1) {
-                        VerticalDivider(thickness = (40 / itemsPerRow).dp)
                     }
                 }
             }
@@ -274,7 +273,7 @@ internal fun TileDropDown(modifier: Modifier = Modifier, selected: Int = 0, entr
         )
         VerticalDivider(thickness = 4.dp)
         Icon(
-            imageVector = Icons.Filled.KeyboardArrowDown,
+            imageVector = if (menuVisible) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
             contentDescription = "Dropdown",
             tint = MaterialTheme.colorScheme.background,
             modifier = Modifier.size(16.dp)
