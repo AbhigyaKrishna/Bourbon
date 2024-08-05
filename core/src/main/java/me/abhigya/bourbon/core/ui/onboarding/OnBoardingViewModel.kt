@@ -38,6 +38,14 @@ object OnBoardingContract {
         ;
     }
 
+    enum class DefaultTraining {
+        Arms,
+        Chest,
+        Shoulder,
+        Core,
+        Legs
+    }
+
     data class State(
         val step: Step = Step.Weight,
         val weight: Kilograms = Kilograms(40),
@@ -46,6 +54,7 @@ object OnBoardingContract {
         val age: Int = 0,
         val goal: Goals = Goals.WeightLoss,
         val aimWeight: Kilograms = Kilograms(0),
+        val training: Set<DefaultTraining> = mutableSetOf(),
     )
 
     sealed interface Inputs {
@@ -53,9 +62,14 @@ object OnBoardingContract {
         data class WeightChanged(val weight: Kilograms) : Inputs
         data class HeightChanged(val height: Centimeters) : Inputs
         data class GenderChanged(val gender: Gender) : Inputs
-        data class AgeChanged(val age: Int): Inputs
-        data class GoalChanged(val goal: Goals): Inputs
-        data class AimWeightChanged(val weight: Kilograms): Inputs
+        data class AgeChanged(val age: Int) : Inputs
+        data class GoalChanged(val goal: Goals) : Inputs
+        data class AimWeightChanged(val weight: Kilograms) : Inputs
+        data class TrainingChanged(val training: AddRemove) : Inputs {
+            sealed interface AddRemove
+            data class Add(val training: DefaultTraining) : AddRemove
+            data class Remove(val training: DefaultTraining) : AddRemove
+        }
         data object NextButton : Inputs
     }
 
@@ -94,6 +108,12 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
             is OnBoardingContract.Inputs.AgeChanged -> updateState { it.copy(age = input.age) }
             is OnBoardingContract.Inputs.GoalChanged -> updateState { it.copy(goal = input.goal) }
             is OnBoardingContract.Inputs.AimWeightChanged -> updateState { it.copy(aimWeight = input.weight) }
+            is OnBoardingContract.Inputs.TrainingChanged -> {
+                when (val training = input.training) {
+                    is OnBoardingContract.Inputs.TrainingChanged.Add -> updateState { it.copy(training = it.training + training.training) }
+                    is OnBoardingContract.Inputs.TrainingChanged.Remove -> updateState { it.copy(training = it.training - training.training) }
+                }
+            }
             is OnBoardingContract.Inputs.NextButton -> {
                 val nextStep = getCurrentState().step.next
                 if (nextStep != null) {

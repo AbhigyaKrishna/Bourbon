@@ -57,7 +57,10 @@ object GenderAndAgeStepScreen : StepScreen {
                     modifier = Modifier
                         .matchParentSize(),
                     isSelected = genderSelected,
-                    onSelect = { onGenderChanged(it) }
+                    onClick = {
+                        if (genderSelected) return@TileOption
+                        onGenderChanged(it)
+                    }
                 ) {
                     Row(
                         modifier = Modifier

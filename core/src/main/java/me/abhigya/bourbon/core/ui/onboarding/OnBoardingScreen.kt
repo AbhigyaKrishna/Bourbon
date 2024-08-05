@@ -138,7 +138,7 @@ object OnBoardingScreen : AppScreen {
         OnBoardingContract.Step.GenderAndAge -> GenderAndAgeStepScreen
         OnBoardingContract.Step.BmiScale -> BmiScaleStepScreen
         OnBoardingContract.Step.GoalAndAim -> GoalAndAimStepScreen
-//            OnBoardingContract.Step.Training -> TODO()
+        OnBoardingContract.Step.Training -> TrainingStepScreen
 //            OnBoardingContract.Step.ActivityLevel -> TODO()
 //            OnBoardingContract.Step.Diet -> TODO()
 //            OnBoardingContract.Step.MealFrequency -> TODO()

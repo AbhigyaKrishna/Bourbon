@@ -3,6 +3,7 @@ package me.abhigya.bourbon.core.ui.components
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -312,26 +313,35 @@ fun TileDropDown(
 @Composable
 fun TileOption(
     modifier: Modifier = Modifier,
-    isSelected: Boolean = false,
-    onSelect: () -> Unit,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    outlined: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
     Box(
         modifier = modifier
+            .clip(RoundedCornerShape(4.dp))
             .run {
                 if (isSelected) {
                     background(
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(4.dp)
+                        color = MaterialTheme.colorScheme.primary
                     )
                 } else {
                     this
                 }
             }
-            .clickable {
-                if (isSelected) return@clickable
-                onSelect()
-            },
+            .run {
+                if (outlined) {
+                    border(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(4.dp),
+                        width = 1.dp
+                    )
+                } else {
+                    this
+                }
+            }
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         content()
