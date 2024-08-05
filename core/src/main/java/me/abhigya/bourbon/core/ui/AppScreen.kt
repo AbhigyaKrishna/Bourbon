@@ -9,3 +9,8 @@ interface AppScreen : KoinComponent {
     operator fun invoke()
 
 }
+
+sealed interface AddRemove<T> {
+    data class Add<T>(val item: T) : AddRemove<T>
+    data class Remove<T>(val item: T) : AddRemove<T>
+}

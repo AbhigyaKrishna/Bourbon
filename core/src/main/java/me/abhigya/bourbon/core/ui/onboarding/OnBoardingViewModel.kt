@@ -7,8 +7,12 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import me.abhigya.bourbon.core.ui.AddRemove
 import me.abhigya.bourbon.domain.entities.Centimeters
+import me.abhigya.bourbon.domain.entities.Days
+import me.abhigya.bourbon.domain.entities.DefaultTraining
 import me.abhigya.bourbon.domain.entities.Gender
+import me.abhigya.bourbon.domain.entities.Goals
 import me.abhigya.bourbon.domain.entities.Kilograms
 import org.koin.dsl.module
 
@@ -31,20 +35,6 @@ object OnBoardingContract {
         MealFrequency,
         ;
     }
-    enum class Goals {
-        WeightLoss,
-        WeightGain,
-        GainMuscles,
-        ;
-    }
-
-    enum class DefaultTraining {
-        Arms,
-        Chest,
-        Shoulder,
-        Core,
-        Legs
-    }
 
     data class State(
         val step: Step = Step.Weight,
@@ -55,6 +45,7 @@ object OnBoardingContract {
         val goal: Goals = Goals.WeightLoss,
         val aimWeight: Kilograms = Kilograms(0),
         val training: Set<DefaultTraining> = mutableSetOf(),
+        val workoutDays: Set<Days> = mutableSetOf(),
     )
 
     sealed interface Inputs {
@@ -65,11 +56,8 @@ object OnBoardingContract {
         data class AgeChanged(val age: Int) : Inputs
         data class GoalChanged(val goal: Goals) : Inputs
         data class AimWeightChanged(val weight: Kilograms) : Inputs
-        data class TrainingChanged(val training: AddRemove) : Inputs {
-            sealed interface AddRemove
-            data class Add(val training: DefaultTraining) : AddRemove
-            data class Remove(val training: DefaultTraining) : AddRemove
-        }
+        data class TrainingChanged(val training: AddRemove<DefaultTraining>) : Inputs
+        data class WorkoutDaysChanged(val days: AddRemove<Days>) : Inputs
         data object NextButton : Inputs
     }
 
@@ -110,8 +98,14 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
             is OnBoardingContract.Inputs.AimWeightChanged -> updateState { it.copy(aimWeight = input.weight) }
             is OnBoardingContract.Inputs.TrainingChanged -> {
                 when (val training = input.training) {
-                    is OnBoardingContract.Inputs.TrainingChanged.Add -> updateState { it.copy(training = it.training + training.training) }
-                    is OnBoardingContract.Inputs.TrainingChanged.Remove -> updateState { it.copy(training = it.training - training.training) }
+                    is AddRemove.Add -> updateState { it.copy(training = it.training + training.item) }
+                    is AddRemove.Remove -> updateState { it.copy(training = it.training - training.item) }
+                }
+            }
+            is OnBoardingContract.Inputs.WorkoutDaysChanged -> {
+                when (val days = input.days) {
+                    is AddRemove.Add -> updateState { it.copy(workoutDays = it.workoutDays + days.item) }
+                    is AddRemove.Remove -> updateState { it.copy(workoutDays = it.workoutDays - days.item) }
                 }
             }
             is OnBoardingContract.Inputs.NextButton -> {

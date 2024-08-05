@@ -28,3 +28,18 @@ enum class Gender {
     Male,
     Female
 }
+
+enum class Goals {
+    WeightLoss,
+    WeightGain,
+    GainMuscles,
+    ;
+}
+
+enum class DefaultTraining {
+    Arms,
+    Chest,
+    Shoulder,
+    Core,
+    Legs
+}

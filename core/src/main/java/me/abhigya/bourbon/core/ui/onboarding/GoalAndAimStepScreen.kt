@@ -29,6 +29,7 @@ import me.abhigya.bourbon.core.ui.components.TileDropDown
 import me.abhigya.bourbon.core.ui.components.TileLabel
 import me.abhigya.bourbon.core.ui.components.TileTextBox
 import me.abhigya.bourbon.core.ui.components.TiledRow
+import me.abhigya.bourbon.domain.entities.Goals
 import me.abhigya.bourbon.domain.entities.Kilograms
 import me.abhigya.bourbon.domain.entities.calculateBmi
 
@@ -90,8 +91,8 @@ object GoalAndAimStepScreen : StepScreen {
 
     @Composable
     internal fun GoalCard(
-        goal: OnBoardingContract.Goals,
-        onGoalChanged: (OnBoardingContract.Goals) -> Unit,
+        goal: Goals,
+        onGoalChanged: (Goals) -> Unit,
         aimWeight: Int,
         onAimWeightChanged: (Int) -> Unit,
     ) {
@@ -101,8 +102,8 @@ object GoalAndAimStepScreen : StepScreen {
                 {
                     TileDropDown(
                         selected = goal.ordinal,
-                        entries = OnBoardingContract.Goals.entries.map { it.toString() },
-                        onEntryClick = { onGoalChanged(OnBoardingContract.Goals.entries[it]) },
+                        entries = Goals.entries.map { it.toString() },
+                        onEntryClick = { onGoalChanged(Goals.entries[it]) },
                         arrowTint = MaterialTheme.colorScheme.primary,
                         textColor = Color.White,
                     )
