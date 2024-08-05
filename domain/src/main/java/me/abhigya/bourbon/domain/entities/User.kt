@@ -49,3 +49,9 @@ enum class ActivityLevel {
     Moderate,
     Active,
 }
+
+enum class DietPreference(val display: String) {
+    Vegetarian("Veg"),
+    NonVegetarian("Non-Veg"),
+    ;
+}

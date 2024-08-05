@@ -140,14 +140,8 @@ object OnBoardingScreen : AppScreen {
         OnBoardingContract.Step.GoalAndAim -> GoalAndAimStepScreen
         OnBoardingContract.Step.Training -> TrainingStepScreen
         OnBoardingContract.Step.ActivityLevel -> ActivityLevelStepScreen
-//            OnBoardingContract.Step.Diet -> TODO()
-//            OnBoardingContract.Step.MealFrequency -> TODO()
-        else -> object : StepScreen {
-            @Composable
-            override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
-
-            }
-        }
+        OnBoardingContract.Step.Diet -> DietStepScreen
+        OnBoardingContract.Step.MealFrequency -> MealFrequencyStepScreen
     }
 
 }

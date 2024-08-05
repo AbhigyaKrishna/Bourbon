@@ -12,6 +12,7 @@ import me.abhigya.bourbon.domain.entities.ActivityLevel
 import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Days
 import me.abhigya.bourbon.domain.entities.DefaultTraining
+import me.abhigya.bourbon.domain.entities.DietPreference
 import me.abhigya.bourbon.domain.entities.Gender
 import me.abhigya.bourbon.domain.entities.Goals
 import me.abhigya.bourbon.domain.entities.Kilograms
@@ -37,6 +38,11 @@ object OnBoardingContract {
         ;
     }
 
+    enum class DietGuide(val display: String) {
+        PreMade("Pre-Made"),
+        Create("Create"),
+    }
+
     data class State(
         val step: Step = Step.Weight,
         val weight: Kilograms = Kilograms(40),
@@ -48,6 +54,9 @@ object OnBoardingContract {
         val training: Set<DefaultTraining> = mutableSetOf(),
         val workoutDays: Set<Days> = mutableSetOf(),
         val activityLevel: ActivityLevel = ActivityLevel.Sedentary,
+        val dietGuide: DietGuide = DietGuide.PreMade,
+        val dietPreference: DietPreference = DietPreference.Vegetarian,
+        val mealFrequency: Int = 1,
     )
 
     sealed interface Inputs {
@@ -61,6 +70,9 @@ object OnBoardingContract {
         data class TrainingChanged(val training: AddRemove<DefaultTraining>) : Inputs
         data class WorkoutDaysChanged(val days: AddRemove<Days>) : Inputs
         data class ActivityLevelChanged(val activityLevel: ActivityLevel) : Inputs
+        data class DietGuideChanged(val dietGuide: DietGuide) : Inputs
+        data class DietPreferenceChanged(val dietPreference: DietPreference) : Inputs
+        data class MealFrequencyChanged(val frequency: Int) : Inputs
         data object NextButton : Inputs
     }
 
@@ -112,6 +124,9 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
                 }
             }
             is OnBoardingContract.Inputs.ActivityLevelChanged -> updateState { it.copy(activityLevel = input.activityLevel) }
+            is OnBoardingContract.Inputs.DietGuideChanged -> updateState { it.copy(dietGuide = input.dietGuide) }
+            is OnBoardingContract.Inputs.DietPreferenceChanged -> updateState { it.copy(dietPreference = input.dietPreference) }
+            is OnBoardingContract.Inputs.MealFrequencyChanged -> updateState { it.copy(mealFrequency = input.frequency.coerceIn(1..8)) }
             is OnBoardingContract.Inputs.NextButton -> {
                 val nextStep = getCurrentState().step.next
                 if (nextStep != null) {
