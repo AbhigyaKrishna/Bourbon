@@ -26,6 +26,8 @@ import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.auth.AuthScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
+import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
+import me.abhigya.bourbon.core.ui.splash.SplashStartScreen
 import me.abhigya.bourbon.domain.UserRepository
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -58,6 +60,8 @@ object RouterScreen : AppScreen {
                         }
                     ) { targetState ->
                         when (targetState) {
+                            RoutePath.SPLASH_START -> SplashStartScreen()
+                            RoutePath.SPLASH_AFTER_ONBOARDING -> SplashAfterOnboardScreen()
                             RoutePath.HOME -> HomeScreen()
                             RoutePath.AUTH -> AuthScreen()
                             RoutePath.ONBOARDING -> OnBoardingScreen()
@@ -73,8 +77,10 @@ object RouterScreen : AppScreen {
             val user = get<UserRepository> { parametersOf(currentContext) }
             delay(100)
             user.signOut().single()
-            if (user.isLoggedIn().single().not()) {
+            if (!user.isLoggedIn().single()) {
                 viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.AUTH.directions().build()))
+            } else {
+                viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.HOME.directions().build()))
             }
         }
     }
