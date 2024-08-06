@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.router.LocalRouter
+import me.abhigya.bourbon.core.utils.bouncyClick
 import me.abhigya.bourbon.core.utils.navigationBarsPadding
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 import org.koin.core.component.get
@@ -110,6 +111,7 @@ object OnBoardingScreen : AppScreen {
                                 color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(4.dp)
                             )
+                            .bouncyClick()
                             .clickable {
                                 val page =
                                     STEP_COUPLE.indexOfFirst { it.contains(uiState.value.step) }

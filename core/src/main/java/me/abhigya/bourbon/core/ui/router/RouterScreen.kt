@@ -35,6 +35,12 @@ import org.koin.core.parameter.parametersOf
 
 object RouterScreen : AppScreen {
 
+    private val excludedDirections = listOf(
+        RoutePath.SPLASH_START.directions().build(),
+        RoutePath.SPLASH_AFTER_ONBOARDING.directions().build(),
+        RoutePath.ONBOARDING.directions().build(),
+    )
+
     @Composable
     override operator fun invoke() {
         val currentContext = LocalContext.current
@@ -72,7 +78,7 @@ object RouterScreen : AppScreen {
                 notFound = { }
             )
 
-            BackHandler(routerState.size > 1 && routerState.last() != RoutePath.ONBOARDING.directions()) {
+            BackHandler(routerState.size > 1 && routerState.last().originalDestinationUrl !in excludedDirections) {
                 viewModel.trySend(RouterContract.Inputs.GoBack())
             }
         }
@@ -83,7 +89,7 @@ object RouterScreen : AppScreen {
             delay(100)
             user.signOut().single()
             if (!user.isLoggedIn().single()) {
-                viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.AUTH.directions().build()))
+                viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.AUTH.directions().build()))
             } else {
                 viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.HOME.directions().build()))
             }
