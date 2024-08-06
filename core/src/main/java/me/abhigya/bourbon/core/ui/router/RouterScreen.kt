@@ -1,5 +1,6 @@
 package me.abhigya.bourbon.core.ui.router
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
@@ -70,6 +71,10 @@ object RouterScreen : AppScreen {
                 },
                 notFound = { }
             )
+
+            BackHandler(routerState.size > 1 && routerState.last() != RoutePath.ONBOARDING.directions()) {
+                viewModel.trySend(RouterContract.Inputs.GoBack())
+            }
         }
 
 

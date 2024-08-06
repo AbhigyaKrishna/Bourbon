@@ -1,5 +1,6 @@
 package me.abhigya.bourbon.core.ui.onboarding
 
+import android.media.AudioManager
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,11 +14,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import me.abhigya.bourbon.core.ui.components.Scale
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileLabel
@@ -30,6 +37,18 @@ object GenderAndAgeStepScreen : StepScreen {
 
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
+        val haptic = LocalHapticFeedback.current
+        val context = LocalContext.current
+
+        val audioManager = remember {
+            ContextCompat.getSystemService(context, AudioManager::class.java)
+        }
+
+        LaunchedEffect(uiState.value.age) {
+            audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, 1f)
+            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+
         TileCard {
             GenderCard(uiState.value.gender) {
                 viewModel.trySend(OnBoardingContract.Inputs.GenderChanged(it))

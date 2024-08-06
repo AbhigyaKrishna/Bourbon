@@ -11,10 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import me.abhigya.bourbon.core.ui.AppScreen
 
-class HomeScreen : AppScreen {
+object HomeScreen : AppScreen {
 
     @Composable
-    override fun invoke() {
+    override operator fun invoke() {
         Scaffold { paddingValues ->
             Box(
                 modifier = Modifier

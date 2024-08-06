@@ -5,9 +5,14 @@ import com.copperleaf.ballast.InputHandler
 import com.copperleaf.ballast.InputHandlerScope
 import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
 import me.abhigya.bourbon.core.ui.AddRemove
+import me.abhigya.bourbon.core.ui.router.RoutePath
+import me.abhigya.bourbon.core.ui.router.RouterViewModel
 import me.abhigya.bourbon.domain.entities.ActivityLevel
 import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Days
@@ -16,6 +21,7 @@ import me.abhigya.bourbon.domain.entities.DietPreference
 import me.abhigya.bourbon.domain.entities.Gender
 import me.abhigya.bourbon.domain.entities.Goals
 import me.abhigya.bourbon.domain.entities.Kilograms
+import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
 class OnBoardingViewModel(
@@ -79,17 +85,17 @@ object OnBoardingContract {
     sealed interface Events
 
     val module = module {
-        factory {
-            OnBoardingInputHandler()
+        factory { (router: RouterViewModel) ->
+            OnBoardingInputHandler(router)
         }
 
-        factory { (coroutineScope: CoroutineScope) ->
+        factory { (coroutineScope: CoroutineScope, router: RouterViewModel) ->
             OnBoardingViewModel(
                 coroutineScope,
                 get<BallastViewModelConfiguration.Builder>()
                     .withViewModel(
                         initialState = State(),
-                        inputHandler = get<OnBoardingInputHandler>(),
+                        inputHandler = get<OnBoardingInputHandler> { parametersOf(router) },
                         name = "OnBoardingScreen"
                     )
                     .build()
@@ -99,7 +105,9 @@ object OnBoardingContract {
 
 }
 
-class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardingContract.Events, OnBoardingContract.State> {
+class OnBoardingInputHandler(
+    private val router: RouterViewModel
+) : InputHandler<OnBoardingContract.Inputs, OnBoardingContract.Events, OnBoardingContract.State> {
     override suspend fun InputHandlerScope<OnBoardingContract.Inputs, OnBoardingContract.Events, OnBoardingContract.State>.handleInput(
         input: OnBoardingContract.Inputs
     ) {
@@ -132,7 +140,7 @@ class OnBoardingInputHandler : InputHandler<OnBoardingContract.Inputs, OnBoardin
                 if (nextStep != null) {
                     updateState { it.copy(step = nextStep) }
                 } else {
-                    // TODO
+                    router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.SPLASH_AFTER_ONBOARDING.directions().build()))
                 }
             }
         }

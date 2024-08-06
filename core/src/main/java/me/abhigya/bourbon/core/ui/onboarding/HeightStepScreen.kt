@@ -28,6 +28,7 @@ import androidx.core.content.ContextCompat
 import me.abhigya.bourbon.core.ui.components.Scale
 import me.abhigya.bourbon.core.utils.systemBarsPadding
 import me.abhigya.bourbon.domain.entities.Centimeters
+import kotlin.math.roundToInt
 
 object HeightStepScreen : StepScreen {
     @Composable
@@ -39,7 +40,7 @@ object HeightStepScreen : StepScreen {
             ContextCompat.getSystemService(context, AudioManager::class.java)
         }
 
-        LaunchedEffect(uiState.value.height) {
+        LaunchedEffect(uiState.value.height.value) {
             audioManager?.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD, 1f)
             haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
@@ -116,10 +117,11 @@ object HeightStepScreen : StepScreen {
                                     alignment = Alignment.CenterHorizontally
                                 ),
                             ) {
-                                val heightInFoot = currentHeight / 30.48
+                                val feet = (currentHeight * 0.0328).toInt()
+                                val inches = (currentHeight * 0.3937).roundToInt() % 12
                                 Text(
                                     modifier = Modifier.alignByBaseline(),
-                                    text = "%.1f".format(heightInFoot),
+                                    text = "$feet' $inches\"",
                                 )
                                 Text(
                                     modifier = Modifier.alignByBaseline(),

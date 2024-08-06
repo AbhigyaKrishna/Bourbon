@@ -1,5 +1,6 @@
 package me.abhigya.bourbon.core.ui.onboarding
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.AnimatedVisibility
@@ -35,7 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.utils.navigationBarsPadding
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 import org.koin.core.component.get
@@ -54,18 +57,29 @@ object OnBoardingScreen : AppScreen {
 
     @Composable
     override operator fun invoke() {
+        val router = LocalRouter.current
         val coroutineScope = rememberCoroutineScope()
-        val viewModel: OnBoardingViewModel = remember(coroutineScope) { get { parametersOf(coroutineScope) } }
+        val viewModel: OnBoardingViewModel = remember(coroutineScope) { get { parametersOf(coroutineScope, router) } }
         val uiState = viewModel.observeStates().collectAsState()
         var currPage by remember { mutableIntStateOf(0) }
 
+        BackHandler {
+            if (currPage > 0) {
+                currPage--
+            } else {
+                router.trySend(RouterContract.Inputs.GoBack())
+            }
+        }
+
         Scaffold(
             topBar = {
-                if (currPage > 0) {
+                AnimatedVisibility(
+                    visible = currPage > 0
+                ) {
                     Row(
                         modifier = Modifier
                             .statusBarsPadding()
-                            .padding(horizontal = 20.dp)
+                            .padding(horizontal = 20.dp, vertical = 8.dp)
                             .clickable {
                                 if (currPage > 0) {
                                     currPage--
@@ -97,10 +111,17 @@ object OnBoardingScreen : AppScreen {
                                 shape = RoundedCornerShape(4.dp)
                             )
                             .clickable {
-                                viewModel.trySend(OnBoardingContract.Inputs.NextButton)
-                                if (currPage < STEP_COUPLE.size - 1 && uiState.value.step > STEP_COUPLE[currPage].last()) {
+                                val page =
+                                    STEP_COUPLE.indexOfFirst { it.contains(uiState.value.step) }
+                                val isLast = STEP_COUPLE[page].last() == uiState.value.step
+                                if (currPage < page) {
+                                    currPage++
+                                    return@clickable
+                                }
+                                if (isLast && page < STEP_COUPLE.lastIndex) {
                                     currPage++
                                 }
+                                viewModel.trySend(OnBoardingContract.Inputs.NextButton)
                             },
                         contentAlignment = Alignment.Center
                     ) {
@@ -135,17 +156,21 @@ object OnBoardingScreen : AppScreen {
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        contentAlignment = Alignment.CenterStart
+                    AnimatedVisibility(
+                        visible = targetPage == 0
                     ) {
-                        Text(
-                            text = "Setup",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ) {
+                            Text(
+                                text = "Setup",
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold,
+                            )
+                        }
                     }
 
                     for (step in STEP_COUPLE[targetPage]) {
