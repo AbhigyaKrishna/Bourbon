@@ -22,6 +22,7 @@ google-api-client = "1.32.1"
 firebase = "33.1.2"
 firebase-gitlive = "1.13.0"
 serialization = "1.7.1"
+arsceneview = "2.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -71,6 +72,7 @@ google-id = { group = "com.google.android.libraries.identity.googleid", name = "
 google-api-client = { group = "com.google.api-client", name = "google-api-client", version.ref = "google-api-client" }
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "serialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
+arsceneview = { group = "io.github.sceneview", name = "arsceneview", version.ref = "arsceneview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
