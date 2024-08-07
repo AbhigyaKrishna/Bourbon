@@ -26,7 +26,8 @@ enum class RoutePath(
     SPLASH_AFTER_ONBOARDING("/splash/after-onboarding"),
     HOME("/home"),
     AUTH("/auth"),
-    ONBOARDING("/onboarding")
+    ONBOARDING("/onboarding"),
+    AR_SCENE("/ar-scene")
     ;
 
     override val matcher: RouteMatcher by lazy { RouteMatcher.create(routeFormat) }

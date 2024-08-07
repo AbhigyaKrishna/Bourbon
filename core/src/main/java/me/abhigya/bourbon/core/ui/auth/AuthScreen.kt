@@ -206,7 +206,7 @@ object AuthScreen : AppScreen {
                     }
 
                     ForgotPassword {
-                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.ONBOARDING.directions().build()))
+                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.AR_SCENE.directions().build()))
                     }
                 }
 

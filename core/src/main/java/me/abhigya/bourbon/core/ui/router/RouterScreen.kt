@@ -24,11 +24,14 @@ import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.single
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.ar.ArScreen
 import me.abhigya.bourbon.core.ui.auth.AuthScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
 import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
 import me.abhigya.bourbon.core.ui.splash.SplashStartScreen
+import me.abhigya.bourbon.domain.Burpee
+import me.abhigya.bourbon.domain.Models
 import me.abhigya.bourbon.domain.UserRepository
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -72,6 +75,7 @@ object RouterScreen : AppScreen {
                             RoutePath.HOME -> HomeScreen()
                             RoutePath.AUTH -> AuthScreen()
                             RoutePath.ONBOARDING -> OnBoardingScreen()
+                            RoutePath.AR_SCENE -> ArScreen(Models.Burpee)()
                         }
                     }
                 },

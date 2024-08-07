@@ -1,6 +1,7 @@
 package me.abhigya.bourbon
 
 import androidx.multidex.MultiDexApplication
+import com.google.android.filament.utils.Utils
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -16,6 +17,8 @@ class BourbonApplication : MultiDexApplication() {
             androidLogger(Level.ERROR)
             modules(modules)
         }
+
+        Utils.init()
     }
 
 }
