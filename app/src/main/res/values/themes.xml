@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Theme.Bourbon" parent="android:Theme.Material.Light.NoActionBar" />
+    
+    <style name="Theme.Bourbon.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#FFD5FF5F</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/prepare_yourself</item>
+        <item name="postSplashScreenTheme">@style/Theme.Bourbon</item>
+    </style>
 </resources>

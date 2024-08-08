@@ -2,6 +2,7 @@
 agp = "8.5.1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
+splash-screen = "1.0.1"
 multidex = "2.0.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -26,6 +27,7 @@ arsceneview = "2.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-core-splash-screen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
 androidx-multidex = { group = "androidx.multidex", name = "multidex", version.ref = "multidex" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -85,7 +87,7 @@ google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
 [bundles]
-android = ["androidx-core-ktx", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
+android = ["androidx-core-ktx", "androidx-core-splash-screen", "androidx-multidex", "androidx-lifecycle-runtime-ktx"]
 android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3", "cascade"]
 android-test = ["androidx-junit", "androidx-espresso-core"]
 android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]

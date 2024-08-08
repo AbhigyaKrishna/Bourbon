@@ -22,7 +22,7 @@ enum class RoutePath(
     override val annotations: Set<RouteAnnotation> = emptySet()
 ) : Route {
 
-    SPLASH_START("/splash/start"),
+//    SPLASH_START("/splash/start"),
     SPLASH_AFTER_ONBOARDING("/splash/after-onboarding"),
     HOME("/home"),
     AUTH("/auth"),
@@ -40,7 +40,7 @@ val RouterContract.module get() = module {
             get<BallastViewModelConfiguration.Builder>()
                 .withRouter(
                     routingTable = RoutingTable.fromEnum(RoutePath.entries),
-                    initialRoute = RoutePath.SPLASH_START
+                    initialRoute = RoutePath.HOME
                 )
                 .build()
         )

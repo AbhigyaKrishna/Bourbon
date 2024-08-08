@@ -1,4 +1,4 @@
-package me.abhigya.bourbon.core.ui
+package me.abhigya.bourbon.core.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

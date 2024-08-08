@@ -52,7 +52,7 @@ import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
-import me.abhigya.bourbon.core.ui.SemiTransparentLoadingOverlay
+import me.abhigya.bourbon.core.ui.components.SemiTransparentLoadingOverlay
 import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.ui.router.RoutePath
 import org.koin.core.component.get
