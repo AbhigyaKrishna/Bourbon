@@ -39,7 +39,7 @@ import io.github.sceneview.rememberNodes
 import io.github.sceneview.rememberOnGestureListener
 import io.github.sceneview.rememberView
 import me.abhigya.bourbon.core.ui.AppScreen
-import me.abhigya.bourbon.domain.ModelResource
+import me.abhigya.bourbon.domain.entities.ModelResource
 
 class ArScreen(
     private val model: ModelResource

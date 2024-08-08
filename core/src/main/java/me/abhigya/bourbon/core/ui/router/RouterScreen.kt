@@ -29,8 +29,8 @@ import me.abhigya.bourbon.core.ui.auth.AuthScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
 import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
-import me.abhigya.bourbon.domain.Burpee
-import me.abhigya.bourbon.domain.Models
+import me.abhigya.bourbon.domain.entities.Burpee
+import me.abhigya.bourbon.domain.entities.Models
 import me.abhigya.bourbon.domain.UserRepository
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf

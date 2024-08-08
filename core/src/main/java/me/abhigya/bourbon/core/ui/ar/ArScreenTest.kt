@@ -44,8 +44,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.utils.bouncyClick
-import me.abhigya.bourbon.domain.ModelResource
-import me.abhigya.bourbon.domain.create
+import me.abhigya.bourbon.domain.entities.ModelResource
+import me.abhigya.bourbon.domain.entities.create
 
 class ArScreenTest(
     private val resource: ModelResource
