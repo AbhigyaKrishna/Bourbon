@@ -7,6 +7,7 @@ plugins {
     bourbon.`di-conventions`
     bourbon.`android-composable-conventions`
     alias(libs.plugins.google.services)
+    alias(libs.plugins.google.secrets.gradle.plugin)
 }
 
 group = rootProject.group
@@ -61,6 +62,10 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     lint {
         checkDependencies = true
         checkReleaseBuilds = true
@@ -85,7 +90,10 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(libs.bundles.android)
+    annotationProcessor(libs.glide.compiler)
+    implementation(libs.firebase.ui.storage)
     implementation(libs.koin)
+    implementation(libs.generative.ai)
     testImplementation(libs.junit)
     testImplementation(libs.ballast.test)
     androidTestImplementation(libs.bundles.android.test)

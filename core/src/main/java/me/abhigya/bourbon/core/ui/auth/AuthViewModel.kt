@@ -80,12 +80,12 @@ object AuthContract {
     }
 
     val module = module {
-        factory { (context: Context) ->
-            AuthInputHandler(get { parametersOf(context) })
+        factory {
+            AuthInputHandler(get())
         }
 
         factory { (router: RouterViewModel, context: Context) ->
-            AuthEventsHandler(context, router, get { parametersOf(context) })
+            AuthEventsHandler(context, router, get())
         }
 
         viewModel { (coroutineScope: CoroutineScope, router: RouterViewModel, context: Context) ->
@@ -94,7 +94,7 @@ object AuthContract {
                 get<BallastViewModelConfiguration.Builder>()
                     .withViewModel(
                         initialState = State(authType = AuthType.LOGIN),
-                        inputHandler = get<AuthInputHandler> { parametersOf(context) },
+                        inputHandler = get<AuthInputHandler>(),
                         name = "AuthScreen"
                     )
                     .build(),
@@ -159,7 +159,7 @@ class AuthInputHandler(
             is AuthContract.Inputs.SignInByGoogle -> {
                 updateState { it.copy(isLoading = true) }
                 sideJob("googleSignIn") {
-                    postEvent(AuthContract.Events.SignInResult(userRepository.signIn().withGoogle().single()))
+                    postEvent(AuthContract.Events.SignInResult(userRepository.signIn().withGoogle(input.context).single()))
                 }
             }
         }

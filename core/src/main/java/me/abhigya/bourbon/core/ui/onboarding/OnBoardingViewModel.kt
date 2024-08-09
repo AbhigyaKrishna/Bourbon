@@ -21,6 +21,7 @@ import me.abhigya.bourbon.domain.entities.DietPreference
 import me.abhigya.bourbon.domain.entities.Gender
 import me.abhigya.bourbon.domain.entities.Goals
 import me.abhigya.bourbon.domain.entities.Kilograms
+import org.koin.core.module.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 
@@ -89,7 +90,7 @@ object OnBoardingContract {
             OnBoardingInputHandler(router)
         }
 
-        factory { (coroutineScope: CoroutineScope, router: RouterViewModel) ->
+        viewModel { (coroutineScope: CoroutineScope, router: RouterViewModel) ->
             OnBoardingViewModel(
                 coroutineScope,
                 get<BallastViewModelConfiguration.Builder>()

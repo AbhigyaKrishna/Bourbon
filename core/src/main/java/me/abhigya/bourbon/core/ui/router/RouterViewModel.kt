@@ -22,12 +22,12 @@ enum class RoutePath(
     override val annotations: Set<RouteAnnotation> = emptySet()
 ) : Route {
 
-//    SPLASH_START("/splash/start"),
     SPLASH_AFTER_ONBOARDING("/splash/after-onboarding"),
     HOME("/home"),
     AUTH("/auth"),
     ONBOARDING("/onboarding"),
-    AR_SCENE("/ar-scene")
+    AR_SCENE("/ar-scene"),
+    EXERCISE_LIST("/exercise-list")
     ;
 
     override val matcher: RouteMatcher by lazy { RouteMatcher.create(routeFormat) }

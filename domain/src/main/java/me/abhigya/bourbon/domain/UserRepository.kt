@@ -1,5 +1,6 @@
 package me.abhigya.bourbon.domain
 
+import android.content.Context
 import kotlinx.coroutines.flow.Flow
 import me.abhigya.bourbon.domain.entities.User
 import me.abhigya.bourbon.domain.entities.UserData
@@ -28,7 +29,7 @@ interface UserRepository {
 
         fun withEmailAndPassword(email: String, password: String): Flow<Result<Unit>>
 
-        fun withGoogle(): Flow<Result<Unit>>
+        fun withGoogle(context: Context): Flow<Result<Unit>>
 
     }
 

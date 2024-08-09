@@ -6,6 +6,7 @@ import com.copperleaf.ballast.core.LoggingInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.plusAssign
 import me.abhigya.bourbon.core.ui.auth.AuthContract
+import me.abhigya.bourbon.core.ui.exercises.ExerciseListContract
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingContract
 import me.abhigya.bourbon.core.ui.router.module
 import me.abhigya.bourbon.data.dataModules
@@ -26,5 +27,6 @@ val modules = listOf(
     dataModules,
     RouterContract.module,
     AuthContract.module,
-    OnBoardingContract.module
+    OnBoardingContract.module,
+    ExerciseListContract.module
 )

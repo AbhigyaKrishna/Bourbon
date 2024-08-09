@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.database
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -34,9 +34,10 @@ import me.abhigya.bourbon.domain.entities.UserData
 import org.koin.core.component.KoinComponent
 import java.util.UUID
 
-class UserRepositoryImpl(private val context: Context) : UserRepository, KoinComponent {
+class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComponent {
 
-    private val database: FirebaseDatabase = Firebase.database(context.resources.getString(R.string.database_url))
+    private val database: DatabaseReference = Firebase.database(applicationContext.getString(R.string.database_url))
+        .getReference("bourbon")
     private val auth: FirebaseAuth = Firebase.auth
 
     override fun isLoggedIn(): Flow<Boolean> {
@@ -70,7 +71,7 @@ class UserRepositoryImpl(private val context: Context) : UserRepository, KoinCom
 
     override fun hasData(user: User): Flow<Boolean> = flow {
         runCatching {
-            database.getReference("userdata/${user.uid}")
+            database.child("userdata/${user.uid}")
                 .valueEventOnce()
                 .firstOrNull()?.value != null
         }.onFailure {
@@ -81,7 +82,7 @@ class UserRepositoryImpl(private val context: Context) : UserRepository, KoinCom
     }
 
     override fun loadUserData(user: User): Flow<Result<UserData>> {
-        return database.getReference("userdata/${user.uid}")
+        return database.child("userdata/${user.uid}")
             .valueEventOnce()
             .map { Result.success(it.valueOrThrow<UserData>()) }
             .catch { emit(Result.failure(it)) }
@@ -89,7 +90,7 @@ class UserRepositoryImpl(private val context: Context) : UserRepository, KoinCom
 
     override fun saveData(user: User): Flow<Result<Unit>> = flow {
         emitCatching {
-            database.getReference("userdata/${user.uid}")
+            database.child("userdata/${user.uid}")
                 .value(user.data)
         }
     }
@@ -103,10 +104,10 @@ class UserRepositoryImpl(private val context: Context) : UserRepository, KoinCom
                 }
         }
 
-        override fun withGoogle(): Flow<Result<Unit>> {
+        override fun withGoogle(context: Context): Flow<Result<Unit>> {
             return flow {
                 emitCatching {
-                    requestGoogleSignIn().getOrElse {
+                    requestGoogleSignIn(context).getOrElse {
                         emit(Result.failure(it))
                         return@flow
                     }.idToken
@@ -155,7 +156,7 @@ class UserRepositoryImpl(private val context: Context) : UserRepository, KoinCom
         ))
     }
 
-    private suspend fun requestGoogleSignIn(): Result<GoogleIdTokenCredential> {
+    private suspend fun requestGoogleSignIn(context: Context): Result<GoogleIdTokenCredential> {
         return runCatching {
 //            val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
 //                .setServerClientId(context.resources.getString(R.string.web_client_id))
