@@ -1,6 +1,7 @@
 plugins {
     bourbon.`android-library-conventions`
     alias(libs.plugins.jetbrains.kotlinx.serialization)
+    alias(libs.plugins.google.secrets.gradle.plugin)
 }
 
 android {
@@ -24,6 +25,7 @@ dependencies {
     api(libs.bundles.firebase)
     implementation(libs.google.play.services.auth)
     implementation(libs.bundles.credentials)
+    implementation(libs.generative.ai)
     implementation(platform(libs.kotlinx.serialization.bom))
     implementation(libs.kotlinx.serialization.core)
 }

@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface GeminiRepository {
 
-    fun prompt(text: String, image: Bitmap?): Flow<String>
+    fun prompt(text: String, image: Bitmap?): Flow<Result<String>>
+
+    fun promptCalorieFetch(item: String, amount: Int, unit: String): Flow<Result<String>>
 
 }
