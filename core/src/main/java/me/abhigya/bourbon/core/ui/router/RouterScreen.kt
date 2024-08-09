@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.single
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.ar.ArScreen
 import me.abhigya.bourbon.core.ui.auth.AuthScreen
+import me.abhigya.bourbon.core.ui.caloriecalc.CalorieViewerScreen
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListContract
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
@@ -108,6 +109,7 @@ object RouterScreen : AppScreen {
                                     )
                                 )
                             )()
+                            RoutePath.CALORIE_VIEWER -> CalorieViewerScreen()
                         }
                     }
                 },
@@ -127,9 +129,6 @@ object RouterScreen : AppScreen {
             if (!user.isLoggedIn().single()) {
                 viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.AUTH.directions().build()))
             }
-//            else {
-//                viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.HOME.directions().build()))
-//            }
         }
     }
 }

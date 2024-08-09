@@ -1,9 +1,17 @@
 package me.abhigya.bourbon.core.utils
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 
 fun Modifier.bouncyClick(): Modifier = composed {
     var isPressed by remember { mutableStateOf(false) }
@@ -107,4 +118,36 @@ fun Modifier.gradientTint(
             blendMode = blendMode
         )
     }
+}
+
+fun Modifier.animatedGradient(
+    primaryColor: Color,
+    containerColor: Color
+): Modifier = this.composed {
+    var size by remember { mutableStateOf(IntSize.Zero) }
+    val transition = rememberInfiniteTransition(label = "animated-gradient")
+    val colors = listOf(
+        primaryColor,
+        containerColor,
+        primaryColor
+    )
+    val offsetXAnimation by transition.animateFloat(
+        initialValue = -size.width.toFloat(),
+        targetValue = size.width.toFloat(),
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1500, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        ), label = "gradientAnimation"
+    )
+    background(
+        brush = Brush.linearGradient(
+            colors = colors,
+            start = Offset(x = offsetXAnimation, y = 0f),
+            end = Offset(x = offsetXAnimation + size.width.toFloat(), y = size.height.toFloat())
+        ),
+        shape = RoundedCornerShape(24.dp)
+    )
+        .onGloballyPositioned {
+            size = it.size
+        }
 }

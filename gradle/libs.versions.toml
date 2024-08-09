@@ -30,6 +30,7 @@ serialization = "1.7.1"
 arsceneview = "2.2.1"
 gen-ai = "0.9.0"
 google-secrets = "2.0.1"
+markdown-text = "0.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -89,6 +90,7 @@ kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
 arsceneview = { group = "io.github.sceneview", name = "arsceneview", version.ref = "arsceneview" }
 generative-ai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gen-ai" }
+markdown-text = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdown-text" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

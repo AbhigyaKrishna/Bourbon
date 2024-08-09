@@ -8,5 +8,6 @@ dependencies {
     api(project(":data"))
     api(libs.bundles.ballast)
     api(libs.arsceneview)
+    implementation(libs.markdown.text)
     testImplementation(libs.ballast.test)
 }

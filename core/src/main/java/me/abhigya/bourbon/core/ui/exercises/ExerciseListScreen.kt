@@ -20,7 +20,7 @@ import androidx.compose.material.icons.outlined.Place
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -39,9 +39,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.copperleaf.ballast.navigation.routing.RouterContract
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.components.AppBar
+import me.abhigya.bourbon.core.ui.components.BackButton
 import me.abhigya.bourbon.core.ui.components.DraggableCard
+import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.utils.verticalGradientBackground
 import me.abhigya.bourbon.domain.entities.Exercise
 import org.koin.core.component.get
@@ -76,21 +80,31 @@ class ExerciseListScreen(
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
         val cardHeight = screenHeight - 200.dp
+        val router = LocalRouter.current
 
-        Surface(modifier = Modifier
-            .fillMaxSize()
-            .padding(top = 32.dp)) {
-            val boxModifier = Modifier
-
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 32.dp),
+            topBar = {
+                AppBar {
+                    BackButton {
+                        router.trySend(RouterContract.Inputs.GoBack())
+                    }
+                }
+            }
+        ) { padding ->
             Box(
-                modifier = boxModifier.verticalGradientBackground(
-                    listOf(
-                        MaterialTheme.colorScheme.secondary,
-                        MaterialTheme.colorScheme.background
+                modifier = Modifier
+                    .padding(padding)
+                    .verticalGradientBackground(
+                        listOf(
+                            MaterialTheme.colorScheme.secondary,
+                            MaterialTheme.colorScheme.background
+                        )
                     )
-                )
             ) {
-                Loader(modifier = boxModifier)
+                Loader()
                 val showing = exercises.dropLast(index)
                 showing.forEachIndexed { idx, album ->
                     DraggableCard(
@@ -213,7 +227,7 @@ class ExerciseListScreen(
     }
 
     @Composable
-    fun Loader(modifier: Modifier) {
+    fun Loader(modifier: Modifier = Modifier) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier

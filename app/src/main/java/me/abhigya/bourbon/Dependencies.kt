@@ -6,6 +6,7 @@ import com.copperleaf.ballast.core.LoggingInterceptor
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.plusAssign
 import me.abhigya.bourbon.core.ui.auth.AuthContract
+import me.abhigya.bourbon.core.ui.caloriecalc.CalorieViewerContract
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListContract
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingContract
 import me.abhigya.bourbon.core.ui.router.module
@@ -28,5 +29,6 @@ val modules = listOf(
     RouterContract.module,
     AuthContract.module,
     OnBoardingContract.module,
-    ExerciseListContract.module
+    ExerciseListContract.module,
+    CalorieViewerContract.module
 )

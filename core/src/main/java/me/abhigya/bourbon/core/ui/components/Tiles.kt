@@ -53,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.takeOrElse
@@ -62,6 +63,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.utils.bouncyClick
@@ -193,6 +195,7 @@ fun TileTextBox(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    shape: Shape = RoundedCornerShape(4.dp),
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
         unfocusedContainerColor = Color.Transparent,
         focusedContainerColor = Color.Transparent,
@@ -255,7 +258,7 @@ fun TileTextBox(
                             isError = false,
                             interactionSource,
                             colors,
-                            RoundedCornerShape(4.dp)
+                            shape
                         )
                     }
                 )
@@ -271,6 +274,8 @@ fun TileDropDown(
     entries: List<String>,
     arrowTint: Color = MaterialTheme.colorScheme.background,
     textColor: Color = MaterialTheme.colorScheme.background,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    fontWeight: FontWeight? = null,
     onEntryClick: (Int) -> Unit
 ) {
     var menuVisible by remember { mutableStateOf(false) }
@@ -287,7 +292,9 @@ fun TileDropDown(
         Text(
             modifier = Modifier.animateContentSize(),
             text = entries[selected],
-            color = textColor
+            color = textColor,
+            fontWeight = fontWeight,
+            fontSize = fontSize
         )
         VerticalDivider(thickness = 4.dp)
         Icon(

@@ -24,7 +24,7 @@ class GeminiRepositoryImpl : GeminiRepository {
         )
     }
 
-    override fun promptCalorieFetch(item: String, amount: Int, unit: String): Flow<Result<String>> {
+    override fun promptCalorieFetch(item: String, amount: Float, unit: String): Flow<Result<String>> {
         return buildPrompt(
             content {
                 text("How many calories are in $amount $unit of $item?")

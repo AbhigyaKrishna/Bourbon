@@ -7,6 +7,6 @@ interface GeminiRepository {
 
     fun prompt(text: String, image: Bitmap?): Flow<Result<String>>
 
-    fun promptCalorieFetch(item: String, amount: Int, unit: String): Flow<Result<String>>
+    fun promptCalorieFetch(item: String, amount: Float, unit: String): Flow<Result<String>>
 
 }
