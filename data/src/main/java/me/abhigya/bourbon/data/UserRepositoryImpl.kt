@@ -39,6 +39,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
     private val database: DatabaseReference = Firebase.database(applicationContext.getString(R.string.database_url))
         .getReference("bourbon")
     private val auth: FirebaseAuth = Firebase.auth
+    private var userDataCache: UserData? = null
 
     override fun isLoggedIn(): Flow<Boolean> {
         return flowOf(auth.currentUser != null)
@@ -82,6 +83,9 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
     }
 
     override fun loadUserData(user: User): Flow<Result<UserData>> {
+        if (userDataCache != null) {
+            return flowOf(Result.success(userDataCache!!))
+        }
         return database.child("userdata/${user.uid}")
             .valueEventOnce()
             .map { Result.success(it.valueOrThrow<UserData>()) }
@@ -152,7 +156,8 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
         return Result.success(User(
             uid,
             displayName ?: return Result.failure(IllegalStateException("Name is null")),
-            email ?: return Result.failure(IllegalStateException("Email is null"))
+            email ?: return Result.failure(IllegalStateException("Email is null")),
+            userDataCache ?: UserData()
         ))
     }
 

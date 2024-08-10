@@ -20,6 +20,7 @@ import me.abhigya.bourbon.core.ui.components.TileLabel
 import me.abhigya.bourbon.core.ui.components.TileOption
 import me.abhigya.bourbon.core.ui.components.TileSeparator
 import me.abhigya.bourbon.core.ui.components.TiledRow
+import me.abhigya.bourbon.domain.entities.DietGuide
 import me.abhigya.bourbon.domain.entities.DietPreference
 
 object DietStepScreen : StepScreen {
@@ -43,11 +44,11 @@ object DietStepScreen : StepScreen {
 
     @Composable
     private fun DietCard(
-        currentDietGuide: OnBoardingContract.DietGuide,
-        onDietGuideChanged: (OnBoardingContract.DietGuide) -> Unit,
+        currentDietGuide: DietGuide,
+        onDietGuideChanged: (DietGuide) -> Unit,
     ) {
         TileLabel(text = "Diet")
-        TiledRow(itemsPerRow = 2, elements = OnBoardingContract.DietGuide.entries.map {
+        TiledRow(itemsPerRow = 2, elements = DietGuide.entries.map {
             {
                 val selected = currentDietGuide == it
                 TileOption(

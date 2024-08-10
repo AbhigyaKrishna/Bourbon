@@ -10,17 +10,21 @@ import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.single
 import me.abhigya.bourbon.core.ui.AddRemove
 import me.abhigya.bourbon.core.ui.router.RoutePath
 import me.abhigya.bourbon.core.ui.router.RouterViewModel
+import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.ActivityLevel
 import me.abhigya.bourbon.domain.entities.Centimeters
 import me.abhigya.bourbon.domain.entities.Days
 import me.abhigya.bourbon.domain.entities.DefaultTraining
+import me.abhigya.bourbon.domain.entities.DietGuide
 import me.abhigya.bourbon.domain.entities.DietPreference
 import me.abhigya.bourbon.domain.entities.Gender
-import me.abhigya.bourbon.domain.entities.Goals
+import me.abhigya.bourbon.domain.entities.Goal
 import me.abhigya.bourbon.domain.entities.Kilograms
+import me.abhigya.bourbon.domain.entities.UserData
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
@@ -45,18 +49,13 @@ object OnBoardingContract {
         ;
     }
 
-    enum class DietGuide(val display: String) {
-        PreMade("Pre-Made"),
-        Create("Create"),
-    }
-
     data class State(
         val step: Step = Step.Weight,
         val weight: Kilograms = Kilograms(40),
         val height: Centimeters = Centimeters(100),
         val gender: Gender = Gender.Male,
         val age: Int = 0,
-        val goal: Goals = Goals.WeightLoss,
+        val goal: Goal = Goal.WeightLoss,
         val aimWeight: Kilograms = Kilograms(0),
         val training: Set<DefaultTraining> = mutableSetOf(),
         val workoutDays: Set<Days> = mutableSetOf(),
@@ -72,7 +71,7 @@ object OnBoardingContract {
         data class HeightChanged(val height: Centimeters) : Inputs
         data class GenderChanged(val gender: Gender) : Inputs
         data class AgeChanged(val age: Int) : Inputs
-        data class GoalChanged(val goal: Goals) : Inputs
+        data class GoalChanged(val goal: Goal) : Inputs
         data class AimWeightChanged(val weight: Kilograms) : Inputs
         data class TrainingChanged(val training: AddRemove<DefaultTraining>) : Inputs
         data class WorkoutDaysChanged(val days: AddRemove<Days>) : Inputs
@@ -87,7 +86,7 @@ object OnBoardingContract {
 
     val module = module {
         factory { (router: RouterViewModel) ->
-            OnBoardingInputHandler(router)
+            OnBoardingInputHandler(router, get())
         }
 
         viewModel { (coroutineScope: CoroutineScope, router: RouterViewModel) ->
@@ -107,7 +106,8 @@ object OnBoardingContract {
 }
 
 class OnBoardingInputHandler(
-    private val router: RouterViewModel
+    private val router: RouterViewModel,
+    private val userRepository: UserRepository
 ) : InputHandler<OnBoardingContract.Inputs, OnBoardingContract.Events, OnBoardingContract.State> {
     override suspend fun InputHandlerScope<OnBoardingContract.Inputs, OnBoardingContract.Events, OnBoardingContract.State>.handleInput(
         input: OnBoardingContract.Inputs
@@ -141,6 +141,10 @@ class OnBoardingInputHandler(
                 if (nextStep != null) {
                     updateState { it.copy(step = nextStep) }
                 } else {
+                    val userData = getCurrentState().toUserData()
+                    sideJob("save-date") {
+                        userRepository.saveData(userRepository.currentUser().single().copy(data = userData))
+                    }
                     router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.SPLASH_AFTER_ONBOARDING.directions().build()))
                 }
             }
@@ -149,3 +153,18 @@ class OnBoardingInputHandler(
 }
 
 val OnBoardingContract.Step.next get() = OnBoardingContract.Step.entries.getOrNull(ordinal + 1)
+
+private fun OnBoardingContract.State.toUserData(): UserData = UserData(
+    weight = weight,
+    height = height,
+    gender = gender,
+    age = age,
+    goal = goal,
+    aimWeight = aimWeight,
+    training = training,
+    workoutDays = workoutDays,
+    activityLevel = activityLevel,
+    dietGuide = dietGuide,
+    dietPreference = dietPreference,
+    mealFrequency = mealFrequency
+)

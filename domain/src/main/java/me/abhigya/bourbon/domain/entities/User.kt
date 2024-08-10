@@ -14,6 +14,15 @@ data class UserData(
     val gender: Gender = Gender.Male,
     val height: Centimeters = Centimeters(),
     val weight: Kilograms = Kilograms(),
+    val age: Int = -5,
+    val goal: Goal = Goal.WeightLoss,
+    val aimWeight: Kilograms = Kilograms(),
+    val training: Set<DefaultTraining> = mutableSetOf(),
+    val workoutDays: Set<Days> = mutableSetOf(),
+    val activityLevel: ActivityLevel = ActivityLevel.Sedentary,
+    val dietGuide: DietGuide = DietGuide.PreMade,
+    val dietPreference: DietPreference = DietPreference.Vegetarian,
+    val mealFrequency: Int = 1,
 )
 
 @Serializable
@@ -29,10 +38,10 @@ enum class Gender {
     Female
 }
 
-enum class Goals {
-    WeightLoss,
-    WeightGain,
-    GainMuscles,
+enum class Goal(val display: String) {
+    WeightLoss("Weight Loss"),
+    WeightGain("Weight Gain"),
+    GainMuscles("Gain Muscles"),
     ;
 }
 
@@ -54,4 +63,9 @@ enum class DietPreference(val display: String) {
     Vegetarian("Veg"),
     NonVegetarian("Non-Veg"),
     ;
+}
+
+enum class DietGuide(val display: String) {
+    PreMade("Pre-Made"),
+    Create("Create"),
 }

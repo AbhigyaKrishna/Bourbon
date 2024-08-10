@@ -16,8 +16,6 @@ import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.single
 import me.abhigya.bourbon.core.ui.router.RoutePath
 import me.abhigya.bourbon.core.ui.router.RouterViewModel
@@ -167,7 +165,6 @@ class AuthInputHandler(
 
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class AuthEventsHandler(
     private val context: Context,
     private val router: RouterViewModel,
@@ -188,7 +185,11 @@ class AuthEventsHandler(
     }
 
     private suspend fun EventHandlerScope<AuthContract.Inputs, AuthContract.Events, AuthContract.State>.handleLogin() {
-        val hasData = userRepository.currentUser().flatMapLatest { userRepository.hasData(it) }.single()
+        val user = userRepository.currentUser().single()
+        val hasData = userRepository.hasData(user).single()
+        if (hasData) {
+            userRepository.loadUserData(user)
+        }
         postInput(AuthContract.Inputs.ChangeLoadingState(false))
         router.trySend(RouterContract.Inputs.GoToDestination((if (hasData) RoutePath.HOME else RoutePath.ONBOARDING).directions().build()))
     }
