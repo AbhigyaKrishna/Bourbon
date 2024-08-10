@@ -47,6 +47,7 @@ object AuthContract {
         NONE,
         WRONG("Wrong password"),
         NOT_MATCH("Passwords do not match"),
+        NOT_FOUND("User not found"),
     }
 
     data class State(
@@ -143,13 +144,22 @@ class AuthInputHandler(
                 } else {
                     updateState { it.copy(passwordErrorState = AuthContract.PasswordErrorType.NONE) }
                     sideJob("login") {
-                        userRepository.signIn().withEmailAndPassword(state.email, state.password).single()
-                            .onSuccess {
+                        userRepository.exists(state.email).collect {
+                            if (!it) {
+                                postInput(AuthContract.Inputs.PasswordErrorChanged(AuthContract.PasswordErrorType.NOT_FOUND))
+                                postInput(AuthContract.Inputs.WrongEmailChanged(true))
+                                postInput(AuthContract.Inputs.ChangeLoadingState(false))
+                                return@collect
+                            }
+                        }
+                        userRepository.signIn().withEmailAndPassword(state.email, state.password).collect {
+                            it.onSuccess {
                                 postEvent(AuthContract.Events.SignInResult(Result.success(it)))
                             }.onFailure {
-                                postInput(AuthContract.Inputs.ChangeLoadingState(false))
                                 postInput(AuthContract.Inputs.PasswordErrorChanged(AuthContract.PasswordErrorType.WRONG))
                             }
+                        }
+                        postInput(AuthContract.Inputs.ChangeLoadingState(false))
                     }
                 }
             }

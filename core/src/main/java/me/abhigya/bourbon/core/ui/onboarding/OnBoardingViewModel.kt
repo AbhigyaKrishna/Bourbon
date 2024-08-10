@@ -10,7 +10,10 @@ import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.withContext
 import me.abhigya.bourbon.core.ui.AddRemove
 import me.abhigya.bourbon.core.ui.router.RoutePath
 import me.abhigya.bourbon.core.ui.router.RouterViewModel
@@ -143,7 +146,9 @@ class OnBoardingInputHandler(
                 } else {
                     val userData = getCurrentState().toUserData()
                     sideJob("save-date") {
-                        userRepository.saveData(userRepository.currentUser().single().copy(data = userData))
+                        withContext(Dispatchers.IO) {
+                            userRepository.saveData(userRepository.currentUser().single().copy(data = userData)).launchIn(this).join()
+                        }
                     }
                     router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.SPLASH_AFTER_ONBOARDING.directions().build()))
                 }

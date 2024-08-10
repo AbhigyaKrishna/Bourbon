@@ -30,6 +30,7 @@ import me.abhigya.bourbon.core.ui.exercises.ExerciseListScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
 import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
+import me.abhigya.bourbon.core.ui.splash.SplashHomeViewModel
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.Burpee
 import me.abhigya.bourbon.domain.entities.Exercise
@@ -125,7 +126,10 @@ object RouterScreen : AppScreen {
             val user = get<UserRepository>()
             if (!user.isLoggedIn().single()) {
                 viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.AUTH.directions().build()))
+            } else if (!user.hasData(user.currentUser().single()).single()) {
+                viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.ONBOARDING.directions().build()))
             }
+            SplashHomeViewModel.finish()
         }
     }
 }

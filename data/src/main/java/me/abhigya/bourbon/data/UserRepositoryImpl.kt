@@ -37,7 +37,7 @@ import java.util.UUID
 class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComponent {
 
     private val database: DatabaseReference = Firebase.database(applicationContext.getString(R.string.database_url))
-        .getReference("bourbon")
+        .getReference("userdata")
     private val auth: FirebaseAuth = Firebase.auth
     private var userDataCache: UserData? = null
 
@@ -72,7 +72,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
 
     override fun hasData(user: User): Flow<Boolean> = flow {
         runCatching {
-            database.child("userdata/${user.uid}")
+            database.child(user.uid)
                 .valueEventOnce()
                 .firstOrNull()?.value != null
         }.onFailure {
@@ -86,7 +86,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
         if (userDataCache != null) {
             return flowOf(Result.success(userDataCache!!))
         }
-        return database.child("userdata/${user.uid}")
+        return database.child(user.uid)
             .valueEventOnce()
             .map { Result.success(it.valueOrThrow<UserData>()) }
             .catch { emit(Result.failure(it)) }
@@ -94,7 +94,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
 
     override fun saveData(user: User): Flow<Result<Unit>> = flow {
         emitCatching {
-            database.child("userdata/${user.uid}")
+            database.child(user.uid)
                 .value(user.data)
         }
     }
@@ -163,11 +163,6 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
 
     private suspend fun requestGoogleSignIn(context: Context): Result<GoogleIdTokenCredential> {
         return runCatching {
-//            val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
-//                .setServerClientId(context.resources.getString(R.string.web_client_id))
-//                .setAutoSelectEnabled(true)
-//                .setNonce(UUID.randomUUID().toString())
-//                .build()
             val signInWithGoogleOption = GetSignInWithGoogleOption.Builder(context.resources.getString(R.string.web_client_id))
                 .setNonce(UUID.randomUUID().toString())
                 .build()

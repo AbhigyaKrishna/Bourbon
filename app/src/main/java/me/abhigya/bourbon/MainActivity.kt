@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import me.abhigya.bourbon.core.ui.splash.SplashHomeViewModel
@@ -18,8 +17,7 @@ class MainActivity : ComponentActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        val splashVm: SplashHomeViewModel by viewModels()
-        splash.setKeepOnScreenCondition { splashVm.splashState.value }
+        splash.setKeepOnScreenCondition { SplashHomeViewModel.splashState.value }
 
         setContent {
             ProvideDisplayInsets {
