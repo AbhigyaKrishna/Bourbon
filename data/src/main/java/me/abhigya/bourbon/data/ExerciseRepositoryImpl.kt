@@ -50,9 +50,9 @@ class ExerciseRepositoryImpl(context: Context) : ExerciseRepository {
             .catch { emit(Result.failure(it)) }
     }
 
-    override fun getExerciseImageById(id: String): Flow<Result<Bitmap>> {
+    override fun getExerciseImageById(file: String): Flow<Result<Bitmap>> {
         return imageStorage
-            .child("exercise_$id.jpg")
+            .child(file)
             .getBytes(1024 * 1024 * 10)
             .handleAsResult {
                 trySend(Result.success(BitmapFactory.decodeByteArray(it, 0, it.size)))
@@ -60,15 +60,15 @@ class ExerciseRepositoryImpl(context: Context) : ExerciseRepository {
     }
 
     @OptIn(UnstableApi::class)
-    override fun getExerciseVideoById(id: String, context: Context): Flow<Result<ExoPlayer>> {
+    override fun getExerciseVideoById(file: String, context: Context): Flow<Result<ExoPlayer>> {
         return videoStorage
-            .child("exercise_$id.mp4")
+            .child(file)
             .getBytes(1024 * 1024 * 50)
             .handleAsResult {
                 val ds = ByteArrayDataSource(it)
                 val factory = DataSource.Factory { ds }
                 val mediaSource = ProgressiveMediaSource.Factory(factory)
-                    .createMediaSource(MediaItem.fromUri("exercise_$id.mp4"))
+                    .createMediaSource(MediaItem.fromUri(file))
                 val player = ExoPlayer.Builder(context)
                     .setTrackSelector(DefaultTrackSelector(context))
                     .build()

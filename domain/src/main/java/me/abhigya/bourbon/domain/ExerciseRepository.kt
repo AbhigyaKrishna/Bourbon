@@ -12,8 +12,8 @@ interface ExerciseRepository {
 
     fun getExerciseById(id: String): Flow<Result<Exercise>>
 
-    fun getExerciseImageById(id: String): Flow<Result<Bitmap>>
+    fun getExerciseImageById(file: String): Flow<Result<Bitmap>>
 
-    fun getExerciseVideoById(id: String, context: Context): Flow<Result<ExoPlayer>>
+    fun getExerciseVideoById(file: String, context: Context): Flow<Result<ExoPlayer>>
 
 }

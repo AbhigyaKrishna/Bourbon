@@ -23,10 +23,9 @@ import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 @Composable
-fun <T> DraggableCard(
-    item: T,
+fun DraggableCard(
     modifier: Modifier = Modifier,
-    onSwiped: (T) -> Unit,
+    onSwiped: () -> Unit,
     content: @Composable () -> Unit
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -65,7 +64,7 @@ fun <T> DraggableCard(
         }
     } else {
         // on swiped
-        onSwiped(item)
+        onSwiped()
     }
 }
 

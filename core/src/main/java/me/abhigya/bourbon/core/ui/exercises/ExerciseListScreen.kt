@@ -106,9 +106,8 @@ class ExerciseListScreen(
             ) {
                 Loader()
                 val showing = exercises.dropLast(index)
-                showing.forEachIndexed { idx, album ->
+                showing.forEachIndexed { idx, exercise ->
                     DraggableCard(
-                        item = album,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(cardHeight)
@@ -124,7 +123,7 @@ class ExerciseListScreen(
                             }
                         }
                     ) {
-                        CardContent(album)
+                        CardContent(exercise)
                     }
                 }
                 Row(
@@ -178,7 +177,7 @@ class ExerciseListScreen(
 
     @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
-    fun CardContent(exercise: Exercise) {
+    internal fun CardContent(exercise: Exercise) {
         Column {
             GlideImage(
                 model = exercise.imageUri,
@@ -227,7 +226,7 @@ class ExerciseListScreen(
     }
 
     @Composable
-    fun Loader(modifier: Modifier = Modifier) {
+    internal fun Loader(modifier: Modifier = Modifier) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier

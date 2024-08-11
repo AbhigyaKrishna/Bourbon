@@ -36,6 +36,7 @@ import com.kizitonwose.calendar.core.yearMonth
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.components.StatCard
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 import me.abhigya.bourbon.domain.entities.User
 import org.koin.core.component.get
@@ -46,26 +47,36 @@ object HomeScreen : AppScreen {
 
     @Composable
     override operator fun invoke() {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            val coroutine = rememberCoroutineScope()
-            val viewModel: HomeViewModel = remember(coroutine) { get { parametersOf(coroutine) } }
-            val uiState by viewModel.observeStates().collectAsState()
-            val userDataState by viewModel.fetchUser().collectAsState(initial = null)
+        val coroutine = rememberCoroutineScope()
+        val viewModel: HomeViewModel = remember(coroutine) { get { parametersOf(coroutine) } }
+        val uiState by viewModel.observeStates().collectAsState()
+        val userDataState by viewModel.fetchUser().collectAsState(initial = null)
 
-            val user = userDataState
-            if (user != null) {
+        val user = userDataState
+        if (user != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Header(user = user)
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(4.dp)
+                        .background(MaterialTheme.colorScheme.background)
                 ) {
-                    Header(user = user)
                     Calendar(uiState = uiState) {
                         viewModel.trySend(HomeContract.Inputs.SelectDate(it.date.toKotlinLocalDate()))
                     }
+                    StatCard(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(180.dp),
+                        calorieEaten = 1291,
+                        calorieRemaining = 826,
+                        calorieBurned = 244,
+                        totalCalorie = 1291
+                    )
                 }
             }
         }
@@ -75,36 +86,41 @@ object HomeScreen : AppScreen {
     internal fun Header(user: User) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .statusBarsPadding()
-                .height(120.dp)
                 .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
                 .background(
                     color = MaterialTheme.colorScheme.primary,
-                ),
-            contentAlignment = Alignment.BottomCenter
+                    shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp)
+                )
         ) {
-            Row(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .statusBarsPadding()
+                    .height(100.dp),
+                contentAlignment = Alignment.BottomCenter
             ) {
-                Column {
-                    Text(
-                        text = "Hello,",
-                        color = MaterialTheme.colorScheme.background,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp
-                    )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Column {
+                        Text(
+                            text = "Hello,",
+                            color = MaterialTheme.colorScheme.background,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        )
 
-                    Text(
-                        text = user.name,
-                        color = MaterialTheme.colorScheme.background,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp
-                    )
+                        Text(
+                            text = user.name,
+                            color = MaterialTheme.colorScheme.background,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 24.sp
+                        )
+                    }
                 }
             }
         }
