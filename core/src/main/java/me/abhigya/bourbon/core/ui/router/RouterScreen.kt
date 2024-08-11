@@ -20,6 +20,7 @@ import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.single
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.ar.ArScreen
@@ -124,6 +125,7 @@ object RouterScreen : AppScreen {
 
         LaunchedEffect(coroutine) {
             val user = get<UserRepository>()
+            delay(50)
             if (!user.isLoggedIn().single()) {
                 viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.AUTH.directions().build()))
             } else if (!user.hasData(user.currentUser().single()).single()) {

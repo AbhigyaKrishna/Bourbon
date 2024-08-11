@@ -68,7 +68,7 @@ fun Modifier.verticalGradientBackground(
     Brush.verticalGradient(
         colors = gradientColors,
         startY = 0f,
-        endY = size.width
+        endY = size.height
     )
 }
 

@@ -9,5 +9,6 @@ dependencies {
     api(libs.bundles.ballast)
     api(libs.arsceneview)
     implementation(libs.markdown.text)
+    implementation(libs.calender)
     testImplementation(libs.ballast.test)
 }

@@ -31,6 +31,7 @@ arsceneview = "2.2.1"
 gen-ai = "0.9.0"
 google-secrets = "2.0.1"
 markdown-text = "0.5.2"
+calender = "2.5.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -91,6 +92,7 @@ kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 arsceneview = { group = "io.github.sceneview", name = "arsceneview", version.ref = "arsceneview" }
 generative-ai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gen-ai" }
 markdown-text = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdown-text" }
+calender = { group = "com.kizitonwose.calendar", name = "compose", version.ref = "calender" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

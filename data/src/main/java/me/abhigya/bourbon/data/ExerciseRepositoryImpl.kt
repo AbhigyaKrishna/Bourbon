@@ -27,22 +27,23 @@ import me.abhigya.bourbon.data.firebase.valueOrThrow
 import me.abhigya.bourbon.domain.ExerciseRepository
 import me.abhigya.bourbon.domain.entities.Exercise
 
-class ExerciseRepositoryImpl(private val context: Context) : ExerciseRepository {
+class ExerciseRepositoryImpl(context: Context) : ExerciseRepository {
 
-    private val database: DatabaseReference = Firebase.database(context.getString(R.string.database_url)).getReference("bourbon")
+    private val database: DatabaseReference = Firebase.database(context.getString(R.string.database_url))
+        .getReference("exercises")
     private val storage: FirebaseStorage = Firebase.storage(context.getString(R.string.storage_url))
     private val imageStorage: StorageReference = storage.getReference("images")
     private val videoStorage: StorageReference = storage.getReference("videos")
 
     override fun getExercises(): Flow<Result<Map<String, Exercise>>> {
-        return database.child("exercise")
+        return database
             .valueEvent()
             .map { Result.success(it.valueOrThrow<Map<String, Exercise>>()) }
             .catch { emit(Result.failure(it)) }
     }
 
     override fun getExerciseById(id: String): Flow<Result<Exercise>> {
-        return database.child("exercise")
+        return database
             .child(id)
             .valueEventOnce()
             .map { Result.success(it.valueOrThrow<Exercise>()) }
