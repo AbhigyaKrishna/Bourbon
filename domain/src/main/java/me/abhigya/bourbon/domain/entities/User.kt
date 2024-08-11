@@ -7,6 +7,7 @@ data class User(
     val name: String,
     val email: String,
     val data: UserData = UserData(),
+    val exercises: Set<String> = mutableSetOf()
 )
 
 @Serializable
@@ -14,7 +15,7 @@ data class UserData(
     val gender: Gender = Gender.Male,
     val height: Centimeters = Centimeters(),
     val weight: Kilograms = Kilograms(),
-    val age: Int = -5,
+    val age: Int = 5,
     val goal: Goal = Goal.WeightLoss,
     val aimWeight: Kilograms = Kilograms(),
     val training: Set<DefaultTraining> = mutableSetOf(),
@@ -35,7 +36,8 @@ value class Kilograms(val value: Int = 0)
 
 enum class Gender {
     Male,
-    Female
+    Female,
+    ;
 }
 
 enum class Goal(val display: String) {
@@ -50,13 +52,15 @@ enum class DefaultTraining {
     Chest,
     Shoulder,
     Core,
-    Legs
+    Legs,
+    ;
 }
 
 enum class ActivityLevel {
     Sedentary,
     Moderate,
     Active,
+    ;
 }
 
 enum class DietPreference(val display: String) {
@@ -68,4 +72,5 @@ enum class DietPreference(val display: String) {
 enum class DietGuide(val display: String) {
     PreMade("Pre-Made"),
     Create("Create"),
+    ;
 }

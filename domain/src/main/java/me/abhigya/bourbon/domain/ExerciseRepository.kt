@@ -8,7 +8,7 @@ import me.abhigya.bourbon.domain.entities.Exercise
 
 interface ExerciseRepository {
 
-    fun getExercises(): Flow<Result<Map<String, Exercise>>>
+    fun getExercises(): Flow<Exercise>
 
     fun getExerciseById(id: String): Flow<Result<Exercise>>
 

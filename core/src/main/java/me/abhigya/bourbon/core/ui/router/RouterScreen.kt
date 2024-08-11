@@ -26,7 +26,6 @@ import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.ar.ArScreen
 import me.abhigya.bourbon.core.ui.auth.AuthScreen
 import me.abhigya.bourbon.core.ui.caloriecalc.CalorieViewerScreen
-import me.abhigya.bourbon.core.ui.exercises.ExerciseListContract
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
@@ -34,13 +33,9 @@ import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
 import me.abhigya.bourbon.core.ui.splash.SplashHomeViewModel
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.Burpee
-import me.abhigya.bourbon.domain.entities.Exercise
-import me.abhigya.bourbon.domain.entities.ExerciseQuantity
 import me.abhigya.bourbon.domain.entities.Models
-import me.abhigya.bourbon.domain.entities.Rest
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
-import kotlin.time.Duration.Companion.seconds
 
 object RouterScreen : AppScreen {
 
@@ -79,37 +74,7 @@ object RouterScreen : AppScreen {
                             RoutePath.AUTH -> AuthScreen()
                             RoutePath.ONBOARDING -> OnBoardingScreen()
                             RoutePath.AR_SCENE -> ArScreen(Models.Burpee)()
-                            RoutePath.EXERCISE_LIST -> ExerciseListScreen(
-                                ExerciseListContract.State(
-                                    exercises = listOf(
-                                        Exercise(
-                                            "burpee",
-                                            "Burpee",
-                                            "Random bs",
-                                            null,
-                                            null,
-                                            30.seconds,
-                                            ExerciseQuantity(
-                                                10,
-                                                ""
-                                            )
-                                        ),
-                                        Rest,
-                                        Exercise(
-                                            "squat",
-                                            "Squats",
-                                            "Squat",
-                                            null,
-                                            null,
-                                            30.seconds,
-                                            ExerciseQuantity(
-                                                10,
-                                                ""
-                                            )
-                                        ),
-                                    )
-                                )
-                            )()
+                            RoutePath.EXERCISE_LIST -> ExerciseListScreen()
                             RoutePath.CALORIE_VIEWER -> CalorieViewerScreen()
                         }
                     }

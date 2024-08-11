@@ -33,23 +33,18 @@ fun TypewriterTextEffect(
     onEffectCompleted: () -> Unit = {},
     displayTextComposable: @Composable (displayedText: String) -> Unit
 ) {
-    // Ensure minDelayInMillis is less than or equal to maxDelayInMillis
     require(minDelayInMillis <= maxDelayInMillis) {
         "TypewriterTextEffect: Invalid delay range. minDelayInMillis ($minDelayInMillis) must be less than or equal to maxDelayInMillis ($maxDelayInMillis)."
     }
 
-    // Ensure minCharacterChunk is less than or equal to maxCharacterChunk
     require(minCharacterChunk <= maxCharacterChunk) {
         "TypewriterTextEffect: Invalid character chunk range. minCharacterChunk ($minCharacterChunk) must be less than or equal to maxCharacterChunk ($maxCharacterChunk)."
     }
 
-    // Initialize and remember the displayedText
     var displayedText by remember { mutableStateOf("") }
 
-    // Call the displayTextComposable with the current displayedText value
     displayTextComposable(displayedText)
 
-    // Launch the effect to update the displayedText value over time
     LaunchedEffect(text) {
         val textLength = text.length
         var endIndex = 0

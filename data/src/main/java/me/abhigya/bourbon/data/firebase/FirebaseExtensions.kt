@@ -57,11 +57,9 @@ fun DatabaseReference.valueEventOnce(): Flow<DataSnapshot> = callbackFlow {
             close(error.toException())
         }
     }
-    addValueEventListener(listener)
+    addListenerForSingleValueEvent(listener)
 
-    awaitClose {
-        runCatching { removeEventListener(listener) }
-    }
+    awaitClose()
 }
 
 inline fun <reified T> DataSnapshot.value(serializer: FirebaseSerializer = FirebaseSerializer()): T? = value?.let { serializer.decode<T>(it) }
@@ -72,3 +70,28 @@ inline fun <reified T> DatabaseReference.value(value: T, serializer: FirebaseSer
     setValue(serializer.encode(value))
 }
 
+fun DatabaseReference.getAsFlow(): Flow<DataSnapshot> = callbackFlow {
+    get().addOnSuccessListener {
+        trySendBlocking(it)
+        close()
+    }.addOnFailureListener {
+        throw it
+    }.addOnCanceledListener {
+        throw CancellationException()
+    }
+
+    awaitClose()
+}
+
+inline fun <reified T> DatabaseReference.get(serializer: FirebaseSerializer = FirebaseSerializer()): Flow<T> = callbackFlow {
+    get().addOnSuccessListener {
+        trySendBlocking(it.valueOrThrow<T>(serializer))
+        close()
+    }.addOnFailureListener {
+        throw it
+    }.addOnCanceledListener {
+        throw CancellationException()
+    }
+
+    awaitClose()
+}

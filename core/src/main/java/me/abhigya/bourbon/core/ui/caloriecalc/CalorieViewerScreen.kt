@@ -2,6 +2,7 @@ package me.abhigya.bourbon.core.ui.caloriecalc
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,6 +45,7 @@ import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AnimatedLoadingGradient
 import me.abhigya.bourbon.core.ui.components.AppBar
 import me.abhigya.bourbon.core.ui.components.BackButton
+import me.abhigya.bourbon.core.ui.components.StatCard
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileDropDown
 import me.abhigya.bourbon.core.ui.components.TileSeparator
@@ -78,7 +80,9 @@ object CalorieViewerScreen : AppScreen {
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                TileCard {
+                TileCard(
+                    width = 360.dp
+                ) {
                     var item by remember { mutableStateOf("") }
                     TileTextBox(
                         modifier = Modifier
@@ -172,6 +176,18 @@ object CalorieViewerScreen : AppScreen {
                         }
                     }
                 }
+
+                HorizontalDivider(thickness = 12.dp)
+
+                StatCard(
+                    modifier = Modifier
+                        .width(360.dp)
+                        .height(168.dp),
+                    calorieEaten = 1291,
+                    calorieRemaining = 826,
+                    calorieBurned = 244,
+                    totalCalorie = 1291 + 826
+                )
             }
         }
     }
@@ -222,7 +238,11 @@ object CalorieViewerScreen : AppScreen {
                 TypewriterTextEffect(text = text) {
                     MarkdownText(
                         modifier = Modifier
-                            .verticalScroll(rememberScrollState()),
+                            .verticalScroll(rememberScrollState())
+                            .clickable(
+                                enabled = false,
+                                onClick = { }
+                            ),
                         markdown = it,
                         style = TextStyle(
                             fontSize = 12.sp

@@ -18,16 +18,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
+import me.abhigya.bourbon.data.firebase.get
+import me.abhigya.bourbon.data.firebase.getAsFlow
 import me.abhigya.bourbon.data.firebase.handle
 import me.abhigya.bourbon.data.firebase.handleAsResult
 import me.abhigya.bourbon.data.firebase.value
-import me.abhigya.bourbon.data.firebase.valueEventOnce
-import me.abhigya.bourbon.data.firebase.valueOrThrow
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.User
 import me.abhigya.bourbon.domain.entities.UserData
@@ -70,16 +69,11 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
         }
     }
 
-    override fun hasData(user: User): Flow<Boolean> = flow {
-        runCatching {
-            database.child(user.uid)
-                .valueEventOnce()
-                .firstOrNull()?.value != null
-        }.onFailure {
-            emit(false)
-        }.onSuccess {
-            emit(it)
-        }
+    override fun hasData(user: User): Flow<Boolean> {
+        return database.child(user.uid)
+            .getAsFlow()
+            .map { it.value != null }
+            .catch { emit(false) }
     }
 
     override fun loadUserData(user: User): Flow<Result<UserData>> {
@@ -87,8 +81,8 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
             return flowOf(Result.success(userDataCache!!))
         }
         return database.child(user.uid)
-            .valueEventOnce()
-            .map { Result.success(it.valueOrThrow<UserData>()) }
+            .get<UserData>()
+            .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }
 

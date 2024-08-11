@@ -19,10 +19,11 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import me.abhigya.bourbon.data.firebase.get
+import me.abhigya.bourbon.data.firebase.getAsFlow
 import me.abhigya.bourbon.data.firebase.handleAsResult
-import me.abhigya.bourbon.data.firebase.valueEvent
-import me.abhigya.bourbon.data.firebase.valueEventOnce
 import me.abhigya.bourbon.data.firebase.valueOrThrow
 import me.abhigya.bourbon.domain.ExerciseRepository
 import me.abhigya.bourbon.domain.entities.Exercise
@@ -35,18 +36,22 @@ class ExerciseRepositoryImpl(context: Context) : ExerciseRepository {
     private val imageStorage: StorageReference = storage.getReference("images")
     private val videoStorage: StorageReference = storage.getReference("videos")
 
-    override fun getExercises(): Flow<Result<Map<String, Exercise>>> {
-        return database
-            .valueEvent()
-            .map { Result.success(it.valueOrThrow<Map<String, Exercise>>()) }
-            .catch { emit(Result.failure(it)) }
+    override fun getExercises(): Flow<Exercise> = flow {
+        database
+            .getAsFlow()
+            .map { it.children.map { data -> data.valueOrThrow<Exercise>() } }
+            .collect {
+                for (exercise in it) {
+                    this@flow.emit(exercise)
+                }
+            }
     }
 
     override fun getExerciseById(id: String): Flow<Result<Exercise>> {
         return database
             .child(id)
-            .valueEventOnce()
-            .map { Result.success(it.valueOrThrow<Exercise>()) }
+            .get<Exercise>()
+            .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }
 

@@ -68,15 +68,8 @@ object HomeScreen : AppScreen {
                     Calendar(uiState = uiState) {
                         viewModel.trySend(HomeContract.Inputs.SelectDate(it.date.toKotlinLocalDate()))
                     }
-                    StatCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(180.dp),
-                        calorieEaten = 1291,
-                        calorieRemaining = 826,
-                        calorieBurned = 244,
-                        totalCalorie = 1291
-                    )
+
+
                 }
             }
         }
@@ -140,7 +133,6 @@ object HomeScreen : AppScreen {
             firstVisibleWeekDate = selectedDate,
             firstDayOfWeek = firstDayOfWeek
         )
-
 
         WeekCalendar(
             state = state,

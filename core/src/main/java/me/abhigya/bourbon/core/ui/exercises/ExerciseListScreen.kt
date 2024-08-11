@@ -24,7 +24,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -35,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -47,27 +47,27 @@ import me.abhigya.bourbon.core.ui.components.BackButton
 import me.abhigya.bourbon.core.ui.components.DraggableCard
 import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.utils.verticalGradientBackground
+import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.Exercise
 import org.koin.core.component.get
-import org.koin.core.parameter.parametersOf
 
-class ExerciseListScreen(
-    private val state: ExerciseListContract.State
-) : AppScreen {
+object ExerciseListScreen : AppScreen {
 
     @Composable
     override operator fun invoke() {
         val coroutineScope = rememberCoroutineScope()
-        val exerciseListVM: ExerciseListViewModel  = remember(coroutineScope) { get { parametersOf(coroutineScope, state) } }
-        val exercises by exerciseListVM.observeStates().collectAsState()
-        Content(
-            exercises.shownIndex,
-            exercises.exercises,
-        {
-            exerciseListVM.trySend(ExerciseListContract.Inputs.Next)
-        }) {
-            exerciseListVM.trySend(ExerciseListContract.Inputs.Previous)
-        }
+        val userState = remember (coroutineScope) { get<UserRepository>().currentUser() }
+        val user = userState.collectAsState(initial = null)
+//        val exerciseListVM: ExerciseListViewModel  = remember(coroutineScope) { get { parametersOf(coroutineScope, state) } }
+//        val exercises by exerciseListVM.observeStates().collectAsState()
+//        Content(
+//            exercises.shownIndex,
+//            exercises.exercises,
+//        {
+//            exerciseListVM.trySend(ExerciseListContract.Inputs.Next)
+//        }) {
+//            exerciseListVM.trySend(ExerciseListContract.Inputs.Previous)
+//        }
     }
 
     @Composable
@@ -178,9 +178,10 @@ class ExerciseListScreen(
     @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
     internal fun CardContent(exercise: Exercise) {
+        val url = stringResource(id = me.abhigya.bourbon.data.R.string.storage_url)
         Column {
             GlideImage(
-                model = exercise.imageUri,
+                model = "$url/images/${exercise.imageUri}",
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier.weight(1f)

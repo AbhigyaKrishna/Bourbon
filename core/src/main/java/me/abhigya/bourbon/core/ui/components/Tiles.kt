@@ -66,18 +66,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import me.abhigya.bourbon.core.utils.bouncyClick
 import me.saket.cascade.CascadeDropdownMenu
 
 @Composable
-fun TileCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+fun TileCard(
+    modifier: Modifier = Modifier,
+    width: Dp = 336.dp,
+    content: @Composable ColumnScope.() -> Unit
+) {
     Box(
         modifier = modifier
             .padding(4.dp)
     ) {
         Card(
             modifier = modifier
-                .width(336.dp),
+                .width(width),
             colors = CardDefaults.elevatedCardColors()
                 .copy(
                     containerColor = MaterialTheme.colorScheme.secondary,
