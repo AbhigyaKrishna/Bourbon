@@ -99,6 +99,7 @@ object HomeScreen : AppScreen, SubScreen {
                         val screen: SubScreen = when (selected) {
                             NavItem.Home -> HomeScreen
                             NavItem.Exercise -> ExerciseViewScreen
+                            NavItem.Diet -> DietViewScreen
                             NavItem.Profile -> TODO()
                         }
 
@@ -272,6 +273,7 @@ object HomeScreen : AppScreen, SubScreen {
     enum class NavItem {
         Home,
         Exercise,
+        Diet,
         Profile
     }
 
@@ -280,6 +282,7 @@ object HomeScreen : AppScreen, SubScreen {
         return when (this) {
             NavItem.Home -> painterResource(id = R.drawable.home)
             NavItem.Exercise -> painterResource(id = R.drawable.dumbbell)
+            NavItem.Diet -> painterResource(id = R.drawable.diet)
             NavItem.Profile -> painterResource(id = R.drawable.profile)
         }
     }

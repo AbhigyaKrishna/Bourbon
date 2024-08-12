@@ -39,7 +39,7 @@ object ExerciseViewScreen : SubScreen {
 
     @Composable
     override fun invoke(uiState: HomeContract.State, user: User) {
-        val exercises = user.exercises[uiState.date.dayOfWeek] ?: listOf(Rest)
+        val exercises = user.exercises[uiState.selectedDate.dayOfWeek] ?: listOf(Rest)
         Scaffold(
             bottomBar = {
                 Box(
