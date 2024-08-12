@@ -9,6 +9,7 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
+import me.abhigya.bourbon.core.ui.components.OutputState
 import me.abhigya.bourbon.domain.GeminiRepository
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -50,13 +51,6 @@ object CalorieViewerContract {
         data class Error(val error: Throwable) : Events
     }
 
-    sealed interface OutputState {
-        data object None : OutputState
-        data object Loading : OutputState
-        data class Data(val text: String) : OutputState
-        data class Error(val error: Throwable) : OutputState
-    }
-
     val module = module {
         viewModel { (coroutineScope: CoroutineScope) ->
             CalorieViewerViewModel(
@@ -88,8 +82,8 @@ class CalorieViewerInputHandler(
             is CalorieViewerContract.Inputs.OutPutStateChanged -> updateState { it.copy(outputState = input.outputState) }
             is CalorieViewerContract.Inputs.Fetch -> {
                 val state = getCurrentState()
-                if (state.outputState == CalorieViewerContract.OutputState.Loading) return
-                updateState { it.copy(outputState = CalorieViewerContract.OutputState.Loading) }
+                if (state.outputState == OutputState.Loading) return
+                updateState { it.copy(outputState = OutputState.Loading) }
                 sideJob("gemini-calorie") {
                     geminiRepository.promptCalorieFetch(state.item, state.amount, state.unit.name)
                         .collect { fetch ->
@@ -113,8 +107,8 @@ object CalorieViewerEventHandler : EventHandler<CalorieViewerContract.Inputs, Ca
         event: CalorieViewerContract.Events
     ) {
         when (event) {
-            is CalorieViewerContract.Events.Fetched -> postInput(CalorieViewerContract.Inputs.OutPutStateChanged(CalorieViewerContract.OutputState.Data(event.text)))
-            is CalorieViewerContract.Events.Error -> postInput(CalorieViewerContract.Inputs.OutPutStateChanged(CalorieViewerContract.OutputState.Error(event.error)))
+            is CalorieViewerContract.Events.Fetched -> postInput(CalorieViewerContract.Inputs.OutPutStateChanged(OutputState.Data(event.text)))
+            is CalorieViewerContract.Events.Error -> postInput(CalorieViewerContract.Inputs.OutPutStateChanged(OutputState.Error(event.error)))
         }
     }
 

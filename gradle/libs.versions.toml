@@ -7,6 +7,7 @@ splash-screen = "1.0.1"
 multidex = "2.0.1"
 glide = "4.16.0"
 glide-compose = "1.0.0-beta01"
+coil = "2.7.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
@@ -44,6 +45,7 @@ androidx-media3-exoplayer-dash = { group = "androidx.media3", name = "media3-exo
 androidx-media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "media3" }
 glide = { group = "com.github.bumptech.glide", name = "compose", version.ref = "glide-compose" }
 glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -108,7 +110,7 @@ google-services = { id = "com.google.gms.google-services", version.ref = "google
 google-secrets-gradle-plugin = { id = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", version.ref = "google-secrets" }
 
 [bundles]
-android = ["androidx-core-ktx", "androidx-core-splash-screen", "androidx-multidex", "androidx-lifecycle-runtime-ktx", "androidx-media3-exoplayer", "androidx-media3-exoplayer-dash", "androidx-media3-ui", "glide"]
+android = ["androidx-core-ktx", "androidx-core-splash-screen", "androidx-multidex", "androidx-lifecycle-runtime-ktx", "androidx-media3-exoplayer", "androidx-media3-exoplayer-dash", "androidx-media3-ui", "coil"]
 android-compose = ["androidx-activity-compose", "androidx-ui", "androidx-ui-graphics", "androidx-ui-tooling-preview", "androidx-material3", "cascade"]
 android-test = ["androidx-junit", "androidx-espresso-core"]
 android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]

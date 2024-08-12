@@ -37,8 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
+import coil.compose.AsyncImage
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
@@ -175,12 +174,11 @@ object ExerciseListScreen : AppScreen {
         }
     }
 
-    @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
     internal fun CardContent(exercise: Exercise) {
         val url = stringResource(id = me.abhigya.bourbon.data.R.string.storage_url)
         Column {
-            GlideImage(
+            AsyncImage(
                 model = "$url/images/exercise_${exercise.id}.png",
                 contentScale = ContentScale.Crop,
                 contentDescription = null,

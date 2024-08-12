@@ -17,4 +17,6 @@ interface GeminiRepository {
 
     fun promptUserDietPlan(userData: UserData): Flow<Result<Map<DayOfWeek, Diet>>>
 
+    fun promptRecipeFromItem(image: Bitmap): Flow<Result<String>>
+
 }

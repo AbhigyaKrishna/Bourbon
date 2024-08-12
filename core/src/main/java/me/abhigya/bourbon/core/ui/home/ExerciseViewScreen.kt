@@ -1,7 +1,5 @@
 package me.abhigya.bourbon.core.ui.home
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,9 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import me.abhigya.bourbon.core.R
-import me.abhigya.bourbon.core.utils.bouncyClick
+import me.abhigya.bourbon.core.ui.components.UiButton
 import me.abhigya.bourbon.domain.entities.Exercise
 import me.abhigya.bourbon.domain.entities.Rest
 import me.abhigya.bourbon.domain.entities.User
@@ -42,33 +39,12 @@ object ExerciseViewScreen : SubScreen {
         val exercises = user.exercises[uiState.selectedDate.dayOfWeek] ?: listOf(Rest)
         Scaffold(
             bottomBar = {
-                Box(
+                UiButton(
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(vertical = 8.dp, horizontal = 4.dp),
-                    contentAlignment = Alignment.Center
+                    text = "Start"
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp)
-                            .background(
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(4.dp)
-                            )
-                            .bouncyClick()
-                            .clickable {
 
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Start",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.background
-                        )
-                    }
                 }
             }
         ) { padding ->

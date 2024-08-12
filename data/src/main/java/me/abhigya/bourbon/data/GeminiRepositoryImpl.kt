@@ -98,6 +98,15 @@ class GeminiRepositoryImpl(private val context: Context) : GeminiRepository {
             .catch { emit(Result.failure(it)) }
     }
 
+    override fun promptRecipeFromItem(image: Bitmap): Flow<Result<String>> {
+        return query(
+            content {
+                text("What can I make with these?")
+                image(image)
+            }
+        )
+    }
+
     private fun String.trimToJson(): String {
         return dropWhile { it != '`' }
             .dropLastWhile { it != '`' }

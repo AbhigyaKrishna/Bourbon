@@ -29,6 +29,7 @@ import me.abhigya.bourbon.core.ui.caloriecalc.CalorieViewerScreen
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListScreen
 import me.abhigya.bourbon.core.ui.home.HomeScreen
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingScreen
+import me.abhigya.bourbon.core.ui.recipe.MakeSomethingOutOfScreen
 import me.abhigya.bourbon.core.ui.splash.SplashAfterOnboardScreen
 import me.abhigya.bourbon.core.ui.splash.SplashHomeViewModel
 import me.abhigya.bourbon.domain.UserRepository
@@ -76,6 +77,7 @@ object RouterScreen : AppScreen {
                             RoutePath.AR_SCENE -> ArScreen(Models.Burpee)()
                             RoutePath.EXERCISE_LIST -> ExerciseListScreen()
                             RoutePath.CALORIE_VIEWER -> CalorieViewerScreen()
+                            RoutePath.MAKE_SOMETHING_OUT_OF -> MakeSomethingOutOfScreen()
                         }
                     }
                 },
@@ -100,6 +102,8 @@ object RouterScreen : AppScreen {
             }
 
             SplashHomeViewModel.finish()
+
+            viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.MAKE_SOMETHING_OUT_OF.directions().build()))
         }
     }
 }

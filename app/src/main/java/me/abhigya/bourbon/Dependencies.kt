@@ -10,6 +10,7 @@ import me.abhigya.bourbon.core.ui.caloriecalc.CalorieViewerContract
 import me.abhigya.bourbon.core.ui.exercises.ExerciseListContract
 import me.abhigya.bourbon.core.ui.home.HomeContract
 import me.abhigya.bourbon.core.ui.onboarding.OnBoardingContract
+import me.abhigya.bourbon.core.ui.recipe.MakeSomethingOutOfContract
 import me.abhigya.bourbon.core.ui.router.module
 import me.abhigya.bourbon.data.dataModules
 import org.koin.dsl.module
@@ -32,5 +33,6 @@ val modules = listOf(
     AuthContract.module,
     OnBoardingContract.module,
     ExerciseListContract.module,
-    CalorieViewerContract.module
+    CalorieViewerContract.module,
+    MakeSomethingOutOfContract.module
 )
