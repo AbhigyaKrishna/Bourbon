@@ -13,20 +13,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.exyte.animatednavbar.AnimatedNavigationBar
+import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.kizitonwose.calendar.compose.WeekCalendar
 import com.kizitonwose.calendar.compose.weekcalendar.rememberWeekCalendarState
 import com.kizitonwose.calendar.core.WeekDay
@@ -35,14 +44,16 @@ import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import com.kizitonwose.calendar.core.yearMonth
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.utils.navigationBarsPadding
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 import me.abhigya.bourbon.domain.entities.User
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 import java.time.DayOfWeek
 
-object HomeScreen : AppScreen {
+object HomeScreen : AppScreen, SubScreen {
 
     @Composable
     override operator fun invoke() {
@@ -50,6 +61,7 @@ object HomeScreen : AppScreen {
         val viewModel: HomeViewModel = remember(coroutine) { get { parametersOf(coroutine) } }
         val uiState by viewModel.observeStates().collectAsState()
         val userState by viewModel.user.collectAsState()
+        var selected by remember { mutableStateOf(NavItem.Home) }
 
         val user = userState
         if (user != null) {
@@ -58,20 +70,48 @@ object HomeScreen : AppScreen {
                     .fillMaxSize()
             ) {
                 Header(user = user)
-                Column(
+                Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(4.dp)
-                        .background(MaterialTheme.colorScheme.background)
-                ) {
-                    Calendar(uiState = uiState) {
-                        viewModel.trySend(HomeContract.Inputs.SelectDate(it.date.toKotlinLocalDate()))
+                        .background(MaterialTheme.colorScheme.background),
+                    topBar = {
+                        if (selected == NavItem.Profile) return@Scaffold
+
+                        Calendar(uiState = uiState) {
+                            viewModel.trySend(HomeContract.Inputs.SelectDate(it.date.toKotlinLocalDate()))
+                        }
+                    },
+                    bottomBar = {
+                        BottomBavBar(
+                            allStates = NavItem.entries,
+                            current = selected
+                        ) {
+                            selected = it
+                        }
                     }
+                ) { padding ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(padding)
+                    ) {
+                        val screen: SubScreen = when (selected) {
+                            NavItem.Home -> HomeScreen
+                            NavItem.Exercise -> ExerciseViewScreen
+                            NavItem.Profile -> TODO()
+                        }
 
-
+                        screen(uiState = uiState, user = user)
+                    }
                 }
             }
         }
+    }
+
+    @Composable
+    override fun invoke(uiState: HomeContract.State, user: User) {
+
     }
 
     @Composable
@@ -135,7 +175,7 @@ object HomeScreen : AppScreen {
 
         WeekCalendar(
             state = state,
-            contentPadding = PaddingValues(8.dp),
+            contentPadding = PaddingValues(horizontal = 8.dp),
             dayContent = {
                 val selection = when {
                     it.date == selectedDate -> SelectionState.SELECTED
@@ -191,11 +231,57 @@ object HomeScreen : AppScreen {
         }
     }
 
+    @Composable
+    internal fun BottomBavBar(allStates: List<NavItem>, current: NavItem, onClick: (NavItem) -> Unit) {
+        AnimatedNavigationBar(
+            modifier = Modifier
+                .fillMaxWidth()
+                .navigationBarsPadding()
+                .height(56.dp),
+            selectedIndex = current.ordinal,
+            barColor = MaterialTheme.colorScheme.secondary,
+            ballColor = MaterialTheme.colorScheme.primary,
+            cornerRadius = shapeCornerRadius(8.dp),
+        ) {
+            allStates.forEachIndexed { index, navItem ->
+                val isSelected = index == current.ordinal
+                IconButton(
+                    modifier = Modifier
+                        .padding(4.dp),
+                    onClick = {
+                        onClick(navItem)
+                    }
+                ) {
+                    Icon(
+                        painter = navItem.icon(),
+                        contentDescription = navItem.name.lowercase(),
+                        tint = if (isSelected) MaterialTheme.colorScheme.primary else Color.White
+                    )
+                }
+            }
+        }
+    }
+
     enum class SelectionState {
         PREVIOUS,
         CURRENT,
         SELECTED,
         NEXT
+    }
+
+    enum class NavItem {
+        Home,
+        Exercise,
+        Profile
+    }
+
+    @Composable
+    private fun NavItem.icon(): Painter {
+        return when (this) {
+            NavItem.Home -> painterResource(id = R.drawable.home)
+            NavItem.Exercise -> painterResource(id = R.drawable.dumbbell)
+            NavItem.Profile -> painterResource(id = R.drawable.profile)
+        }
     }
 
 }

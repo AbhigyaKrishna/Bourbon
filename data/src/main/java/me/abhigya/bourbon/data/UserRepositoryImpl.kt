@@ -15,7 +15,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.trySendBlocking
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
@@ -24,6 +23,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.tasks.await
 import me.abhigya.bourbon.data.firebase.get
@@ -79,15 +79,9 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
 
     override suspend fun loadUserFully() {
         val user = currentUser().single()
-        val data = loadUserData(user).flowOn(Dispatchers.IO).catch {
-            throw it
-        }.single()
-        val exercises = loadExercises(user).flowOn(Dispatchers.IO).catch {
-            throw it
-        }.single()
-        val diet = loadDiet(user).flowOn(Dispatchers.IO).catch {
-            throw it
-        }.single()
+        val data = loadUserData(user).flowOn(Dispatchers.IO).single()
+        val exercises = loadExercises(user).flowOn(Dispatchers.IO).single()
+        val diet = loadDiet(user).flowOn(Dispatchers.IO).single()
 
         userCache = user.copy(
             data = data.getOrThrow(),
@@ -110,6 +104,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
             .getReference("userdata")
             .child(user.uid)
             .get<UserData>()
+            .onEach { data -> userCache?.let { userCache = it.copy(data = data) } }
             .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }
@@ -120,6 +115,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
                 .getReference("userdata")
                 .child(user.uid)
                 .value(user.data)
+            userCache?.let { userCache = it.copy(data = user.data) }
         }
     }
 
@@ -129,6 +125,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
                 .getReference("exercises")
                 .child(user.uid)
                 .value(user.exercises)
+            userCache?.let { userCache = it.copy(exercises = user.exercises) }
         }
     }
 
@@ -137,6 +134,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
             .getReference("exercises")
             .child(user.uid)
             .get<Map<DayOfWeek, List<Exercise>>>()
+            .onEach { exercise -> userCache?.let { userCache = it.copy(exercises = exercise) } }
             .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }
@@ -147,6 +145,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
                 .getReference("diets")
                 .child(user.uid)
                 .value(user.diet)
+            userCache?.let { userCache = it.copy(diet = user.diet) }
         }
     }
 
@@ -155,6 +154,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
             .getReference("diets")
             .child(user.uid)
             .get<Map<DayOfWeek, Diet>>()
+            .onEach { diet -> userCache?.let { userCache = it.copy(diet = diet) } }
             .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
     }

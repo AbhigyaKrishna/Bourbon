@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,11 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.Scale
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileLabel
@@ -88,7 +89,7 @@ object GenderAndAgeStepScreen : StepScreen {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.Check,
+                            painter = it.icon(),
                             contentDescription = it.name,
                             tint = if (genderSelected) MaterialTheme.colorScheme.background else Color.White,
                             modifier = Modifier.size(16.dp)
@@ -141,6 +142,14 @@ object GenderAndAgeStepScreen : StepScreen {
                 }
             }
         ))
+    }
+
+    @Composable
+    private fun Gender.icon(): Painter {
+        return when (this) {
+            Gender.Male -> painterResource(id = R.drawable.male)
+            Gender.Female -> painterResource(id = R.drawable.female)
+        }
     }
 
 }

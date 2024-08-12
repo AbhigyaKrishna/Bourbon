@@ -199,14 +199,14 @@ object ExerciseListScreen : AppScreen {
                     textAlign = TextAlign.Start
                 )
                 Icon(
-                    imageVector = Icons.Outlined.Place,
+                    painter = painterResource(id = R.drawable.stopwatch),
                     modifier = Modifier
                         .padding(horizontal = 8.dp),
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null
                 )
                 Text(
-                    text = (exercise.duration ?: 30).toString(),
+                    text = "${exercise.duration ?: 30}s",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

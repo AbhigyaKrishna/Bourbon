@@ -10,12 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -35,12 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import dev.jeziellago.compose.markdowntext.MarkdownText
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AnimatedLoadingGradient
 import me.abhigya.bourbon.core.ui.components.AppBar
@@ -222,8 +223,10 @@ object CalorieViewerScreen : AppScreen {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.CheckCircle,
-                    contentDescription = "AI Text"
+                    painter = painterResource(id = R.drawable.gemini),
+                    contentDescription = "AI Text",
+                    modifier = Modifier
+                        .size(16.dp)
                 )
             }
 

@@ -10,5 +10,6 @@ dependencies {
     api(libs.arsceneview)
     implementation(libs.markdown.text)
     implementation(libs.calender)
+    implementation(libs.navbar)
     testImplementation(libs.ballast.test)
 }
