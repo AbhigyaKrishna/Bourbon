@@ -91,6 +91,7 @@ fun GeminiTypeWrite(
                 contentDescription = "AI Text",
                 modifier = Modifier
                     .size(16.dp),
+                tint = Color.Unspecified
             )
         }
 

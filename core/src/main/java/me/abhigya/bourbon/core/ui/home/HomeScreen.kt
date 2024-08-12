@@ -8,11 +8,21 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +44,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.animation.indendshape.shapeCornerRadius
 import com.kizitonwose.calendar.compose.WeekCalendar
@@ -46,8 +59,14 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
+import me.abhigya.bourbon.core.ui.components.StatCard
+import me.abhigya.bourbon.core.ui.router.LocalRouter
+import me.abhigya.bourbon.core.ui.router.RoutePath
+import me.abhigya.bourbon.core.utils.bouncyClick
 import me.abhigya.bourbon.core.utils.navigationBarsPadding
 import me.abhigya.bourbon.core.utils.statusBarsPadding
+import me.abhigya.bourbon.domain.entities.DietPreference
+import me.abhigya.bourbon.domain.entities.Food
 import me.abhigya.bourbon.domain.entities.User
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
@@ -100,7 +119,7 @@ object HomeScreen : AppScreen, SubScreen {
                             NavItem.Home -> HomeScreen
                             NavItem.Exercise -> ExerciseViewScreen
                             NavItem.Diet -> DietViewScreen
-                            NavItem.Profile -> TODO()
+                            NavItem.Profile -> ProfileScreen
                         }
 
                         screen(uiState = uiState, user = user)
@@ -112,7 +131,164 @@ object HomeScreen : AppScreen, SubScreen {
 
     @Composable
     override fun invoke(uiState: HomeContract.State, user: User) {
+        val router = LocalRouter.current
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(4.dp)
+                .background(MaterialTheme.colorScheme.background),
+            horizontalAlignment = Alignment.Start
+        ) {
+            Text(
+                text = "Quick Access",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(160.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .padding(vertical = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        elevation = CardDefaults.elevatedCardElevation(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.secondary,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(horizontal = 16.dp),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .bouncyClick()
+                                    .clickable {
+                                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.CALORIE_VIEWER.directions().build()))
+                                    },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Calorie viewer",
+                                    color = Color.White,
+                                    fontSize = 20.sp
+                                )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.fire),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            }
 
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f)
+                                    .bouncyClick()
+                                    .clickable {
+                                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.MAKE_SOMETHING_OUT_OF.directions().build()))
+                                    },
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Make Something Out Of",
+                                    color = Color.White,
+                                    fontSize = 20.sp
+                                )
+                                Icon(
+                                    painter = painterResource(id = R.drawable.book),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+
+            Text(
+                text = "Upcoming Meal",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
+            )
+            HorizontalDivider(thickness = 4.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(80.dp)
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    elevation = CardDefaults.elevatedCardElevation(),
+                    shape = RoundedCornerShape(12.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                    )
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        val food = user.diet[uiState.selectedDate.dayOfWeek]?.food?.first() ?: Food("dummy", "Dummy", "Dummy", 0, DietPreference.Vegetarian)
+                        Column(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = food.name,
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.primary,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "${food.calories} calories",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+            }
+
+            HorizontalDivider(thickness = 12.dp)
+            Text(
+                text = "Stats",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 16.sp
+            )
+            HorizontalDivider(thickness = 4.dp)
+            StatCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(168.dp),
+                calorieEaten = 1291,
+                calorieRemaining = 826,
+                calorieBurned = 244,
+                totalCalorie = 1291 + 826
+            )
+        }
     }
 
     @Composable

@@ -102,8 +102,6 @@ object RouterScreen : AppScreen {
             }
 
             SplashHomeViewModel.finish()
-
-            viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.MAKE_SOMETHING_OUT_OF.directions().build()))
         }
     }
 }

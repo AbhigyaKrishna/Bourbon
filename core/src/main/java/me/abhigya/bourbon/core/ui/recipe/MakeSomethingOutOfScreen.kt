@@ -101,7 +101,7 @@ object MakeSomethingOutOfScreen : AppScreen {
 
                 GeminiOutput(
                     state = uiState.outputState,
-                    height = 300.dp
+                    height = 500.dp
                 )
             }
         }
