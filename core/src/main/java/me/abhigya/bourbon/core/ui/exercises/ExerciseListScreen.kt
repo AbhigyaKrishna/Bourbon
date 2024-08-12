@@ -181,7 +181,7 @@ object ExerciseListScreen : AppScreen {
         val url = stringResource(id = me.abhigya.bourbon.data.R.string.storage_url)
         Column {
             GlideImage(
-                model = "$url/images/${exercise.imageUri}",
+                model = "$url/images/exercise_${exercise.id}.png",
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier.weight(1f)
@@ -206,7 +206,7 @@ object ExerciseListScreen : AppScreen {
                     contentDescription = null
                 )
                 Text(
-                    text = exercise.duration.inWholeSeconds.toString(),
+                    text = (exercise.duration ?: 30).toString(),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

@@ -19,7 +19,8 @@ koin = "4.0.0-RC1"
 arrow = "1.2.4"
 ksp = "2.0.0-1.0.23"
 google-services = "4.4.2"
-play-services-auth = "21.2.0"
+play-services = "21.2.0"
+play-services-maps = "19.0.0"
 credentials = "1.3.0-rc01"
 google-id = "1.1.1"
 google-api-client = "1.32.1"
@@ -78,10 +79,8 @@ firebase-database = { group = "com.google.firebase", name = "firebase-database-k
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
 firebase-ui-storage = { group = "com.firebaseui", name = "firebase-ui-storage", version.ref = "firebase-ui" }
-firebase-analytics-gitlive = { group = "dev.gitlive", name = "firebase-analytics", version.ref = "firebase-gitlive" }
-firebase-database-gitlive = { group = "dev.gitlive", name = "firebase-database", version.ref = "firebase-gitlive" }
-firebase-auth-gitlive = { group = "dev.gitlive", name = "firebase-auth", version.ref = "firebase-gitlive" }
-google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
+google-play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services" }
+google-play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "play-services" }
 #noinspection CredentialDependency
 android-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 android-credentials-play-service = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
@@ -89,6 +88,7 @@ google-id = { group = "com.google.android.libraries.identity.googleid", name = "
 google-api-client = { group = "com.google.api-client", name = "google-api-client", version.ref = "google-api-client" }
 kotlinx-serialization-bom = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-bom", version.ref = "serialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json" }
 arsceneview = { group = "io.github.sceneview", name = "arsceneview", version.ref = "arsceneview" }
 generative-ai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "gen-ai" }
 markdown-text = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "markdown-text" }
@@ -113,4 +113,6 @@ android-compose-debug = ["androidx-ui-tooling", "androidx-ui-test-manifest"]
 ballast = ["ballast-core", "ballast-repository", "ballast-saved-state", "ballast-sync", "ballast-undo", "ballast-navigation", "ballast-schedules", "ballast-crash-reporting", "ballast-analytics", "ballast-debugger-client"]
 arrow = ["arrow-core", "arrow-coroutines"]
 firebase = ["firebase-analytics", "firebase-database", "firebase-auth", "firebase-storage", "firebase-ui-storage"]
+kotlinx-serialization = ["kotlinx-serialization-core", "kotlinx-serialization-json"]
 credentials = ["android-credentials", "android-credentials-play-service", "google-id"]
+google-play-services = ["google-play-services-auth", "google-play-services-location"]

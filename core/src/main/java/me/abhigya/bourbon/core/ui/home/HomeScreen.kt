@@ -36,7 +36,6 @@ import com.kizitonwose.calendar.core.yearMonth
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import me.abhigya.bourbon.core.ui.AppScreen
-import me.abhigya.bourbon.core.ui.components.StatCard
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 import me.abhigya.bourbon.domain.entities.User
 import org.koin.core.component.get
@@ -50,9 +49,9 @@ object HomeScreen : AppScreen {
         val coroutine = rememberCoroutineScope()
         val viewModel: HomeViewModel = remember(coroutine) { get { parametersOf(coroutine) } }
         val uiState by viewModel.observeStates().collectAsState()
-        val userDataState by viewModel.fetchUser().collectAsState(initial = null)
+        val userState by viewModel.user.collectAsState()
 
-        val user = userDataState
+        val user = userState
         if (user != null) {
             Column(
                 modifier = Modifier

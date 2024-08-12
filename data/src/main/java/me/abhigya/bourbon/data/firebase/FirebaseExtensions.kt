@@ -7,10 +7,13 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.onFailure
+import kotlinx.coroutines.channels.onSuccess
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.runBlocking
 import kotlin.coroutines.cancellation.CancellationException
 
 inline fun <T, R> Task<T>.handle(
@@ -19,11 +22,16 @@ inline fun <T, R> Task<T>.handle(
 ): Flow<R> = channelFlow {
     addOnSuccessListener {
         successScope(it)
+        close()
     }.addOnFailureListener {
         trySendBlocking(failureTransform(it))
+        close()
     }.addOnCanceledListener {
         trySendBlocking(failureTransform(CancellationException()))
+        close()
     }
+
+    awaitClose()
 }
 
 inline fun <T, R> Task<T>.handleAsResult(crossinline successScope: ProducerScope<Result<R>>.(T) -> Unit): Flow<Result<R>> {
@@ -34,6 +42,7 @@ fun DatabaseReference.valueEvent(): Flow<DataSnapshot> = callbackFlow {
     val listener = addValueEventListener(object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             trySendBlocking(snapshot)
+            close()
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -75,9 +84,9 @@ fun DatabaseReference.getAsFlow(): Flow<DataSnapshot> = callbackFlow {
         trySendBlocking(it)
         close()
     }.addOnFailureListener {
-        throw it
+        close(it)
     }.addOnCanceledListener {
-        throw CancellationException()
+        close(CancellationException())
     }
 
     awaitClose()
@@ -85,12 +94,17 @@ fun DatabaseReference.getAsFlow(): Flow<DataSnapshot> = callbackFlow {
 
 inline fun <reified T> DatabaseReference.get(serializer: FirebaseSerializer = FirebaseSerializer()): Flow<T> = callbackFlow {
     get().addOnSuccessListener {
-        trySendBlocking(it.valueOrThrow<T>(serializer))
-        close()
+        runBlocking {
+            trySendBlocking(it.valueOrThrow<T>(serializer))
+        }.onFailure {
+            close(it)
+        }.onSuccess {
+            close()
+        }
     }.addOnFailureListener {
-        throw it
+        close(it)
     }.addOnCanceledListener {
-        throw CancellationException()
+        close(CancellationException())
     }
 
     awaitClose()

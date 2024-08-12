@@ -93,9 +93,12 @@ object RouterScreen : AppScreen {
             delay(50)
             if (!user.isLoggedIn().single()) {
                 viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.AUTH.directions().build()))
-            } else if (!user.hasData(user.currentUser().single()).single()) {
-                viewModel.trySend(RouterContract.Inputs.GoToDestination(RoutePath.ONBOARDING.directions().build()))
+            } else if (user.hasData(user.currentUser().single()).single()) {
+                user.loadUserFully()
+            } else {
+                viewModel.trySend(RouterContract.Inputs.ReplaceTopDestination(RoutePath.ONBOARDING.directions().build()))
             }
+
             SplashHomeViewModel.finish()
         }
     }

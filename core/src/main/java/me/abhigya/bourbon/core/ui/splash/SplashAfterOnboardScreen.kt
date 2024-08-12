@@ -6,9 +6,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.ui.router.RoutePath
+import me.abhigya.bourbon.domain.UserRepository
+import org.koin.core.component.get
+import kotlin.system.measureTimeMillis
 
 object SplashAfterOnboardScreen : SplashScreen() {
 
@@ -16,8 +21,14 @@ object SplashAfterOnboardScreen : SplashScreen() {
     override fun Content() {
         val coroutine = rememberCoroutineScope()
         val router = LocalRouter.current
+        val userRepository: UserRepository = get()
         LaunchedEffect(coroutine) {
-            delay(2000)
+            val time = measureTimeMillis {
+                withContext(Dispatchers.IO) {
+                    userRepository.loadUserFully()
+                }
+            }
+            delay(2000 - time)
             router.trySend(RouterContract.Inputs.RestoreBackstack(listOf(RoutePath.HOME.directions().build())))
         }
 

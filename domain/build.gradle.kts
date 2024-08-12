@@ -5,6 +5,6 @@ plugins {
 
 dependencies {
     implementation(platform(libs.kotlinx.serialization.bom))
-    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.bundles.kotlinx.serialization)
     implementation(libs.arsceneview)
 }

@@ -1,13 +1,15 @@
 package me.abhigya.bourbon.domain.entities
 
 import kotlinx.serialization.Serializable
+import java.time.DayOfWeek
 
 data class User(
     val uid: String,
     val name: String,
     val email: String,
     val data: UserData = UserData(),
-    val exercises: Set<String> = mutableSetOf()
+    val exercises: Map<DayOfWeek, List<Exercise>> = emptyMap(),
+    val diet: Map<DayOfWeek, Diet> = emptyMap(),
 )
 
 @Serializable
@@ -19,11 +21,13 @@ data class UserData(
     val goal: Goal = Goal.WeightLoss,
     val aimWeight: Kilograms = Kilograms(),
     val training: Set<DefaultTraining> = mutableSetOf(),
-    val workoutDays: Set<Days> = mutableSetOf(),
+    val workoutDays: Set<DayOfWeek> = mutableSetOf(),
     val activityLevel: ActivityLevel = ActivityLevel.Sedentary,
     val dietGuide: DietGuide = DietGuide.PreMade,
     val dietPreference: DietPreference = DietPreference.Vegetarian,
     val mealFrequency: Int = 1,
+    val equipments: Set<String> = mutableSetOf(),
+    val location: String = "",
 )
 
 @Serializable
@@ -74,3 +78,10 @@ enum class DietGuide(val display: String) {
     Create("Create"),
     ;
 }
+
+val DayOfWeek.abbreviation: String
+    get() = this.name.take(1) + if (this == DayOfWeek.THURSDAY || this == DayOfWeek.SATURDAY) {
+         this.name[1].lowercase()
+    } else {
+        ""
+    }

@@ -23,9 +23,9 @@ dependencies {
     api(project(":domain"))
     api(platform(libs.firebase.bom))
     api(libs.bundles.firebase)
-    implementation(libs.google.play.services.auth)
+    implementation(libs.bundles.google.play.services)
     implementation(libs.bundles.credentials)
     implementation(libs.generative.ai)
     implementation(platform(libs.kotlinx.serialization.bom))
-    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.bundles.kotlinx.serialization)
 }

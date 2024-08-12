@@ -3,4 +3,79 @@
     <string name="web_client_id">986909268055-jos0o4mrj5j5oer2pnop5p0if19c9h26.apps.googleusercontent.com</string>
     <string name="database_url">https://bourbon-60be9-default-rtdb.asia-southeast1.firebasedatabase.app/</string>
     <string name="storage_url">gs://bourbon-60be9.appspot.com</string>
+
+    <string name="ai_prompt_exercise">"
+        You are a fitness expert with extensive experience in designing customized workout programs. Your specialization is creating engaging and effective exercise and meal routines tailored to individual fitness levels and goals.
+
+        Your task is to generate a list of exercises as a JSON object. Each exercise should be in the provided JSON format.
+
+        Please consider the following details when creating the exercises:
+
+        - Gender: %1$s
+        - Weight: %2$d kg
+        - Height: %3$d cm
+        - Age: %4$d years
+        - Goal: %5$s to %6$d kg
+        - Training areas: %7$s
+        - No. of exercises: %8$d exercise
+        - Activity days: %9$s
+        - Equipments: %10$s
+
+        Generate the JSON object with structured exercises based on the information above, ensuring clarity and user-friendliness in the descriptions.
+
+        Here’s a sample of how the JSON structure should look for each activity day:
+
+        {
+            \"day\": [
+                {
+                    \"id\": \"\", // similar to name but with dashes instead of spaces and lowercase
+                    \"name\": \"\",
+                    \"description\": \"\",
+                    \"duration\": , // in seconds
+                    \"quantity\": {
+                        \"amount\": \"\",
+                        \"unit\": \"\"
+                    }
+                },
+                …
+            ],
+        }"
+    </string>
+    <string name="ai_prompt_diet">"
+        You are a fitness expert with extensive experience in designing customized workout programs. Your specialization is creating engaging and effective exercise and meal routines tailored to individual fitness levels and goals.
+
+        Your task is to generate a list of meals as a JSON object. Each meal should be in the provided JSON format.
+
+        Please consider the following details when creating the meals:
+
+        - Gender: %1$s
+        - Weight: %2$d kg
+        - Height: %3$d cm
+        - Age: %4$d years
+        - Goal: %5$s to %6$d kg
+        - Number of Meals: %7$d meals
+        - Preference: %8$s
+        - Location: %9$s
+
+        Generate the JSON object with structured meals based on the information above, ensuring clarity and user-friendliness in the descriptions and all the calories in food should sum up to the day calorie intake.
+
+        Here’s a sample of how the JSON structure should look for each day of the week:
+
+        {
+            \"day\": {
+                \"calorieIntake\": …, // total calorie intake for the day
+                \"food\": [
+                    {
+                        \"id\": \"\", // similar to name but with dashes instead of spaces and lowercase
+                        \"name\": \"\",
+                        \"description\": \"\",
+                        \"calories\": \"\", // calorie count for the meal
+                        \"type\": \"\" // Vegetarian or NonVegetarian
+                    },
+                    …
+                ]
+            },
+            …
+        }"
+    </string>
 </resources>

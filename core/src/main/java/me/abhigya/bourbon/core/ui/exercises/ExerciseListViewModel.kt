@@ -30,14 +30,14 @@ class ExerciseListViewModel(
     init {
         val exercises = observeStates()
         viewModelScope.launch {
-            for ((idx, exercise) in exercises.first().exercises.withIndex()) {
-                val videoUri = exercise.videoUri ?: continue
-                launch(Dispatchers.IO) {
-                    val video = exerciseRepository.getExerciseImageById(videoUri).single().getOrNull() ?: return@launch
-                    videoCache[idx] = video
-                    sendAndAwaitCompletion(ExerciseListContract.Inputs.RaiseEvent(ExerciseListContract.Events.VideoLoaded(idx, video)))
-                }
-            }
+//            for ((idx, exercise) in exercises.first().exercises.withIndex()) {
+//                val videoUri = exercise.videoUri ?: continue
+//                launch(Dispatchers.IO) {
+//                    val video = exerciseRepository.getExerciseImageById(videoUri).single().getOrNull() ?: return@launch
+//                    videoCache[idx] = video
+//                    sendAndAwaitCompletion(ExerciseListContract.Inputs.RaiseEvent(ExerciseListContract.Events.VideoLoaded(idx, video)))
+//                }
+//            }
         }
     }
 

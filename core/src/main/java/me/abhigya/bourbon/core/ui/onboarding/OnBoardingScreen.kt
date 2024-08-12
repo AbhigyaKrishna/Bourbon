@@ -15,12 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,8 +28,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +47,8 @@ private val STEP_COUPLE = listOf(
     listOf(OnBoardingContract.Step.GenderAndAge),
     listOf(OnBoardingContract.Step.BmiScale),
     listOf(OnBoardingContract.Step.GoalAndAim, OnBoardingContract.Step.Training, OnBoardingContract.Step.ActivityLevel),
-    listOf(OnBoardingContract.Step.Diet, OnBoardingContract.Step.MealFrequency)
+    listOf(OnBoardingContract.Step.Diet, OnBoardingContract.Step.MealFrequency),
+    listOf(OnBoardingContract.Step.FetchData)
 )
 
 object OnBoardingScreen : AppScreen {
@@ -68,6 +62,7 @@ object OnBoardingScreen : AppScreen {
         var currPage by remember { mutableIntStateOf(0) }
 
         BackHandler {
+            if (uiState.value.step == OnBoardingContract.Step.FetchData) return@BackHandler
             if (currPage > 0) {
                 currPage--
             } else {
@@ -77,6 +72,7 @@ object OnBoardingScreen : AppScreen {
 
         Scaffold(
             topBar = {
+                if (uiState.value.step == OnBoardingContract.Step.FetchData) return@Scaffold
                 AnimatedVisibility(
                     visible = currPage > 0
                 ) {
@@ -90,6 +86,7 @@ object OnBoardingScreen : AppScreen {
                 }
             },
             bottomBar = {
+                if (uiState.value.step == OnBoardingContract.Step.FetchData) return@Scaffold
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -194,6 +191,7 @@ object OnBoardingScreen : AppScreen {
         OnBoardingContract.Step.ActivityLevel -> ActivityLevelStepScreen
         OnBoardingContract.Step.Diet -> DietStepScreen
         OnBoardingContract.Step.MealFrequency -> MealFrequencyStepScreen
+        OnBoardingContract.Step.FetchData -> FetchDataStepScreen
     }
 
 }

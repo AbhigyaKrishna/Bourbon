@@ -7,7 +7,12 @@ import com.copperleaf.ballast.build
 import com.copperleaf.ballast.core.AndroidViewModel
 import com.copperleaf.ballast.withViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import me.abhigya.bourbon.domain.UserRepository
@@ -21,8 +26,17 @@ class HomeViewModel(
     private val userRepository: UserRepository
 ) : AndroidViewModel<HomeContract.Inputs, HomeContract.Events, HomeContract.State>(config, coroutine) {
 
-    fun fetchUser(): Flow<User> {
-        return userRepository.currentUser()
+    private val _user: MutableStateFlow<User?> = MutableStateFlow(null)
+    val user: StateFlow<User?> = _user.asStateFlow()
+
+    init {
+        coroutine.launch {
+            while (!userRepository.isLoaded) {
+                delay(100)
+            }
+
+            _user.value = userRepository.currentUser().single()
+        }
     }
 
 }

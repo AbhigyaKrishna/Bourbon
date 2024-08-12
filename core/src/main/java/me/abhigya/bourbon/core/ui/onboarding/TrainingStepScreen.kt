@@ -16,8 +16,9 @@ import me.abhigya.bourbon.core.ui.components.TileLabel
 import me.abhigya.bourbon.core.ui.components.TileOption
 import me.abhigya.bourbon.core.ui.components.TileSeparator
 import me.abhigya.bourbon.core.ui.components.TiledRow
-import me.abhigya.bourbon.domain.entities.Days
 import me.abhigya.bourbon.domain.entities.DefaultTraining
+import me.abhigya.bourbon.domain.entities.abbreviation
+import java.time.DayOfWeek
 
 object TrainingStepScreen : StepScreen {
 
@@ -56,7 +57,7 @@ object TrainingStepScreen : StepScreen {
             TiledRow(
                 itemsPerRow = 7,
                 height = 40.dp,
-                elements = Days.entries.map {
+                elements = DayOfWeek.entries.map {
                     {
                         val selected = uiState.value.workoutDays.contains(it)
                         TileOption(
