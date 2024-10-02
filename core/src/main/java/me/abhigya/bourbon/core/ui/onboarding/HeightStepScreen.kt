@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.Scale
 import me.abhigya.bourbon.core.utils.systemBarsPadding
 import me.abhigya.bourbon.domain.entities.Centimeters
@@ -79,7 +81,7 @@ object HeightStepScreen : StepScreen {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "How tall are you?",
+                        text = stringResource(R.string.how_tall_are_you),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -125,7 +127,7 @@ object HeightStepScreen : StepScreen {
                                 )
                                 Text(
                                     modifier = Modifier.alignByBaseline(),
-                                    text = "ft"
+                                    text = stringResource(R.string.ft_unit)
                                 )
                             }
                         }

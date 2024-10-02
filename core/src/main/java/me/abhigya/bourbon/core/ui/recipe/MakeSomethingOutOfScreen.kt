@@ -40,12 +40,14 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import coil.compose.AsyncImage
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AppBar
 import me.abhigya.bourbon.core.ui.components.BackButton
@@ -93,7 +95,7 @@ object MakeSomethingOutOfScreen : AppScreen {
                 UiButton(
                     modifier = Modifier
                         .padding(8.dp),
-                    text = "Find",
+                    text = stringResource(R.string.make_something_out_of_screen_find),
                     clickable = uiState.image != null
                 ) {
                     viewModel.trySend(MakeSomethingOutOfContract.Inputs.Find)
@@ -207,7 +209,7 @@ object MakeSomethingOutOfScreen : AppScreen {
                 }
 
                 Text(
-                    text = "Click to take picture",
+                    text = stringResource(R.string.make_something_out_of_screen_click_to_take_picture),
                     fontSize = 24.sp,
                     color = MaterialTheme.colorScheme.tertiary
                 )
@@ -229,20 +231,20 @@ object MakeSomethingOutOfScreen : AppScreen {
         onPhotoGalleryClick: () -> Unit
     ) {
         ModalBottomSheetContent(
-            header = "Choose Option",
+            header = stringResource(R.string.make_something_out_of_screen_choose_option),
             onDismiss = {
                 onDismiss.invoke()
             },
             items = listOf(
                 BottomSheetItem(
-                    title = "Take Photo",
+                    title = stringResource(R.string.make_something_out_of_screen_take_photo),
                     icon = Icons.Default.AccountBox,
                     onClick = {
                         onTakePhotoClick.invoke()
                     }
                 ),
                 BottomSheetItem(
-                    title = "Select image",
+                    title = stringResource(R.string.make_something_out_of_screen_select_image),
                     icon = Icons.Default.Place,
                     onClick = {
                         onPhotoGalleryClick.invoke()
@@ -256,7 +258,7 @@ object MakeSomethingOutOfScreen : AppScreen {
     @Composable
     fun ModalBottomSheetContent(
         onDismiss: () -> Unit,
-        header: String = "Choose Option",
+        header: String = stringResource(R.string.make_something_out_of_screen_choose_option),
         items: List<BottomSheetItem> = listOf(),
     ) {
         val skipPartiallyExpanded by remember { mutableStateOf(false) }

@@ -203,7 +203,7 @@ object ExerciseListScreen : AppScreen {
                     contentDescription = null
                 )
                 Text(
-                    text = "${exercise.duration ?: 30}s",
+                    text = stringResource(R.string.duration_seconds, exercise.duration ?: 30),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

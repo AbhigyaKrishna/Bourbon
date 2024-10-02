@@ -13,13 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
@@ -41,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -140,7 +135,7 @@ object HomeScreen : AppScreen, SubScreen {
             horizontalAlignment = Alignment.Start
         ) {
             Text(
-                text = "Quick Access",
+                text = stringResource(R.string.home_screen_quick_access),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp
             )
@@ -179,13 +174,19 @@ object HomeScreen : AppScreen, SubScreen {
                                     .weight(1f)
                                     .bouncyClick()
                                     .clickable {
-                                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.CALORIE_VIEWER.directions().build()))
+                                        router.trySend(
+                                            RouterContract.Inputs.GoToDestination(
+                                                RoutePath.CALORIE_VIEWER
+                                                    .directions()
+                                                    .build()
+                                            )
+                                        )
                                     },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Calorie viewer",
+                                    text = stringResource(R.string.home_screen_calorie_viewer),
                                     color = Color.White,
                                     fontSize = 20.sp
                                 )
@@ -202,13 +203,19 @@ object HomeScreen : AppScreen, SubScreen {
                                     .weight(1f)
                                     .bouncyClick()
                                     .clickable {
-                                        router.trySend(RouterContract.Inputs.GoToDestination(RoutePath.MAKE_SOMETHING_OUT_OF.directions().build()))
+                                        router.trySend(
+                                            RouterContract.Inputs.GoToDestination(
+                                                RoutePath.MAKE_SOMETHING_OUT_OF
+                                                    .directions()
+                                                    .build()
+                                            )
+                                        )
                                     },
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = "Make Something Out Of",
+                                    text = stringResource(R.string.home_screen_make_something_out_of),
                                     color = Color.White,
                                     fontSize = 20.sp
                                 )
@@ -224,7 +231,7 @@ object HomeScreen : AppScreen, SubScreen {
             }
 
             Text(
-                text = "Upcoming Meal",
+                text = stringResource(R.string.home_screen_upcoming_meal),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp
             )
@@ -263,7 +270,7 @@ object HomeScreen : AppScreen, SubScreen {
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "${food.calories} calories",
+                                text = stringResource(R.string.calories, food.calories),
                                 style = MaterialTheme.typography.labelMedium,
                                 color = Color.White
                             )
@@ -274,7 +281,7 @@ object HomeScreen : AppScreen, SubScreen {
 
             HorizontalDivider(thickness = 12.dp)
             Text(
-                text = "Stats",
+                text = stringResource(R.string.home_screen_stats),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp
             )
@@ -317,7 +324,7 @@ object HomeScreen : AppScreen, SubScreen {
                 ) {
                     Column {
                         Text(
-                            text = "Hello,",
+                            text = stringResource(R.string.hello),
                             color = MaterialTheme.colorScheme.background,
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp

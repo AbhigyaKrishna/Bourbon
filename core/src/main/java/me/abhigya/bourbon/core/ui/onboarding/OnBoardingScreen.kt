@@ -28,10 +28,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AppBar
 import me.abhigya.bourbon.core.ui.components.BackButton
@@ -118,7 +120,7 @@ object OnBoardingScreen : AppScreen {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Next",
+                            text = stringResource(R.string.next),
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.background
@@ -158,7 +160,7 @@ object OnBoardingScreen : AppScreen {
                             contentAlignment = Alignment.CenterStart
                         ) {
                             Text(
-                                text = "Setup",
+                                text = stringResource(R.string.setup),
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
                             )

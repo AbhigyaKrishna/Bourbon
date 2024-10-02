@@ -57,6 +57,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.takeOrElse
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -66,6 +67,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.abhigya.bourbon.core.R
 import me.saket.cascade.CascadeDropdownMenu
 
 @Composable
@@ -302,7 +304,7 @@ fun TileDropDown(
         VerticalDivider(thickness = 4.dp)
         Icon(
             imageVector = if (menuVisible) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-            contentDescription = "Dropdown",
+            contentDescription = stringResource(R.string.dropdown),
             tint = arrowTint,
             modifier = Modifier.size(16.dp)
         )
