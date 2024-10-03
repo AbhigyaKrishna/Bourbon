@@ -15,8 +15,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileLabel
 import kotlin.math.roundToInt
@@ -26,7 +29,7 @@ object MealFrequencyStepScreen : StepScreen {
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
         TileCard {
-            TileLabel(text = "Meal Frequency")
+            TileLabel(text = stringResource(R.string.meal_frequency))
 
             Text(
                 text = uiState.value.mealFrequency.toString(),
@@ -41,7 +44,11 @@ object MealFrequencyStepScreen : StepScreen {
                     .fillMaxWidth()
                     .animateContentSize()
                     .padding(bottom = 8.dp),
-                text = "meal${if (uiState.value.mealFrequency > 1) "s" else ""} per day",
+                text = pluralStringResource(
+                    R.plurals.meals_per_day,
+                    uiState.value.mealFrequency,
+                    uiState.value.mealFrequency
+                ),
                 color = Color.White,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center

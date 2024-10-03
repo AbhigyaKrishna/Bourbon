@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileLabel
 import me.abhigya.bourbon.core.ui.components.TileOption
@@ -17,7 +19,7 @@ object ActivityLevelStepScreen : StepScreen {
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
         TileCard {
-            TileLabel(text = "Activity Level")
+            TileLabel(text = stringResource(R.string.activity_level))
             TiledRow(itemsPerRow = 3, elements = ActivityLevel.entries.map {
                 {
                     val selected = uiState.value.activityLevel == it

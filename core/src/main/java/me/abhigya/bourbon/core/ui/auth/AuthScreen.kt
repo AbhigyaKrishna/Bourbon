@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
@@ -91,10 +92,10 @@ object AuthScreen : AppScreen {
 
                     var emailText by remember { mutableStateOf("") }
                     InputField(
-                        label = "Email",
-                        placeholder = "Enter Email",
+                        label = stringResource(R.string.auth_email),
+                        placeholder = stringResource(R.string.auth_enter_email),
                         value = emailText,
-                        errorSuperScript = if (uiState.isWrongEmail) "Invalid Email" else null,
+                        errorSuperScript = if (uiState.isWrongEmail) stringResource(R.string.auth_invalid_email) else null,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     ) {
                         emailText = it
@@ -105,8 +106,8 @@ object AuthScreen : AppScreen {
 
                     var passwordText by remember { mutableStateOf("") }
                     InputField(
-                        label = "Password",
-                        placeholder = "Enter Password",
+                        label = stringResource(R.string.auth_password),
+                        placeholder = stringResource(R.string.auth_enter_password),
                         value = passwordText,
                         errorSuperScript = uiState.passwordErrorState.display,
                         visualTransformation = uiState.passwordVisualState,
@@ -118,7 +119,7 @@ object AuthScreen : AppScreen {
                                         viewModel.trySend(AuthContract.Inputs.PasswordVisibilityChanged)
                                     },
                                 painter = painterResource(id = R.drawable.ic_eye),
-                                contentDescription = "Show Password",
+                                contentDescription = stringResource(R.string.auth_show_password),
                                 tint = MaterialTheme.colorScheme.primary
                             )
                         },
@@ -151,7 +152,7 @@ object AuthScreen : AppScreen {
                                         contentAlignment = Alignment.CenterStart
                                     ) {
                                         Text(
-                                            text = "Re-Enter Password",
+                                            text = stringResource(R.string.auth_re_enter_password),
                                             fontSize = 14.sp
                                         )
                                     }
@@ -170,7 +171,11 @@ object AuthScreen : AppScreen {
 
                     Separator()
                     UIButton(
-                        text = if (uiState.authType == AuthContract.AuthType.LOGIN) "Log In" else "Sign Up",
+                        text = if (uiState.authType == AuthContract.AuthType.LOGIN) {
+                            stringResource(R.string.auth_log_in)
+                        } else {
+                            stringResource(R.string.auth_sign_up)
+                        },
                         primary = true
                     ) {
                         viewModel.trySend(AuthContract.Inputs.ConfirmButton)
@@ -182,23 +187,29 @@ object AuthScreen : AppScreen {
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "or",
+                            text = stringResource(R.string.or),
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.tertiary,
                             fontWeight = FontWeight.Bold
                         )
                     }
-                    UIButton(text = if (uiState.authType != AuthContract.AuthType.LOGIN) "Log In" else "Sign Up") {
+                    UIButton(
+                        text = if (uiState.authType != AuthContract.AuthType.LOGIN) {
+                            stringResource(R.string.auth_log_in)
+                        } else {
+                            stringResource(R.string.auth_sign_up)
+                        }
+                    ) {
                         viewModel.trySend(AuthContract.Inputs.SwitchAuthType(uiState.authType.inverse()))
                     }
                     Separator(thickness = 16.dp)
                     UIButton(
-                        text = "Sign in with Google",
+                        text = stringResource(R.string.auth_sign_in_with_google),
                         contentColor = Color.White,
                         logo = {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_google),
-                                contentDescription = "Google"
+                                contentDescription = stringResource(R.string.google)
                             )
                         }
                     ) {
@@ -219,7 +230,7 @@ object AuthScreen : AppScreen {
     internal fun Logo(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(id = R.drawable.ic_logo),
-            contentDescription = "Logo",
+            contentDescription = stringResource(R.string.logo),
             modifier = modifier
         )
     }
@@ -268,7 +279,7 @@ object AuthScreen : AppScreen {
                         Icon(
                             modifier = Modifier.size(11.dp),
                             imageVector = Icons.Filled.Info,
-                            contentDescription = "Error",
+                            contentDescription = stringResource(R.string.auth_error),
                             tint = MaterialTheme.colorScheme.error
                         )
                         VerticalDivider(thickness = 4.dp)
@@ -360,13 +371,13 @@ object AuthScreen : AppScreen {
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Forgotten your password? ",
+                text = stringResource(R.string.auth_forgotten_your_password),
                 fontSize = fontSize
             )
             Text(
                 modifier = modifier
                     .clickable(onClick = onResetClick),
-                text = "Reset Password",
+                text = stringResource(R.string.auth_reset_password),
                 fontSize = fontSize,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold

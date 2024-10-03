@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.TileCard
@@ -50,7 +51,7 @@ object DietStepScreen : StepScreen {
         currentDietGuide: DietGuide,
         onDietGuideChanged: (DietGuide) -> Unit,
     ) {
-        TileLabel(text = "Diet")
+        TileLabel(text = stringResource(R.string.diet))
         TiledRow(itemsPerRow = 2, elements = DietGuide.entries.map {
             {
                 val selected = currentDietGuide == it
@@ -97,7 +98,7 @@ object DietStepScreen : StepScreen {
         currentDietPref: DietPreference,
         onDietPreferenceChange: (DietPreference) -> Unit
     ) {
-        TileLabel(text = "Dietary Preference")
+        TileLabel(text = stringResource(R.string.dietary_preference))
         TiledRow(itemsPerRow = 2, elements = DietPreference.entries.map {
             {
                 val selected = currentDietPref == it
