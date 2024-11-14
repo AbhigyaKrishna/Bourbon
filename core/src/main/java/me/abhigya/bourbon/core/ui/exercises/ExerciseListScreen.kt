@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import kotlinx.datetime.DayOfWeek
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AppBar
@@ -47,31 +49,44 @@ import me.abhigya.bourbon.core.ui.router.LocalRouter
 import me.abhigya.bourbon.core.utils.verticalGradientBackground
 import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.Exercise
+import me.abhigya.bourbon.domain.entities.ExerciseData
+import me.abhigya.bourbon.domain.entities.Rest
 import org.koin.core.component.get
+import org.koin.core.parameter.parametersOf
 
-object ExerciseListScreen : AppScreen {
+class ExerciseListScreen(
+    private val dayOfWeek: DayOfWeek
+) : AppScreen {
 
     @Composable
     override operator fun invoke() {
         val coroutineScope = rememberCoroutineScope()
-        val userState = remember (coroutineScope) { get<UserRepository>().currentUser() }
-        val user = userState.collectAsState(initial = null)
-//        val exerciseListVM: ExerciseListViewModel  = remember(coroutineScope) { get { parametersOf(coroutineScope, state) } }
-//        val exercises by exerciseListVM.observeStates().collectAsState()
-//        Content(
-//            exercises.shownIndex,
-//            exercises.exercises,
-//        {
-//            exerciseListVM.trySend(ExerciseListContract.Inputs.Next)
-//        }) {
-//            exerciseListVM.trySend(ExerciseListContract.Inputs.Previous)
-//        }
+        val user = remember (coroutineScope) { get<UserRepository>().currentUser() }
+        val userState by user.collectAsState(initial = null)
+
+        if (userState == null) return
+        val exercises = userState!!.exercises[dayOfWeek] ?: listOf(Rest)
+
+        val exerciseListVM: ExerciseListViewModel  = remember(coroutineScope) { get { parametersOf(coroutineScope, ExerciseListContract.State(exercises = exercises), exercises) } }
+        val exerciseData by exerciseListVM.exerciseData.collectAsState()
+        val uiState by exerciseListVM.observeStates().collectAsState()
+
+        Content(
+            uiState.shownIndex,
+            exercises,
+            exerciseData,
+        {
+            exerciseListVM.trySend(ExerciseListContract.Inputs.Next)
+        }) {
+            exerciseListVM.trySend(ExerciseListContract.Inputs.Previous)
+        }
     }
 
     @Composable
     internal fun Content(
         index: Int,
         exercises: List<Exercise>,
+        exerciseData: Map<String, ExerciseData>,
         onNext: () -> Unit,
         onBack: () -> Unit
     ) {
@@ -121,7 +136,7 @@ object ExerciseListScreen : AppScreen {
                             }
                         }
                     ) {
-                        CardContent(exercise)
+                        CardContent(exercise, exerciseData[exercise.id]?.imageUri)
                     }
                 }
                 Row(
@@ -174,11 +189,10 @@ object ExerciseListScreen : AppScreen {
     }
 
     @Composable
-    internal fun CardContent(exercise: Exercise) {
-        val url = stringResource(id = me.abhigya.bourbon.data.R.string.storage_url)
+    internal fun CardContent(exercise: Exercise, imageUri: String?) {
         Column {
             AsyncImage(
-                model = "$url/images/exercise_${exercise.id}.png",
+                model = imageUri,
                 contentScale = ContentScale.Crop,
                 contentDescription = null,
                 modifier = Modifier.weight(1f)

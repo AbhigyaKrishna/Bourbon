@@ -53,7 +53,7 @@ class UserRepositoryImpl(applicationContext: Context) : UserRepository, KoinComp
     }
 
     override fun currentUser(): Flow<User> {
-        return flowOf( userCache ?: auth.currentUser?.into()?.getOrNull() ?: return emptyFlow())
+        return flowOf( userCache ?: auth.currentUser?.into()?.getOrNull()?.also { userCache = it } ?: return emptyFlow())
     }
 
     override fun exists(email: String): Flow<Boolean> {

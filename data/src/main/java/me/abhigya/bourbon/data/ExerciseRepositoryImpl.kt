@@ -17,42 +17,61 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flattenConcat
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import me.abhigya.bourbon.data.firebase.get
-import me.abhigya.bourbon.data.firebase.getAsFlow
 import me.abhigya.bourbon.data.firebase.handleAsResult
-import me.abhigya.bourbon.data.firebase.valueOrThrow
 import me.abhigya.bourbon.domain.ExerciseRepository
-import me.abhigya.bourbon.domain.entities.Exercise
+import me.abhigya.bourbon.domain.entities.ExerciseData
+import java.util.concurrent.ConcurrentHashMap
 
 class ExerciseRepositoryImpl(context: Context) : ExerciseRepository {
 
+    private val cache: MutableMap<String, ExerciseData> = ConcurrentHashMap()
     private val database: DatabaseReference = Firebase.database(context.getString(R.string.database_url))
-        .getReference("exercises")
+        .getReference("exercise-data")
     private val storage: FirebaseStorage = Firebase.storage(context.getString(R.string.storage_url))
     private val imageStorage: StorageReference = storage.getReference("images")
     private val videoStorage: StorageReference = storage.getReference("videos")
 
-    override fun getExercises(): Flow<Exercise> = flow {
-        database
-            .getAsFlow()
-            .map { it.children.map { data -> data.valueOrThrow<Exercise>() } }
-            .collect {
-                for (exercise in it) {
-                    this@flow.emit(exercise)
-                }
-            }
-    }
+    override fun getExerciseData(id: String): Flow<Result<ExerciseData>> {
+        if (id in cache) {
+            return flowOf(Result.success(cache[id]!!))
+        }
 
-    override fun getExerciseById(id: String): Flow<Result<Exercise>> {
         return database
             .child(id)
-            .get<Exercise>()
+            .get<ExerciseData>()
+            .onEach { cache[it.id] = it }
             .map { Result.success(it) }
             .catch { emit(Result.failure(it)) }
+    }
+
+    @kotlin.OptIn(ExperimentalCoroutinesApi::class)
+    override fun getExerciseData(id: Iterable<String>): Flow<Result<ExerciseData>> {
+        val (cached, remaining) = id.partition { it in cache }
+        val flow = cached.asFlow().mapNotNull { cache[it] }
+            .map { Result.success(it) }
+
+        if (remaining.isNotEmpty()) {
+            val missing = remaining.asFlow()
+                .flatMapConcat { database.child(it).get<ExerciseData>() }
+                .onEach { cache[it.id] = it }
+                .map { Result.success(it) }
+                .catch { emit(Result.failure(it)) }
+
+            return flowOf(flow, missing).flattenConcat()
+        }
+
+        return flow
     }
 
     override fun getExerciseImageById(file: String): Flow<Result<Bitmap>> {

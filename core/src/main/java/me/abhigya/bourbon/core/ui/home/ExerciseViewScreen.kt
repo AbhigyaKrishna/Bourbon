@@ -27,8 +27,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.copperleaf.ballast.navigation.routing.RouterContract
+import com.copperleaf.ballast.navigation.routing.build
+import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.pathParameter
 import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.UiButton
+import me.abhigya.bourbon.core.ui.router.LocalRouter
+import me.abhigya.bourbon.core.ui.router.RoutePath
 import me.abhigya.bourbon.domain.entities.Exercise
 import me.abhigya.bourbon.domain.entities.Rest
 import me.abhigya.bourbon.domain.entities.User
@@ -38,6 +44,7 @@ object ExerciseViewScreen : SubScreen {
     @Composable
     override fun invoke(uiState: HomeContract.State, user: User) {
         val exercises = user.exercises[uiState.selectedDate.dayOfWeek] ?: listOf(Rest)
+        val router = LocalRouter.current
         Scaffold(
             bottomBar = {
                 UiButton(
@@ -45,7 +52,12 @@ object ExerciseViewScreen : SubScreen {
                         .padding(vertical = 8.dp, horizontal = 4.dp),
                     text = stringResource(R.string.exercise_view_start)
                 ) {
-
+                    router.trySend(RouterContract.Inputs.GoToDestination(
+                        RoutePath.EXERCISE_LIST
+                            .directions()
+                            .pathParameter("dayOfWeek", uiState.selectedDate.dayOfWeek.ordinal.toString())
+                            .build()
+                    ))
                 }
             }
         ) { padding ->

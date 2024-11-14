@@ -77,13 +77,12 @@ object HomeScreen : AppScreen, SubScreen {
         val userState by viewModel.user.collectAsState()
         var selected by remember { mutableStateOf(NavItem.Home) }
 
-        val user = userState
-        if (user != null) {
+        if (userState != null) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Header(user = user)
+                Header(user = userState!!)
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize()
@@ -117,7 +116,7 @@ object HomeScreen : AppScreen, SubScreen {
                             NavItem.Profile -> ProfileScreen
                         }
 
-                        screen(uiState = uiState, user = user)
+                        screen(uiState = uiState, user = userState!!)
                     }
                 }
             }

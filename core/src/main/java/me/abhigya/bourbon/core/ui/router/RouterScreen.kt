@@ -19,6 +19,7 @@ import com.copperleaf.ballast.navigation.routing.Backstack
 import com.copperleaf.ballast.navigation.routing.RouterContract
 import com.copperleaf.ballast.navigation.routing.build
 import com.copperleaf.ballast.navigation.routing.directions
+import com.copperleaf.ballast.navigation.routing.intPath
 import com.copperleaf.ballast.navigation.routing.renderCurrentDestination
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.single
@@ -37,6 +38,7 @@ import me.abhigya.bourbon.domain.entities.Burpee
 import me.abhigya.bourbon.domain.entities.Models
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
+import java.time.DayOfWeek
 
 object RouterScreen : AppScreen {
 
@@ -75,7 +77,10 @@ object RouterScreen : AppScreen {
                             RoutePath.AUTH -> AuthScreen()
                             RoutePath.ONBOARDING -> OnBoardingScreen()
                             RoutePath.AR_SCENE -> ArScreen(Models.Burpee)()
-                            RoutePath.EXERCISE_LIST -> ExerciseListScreen()
+                            RoutePath.EXERCISE_LIST -> {
+                                val dayOfWeek by intPath("dayOfWeek")
+                                ExerciseListScreen(DayOfWeek.entries[dayOfWeek])
+                            }
                             RoutePath.CALORIE_VIEWER -> CalorieViewerScreen()
                             RoutePath.MAKE_SOMETHING_OUT_OF -> MakeSomethingOutOfScreen()
                         }

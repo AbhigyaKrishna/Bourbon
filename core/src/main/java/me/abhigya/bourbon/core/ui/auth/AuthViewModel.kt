@@ -198,10 +198,10 @@ class AuthEventsHandler(
         val user = userRepository.currentUser().single()
         val hasData = userRepository.hasData(user).single()
         if (hasData) {
-            userRepository.loadUserData(user)
+            userRepository.loadUserData(user).single()
         }
         postInput(AuthContract.Inputs.ChangeLoadingState(false))
-        router.trySend(RouterContract.Inputs.GoToDestination((if (hasData) RoutePath.HOME else RoutePath.ONBOARDING).directions().build()))
+        router.trySend(RouterContract.Inputs.ReplaceTopDestination((if (hasData) RoutePath.HOME else RoutePath.ONBOARDING).directions().build()))
     }
 
     private suspend fun EventHandlerScope<AuthContract.Inputs, AuthContract.Events, AuthContract.State>.handleError() {

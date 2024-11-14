@@ -27,9 +27,9 @@ enum class RoutePath(
     AUTH("/auth"),
     ONBOARDING("/onboarding"),
     AR_SCENE("/ar-scene"),
-    EXERCISE_LIST("/exercise-list"),
+    EXERCISE_LIST("/exercise-list/{dayOfWeek}"),
     CALORIE_VIEWER("/calorie-viewer"),
-    MAKE_SOMETHING_OUT_OF("/make-something-out-of")
+    MAKE_SOMETHING_OUT_OF("/make-something-out-of"),
     ;
 
     override val matcher: RouteMatcher by lazy { RouteMatcher.create(routeFormat) }

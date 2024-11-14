@@ -23,7 +23,7 @@ import org.koin.dsl.module
 class HomeViewModel(
     coroutine: CoroutineScope,
     config: BallastViewModelConfiguration<HomeContract.Inputs, HomeContract.Events, HomeContract.State>,
-    private val userRepository: UserRepository
+    userRepository: UserRepository
 ) : AndroidViewModel<HomeContract.Inputs, HomeContract.Events, HomeContract.State>(config, coroutine) {
 
     private val _user: MutableStateFlow<User?> = MutableStateFlow(null)

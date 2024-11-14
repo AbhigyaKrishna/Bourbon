@@ -24,3 +24,10 @@ data object Rest : Exercise(
     duration = 15,
     quantity = null
 )
+
+@Serializable
+data class ExerciseData(
+    val id: String,
+    val imageUri: String,
+    val videoUri: String
+)
