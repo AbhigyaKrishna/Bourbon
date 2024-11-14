@@ -23,6 +23,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import me.abhigya.bourbon.core.R
@@ -69,7 +70,7 @@ object GenderAndAgeStepScreen : StepScreen {
         currentGender: Gender,
         onGenderChanged: (Gender) -> Unit = {},
     ) {
-        TileLabel(text = "Gender")
+        TileLabel(text = stringResource(R.string.gender))
         TiledRow(elements = Gender.entries.map {
             {
                 val genderSelected = currentGender == it
@@ -107,7 +108,7 @@ object GenderAndAgeStepScreen : StepScreen {
         currentAge: Int,
         onAgeChanged: (Int) -> Unit = {}
     ) {
-        TileLabel(text = "Age")
+        TileLabel(text = stringResource(R.string.age))
         TiledRow(height = 350.dp, elements = listOf(
             {
                 Scale(
@@ -136,7 +137,7 @@ object GenderAndAgeStepScreen : StepScreen {
                         Text(
                             modifier = Modifier.alignByBaseline(),
                             color = MaterialTheme.colorScheme.outline,
-                            text = "Years",
+                            text = stringResource(R.string.years),
                         )
                     }
                 }

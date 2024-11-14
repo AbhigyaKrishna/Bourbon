@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -88,7 +89,7 @@ fun GeminiTypeWrite(
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.gemini),
-                contentDescription = "AI Text",
+                contentDescription = stringResource(R.string.ai_text),
                 modifier = Modifier
                     .size(16.dp),
                 tint = Color.Unspecified
@@ -144,7 +145,7 @@ fun GeminiOutput(
         )
         is OutputState.Error -> GeminiTypeWrite(
             modifier = modifier,
-            text = "An error occurred: ${state.error.localizedMessage}"
+            text = stringResource(R.string.an_error_occurred, state.error.localizedMessage.orEmpty())
         )
         else -> renderNoneState?.invoke()
     }

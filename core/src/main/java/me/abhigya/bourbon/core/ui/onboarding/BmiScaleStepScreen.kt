@@ -21,10 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.BmiScale
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.domain.entities.BmiCategory
@@ -64,7 +66,7 @@ object BmiScaleStepScreen : StepScreen {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Your BMI is ",
+                text = stringResource(R.string.your_bmi_is),
                 style = MaterialTheme.typography.headlineMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -74,7 +76,7 @@ object BmiScaleStepScreen : StepScreen {
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "kg/m²")
+            Text(text = stringResource(R.string.kg_m_unit))
             Spacer(modifier = Modifier.height(24.dp))
             BmiScale(
                 value = bmi,
@@ -84,7 +86,7 @@ object BmiScaleStepScreen : StepScreen {
             Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = buildAnnotatedString {
-                    append("Your weight is ")
+                    append(stringResource(R.string.your_weight_is))
                     withStyle(SpanStyle(bmiCategory.color)) {
                         append(
                             bmiCategory.name.lowercase().replaceFirstChar(Char::uppercase)

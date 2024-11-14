@@ -28,9 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.domain.entities.Diet
 import me.abhigya.bourbon.domain.entities.Food
 import me.abhigya.bourbon.domain.entities.User
@@ -47,7 +49,7 @@ object DietViewScreen : SubScreen {
             Text(
                 modifier = Modifier
                     .padding(start = 4.dp, top = 12.dp, bottom = 12.dp),
-                text = "Day Calorie: ${diet.calorieIntake}",
+                text = stringResource(R.string.diet_view_day_calorie, diet.calorieIntake),
                 fontSize = 28.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
@@ -115,7 +117,7 @@ object DietViewScreen : SubScreen {
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = "${food.calories} calories",
+                            text = stringResource(R.string.calories, food.calories),
                             style = MaterialTheme.typography.labelMedium,
                             color = Color.White
                         )

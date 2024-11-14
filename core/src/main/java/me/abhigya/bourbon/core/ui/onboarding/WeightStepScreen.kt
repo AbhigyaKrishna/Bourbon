@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.CircularScale
 import me.abhigya.bourbon.core.utils.systemBarsPadding
 import me.abhigya.bourbon.domain.entities.Kilograms
@@ -80,7 +82,7 @@ object WeightStepScreen : StepScreen {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "How much do you weight?",
+                        text = stringResource(R.string.how_much_do_you_weight),
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.titleLarge
                     )
@@ -106,7 +108,7 @@ object WeightStepScreen : StepScreen {
                             Text(
                                 modifier = Modifier.alignByBaseline(),
                                 color = MaterialTheme.colorScheme.outline,
-                                text = "kg",
+                                text = stringResource(R.string.kg_unit),
                             )
                         }
                         CompositionLocalProvider(
@@ -125,7 +127,7 @@ object WeightStepScreen : StepScreen {
                                 )
                                 Text(
                                     modifier = Modifier.alignByBaseline(),
-                                    text = "lbs"
+                                    text = stringResource(R.string.lbs_unit)
                                 )
                             }
                         }

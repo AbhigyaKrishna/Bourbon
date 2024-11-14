@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.sp
+import me.abhigya.bourbon.core.R
 
 object FetchDataStepScreen : StepScreen {
 
@@ -22,7 +24,7 @@ object FetchDataStepScreen : StepScreen {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Fetching data...",
+                text = stringResource(R.string.fetching_data),
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 32.sp
             )

@@ -28,10 +28,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.copperleaf.ballast.navigation.routing.RouterContract
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AppScreen
 import me.abhigya.bourbon.core.ui.components.AnimatedLoadingGradient
 import me.abhigya.bourbon.core.ui.components.AppBar
@@ -88,7 +90,7 @@ object CalorieViewerScreen : AppScreen {
                             viewModel.trySend(CalorieViewerContract.Inputs.ItemChanged(it))
                         },
                         label = {
-                            Text(text = "Item")
+                            Text(text = stringResource(R.string.calorie_viewer_item))
                         },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -112,7 +114,7 @@ object CalorieViewerScreen : AppScreen {
                                     }
                                 },
                                 label = {
-                                    Text(text = "Amount")
+                                    Text(text = stringResource(R.string.calorie_viewer_amount))
                                 }
                             )
                         },
@@ -145,7 +147,7 @@ object CalorieViewerScreen : AppScreen {
                         shape = RoundedCornerShape(8.dp),
                     ) {
                         Text(
-                            text = "Check",
+                            text = stringResource(R.string.check),
                             color = MaterialTheme.colorScheme.background,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold

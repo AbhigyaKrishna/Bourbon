@@ -22,7 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.components.BmiScale
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileDropDown
@@ -58,7 +60,7 @@ object GoalAndAimStepScreen : StepScreen {
     @Composable
     internal fun BmiScaleCard(uiState: State<OnBoardingContract.State>) {
         TileCard {
-            TileLabel(text = "BMI Scale")
+            TileLabel(text = stringResource(R.string.bmi_scale))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

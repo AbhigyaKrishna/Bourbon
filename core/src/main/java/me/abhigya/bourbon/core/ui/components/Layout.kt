@@ -33,10 +33,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.utils.bouncyClick
 import me.abhigya.bourbon.core.utils.statusBarsPadding
 
@@ -69,7 +71,7 @@ fun BackButton(
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
+            contentDescription = stringResource(R.string.back),
             tint = tint
         )
     }
@@ -144,7 +146,7 @@ fun StatCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Eaten",
+                        text = stringResource(R.string.eaten),
                         color = subTextColor,
                         fontSize = subTextSize
                     )
@@ -181,7 +183,7 @@ fun StatCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Remaining",
+                        text = stringResource(R.string.remaining),
                         color = subTextColor,
                         fontSize = subTextSize
                     )
@@ -206,7 +208,7 @@ fun StatCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Burned",
+                        text = stringResource(R.string.burned),
                         color = subTextColor,
                         fontSize = subTextSize
                     )

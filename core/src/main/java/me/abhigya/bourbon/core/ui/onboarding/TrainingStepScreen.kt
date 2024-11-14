@@ -7,9 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import me.abhigya.bourbon.core.R
 import me.abhigya.bourbon.core.ui.AddRemove
 import me.abhigya.bourbon.core.ui.components.TileCard
 import me.abhigya.bourbon.core.ui.components.TileLabel
@@ -25,7 +27,7 @@ object TrainingStepScreen : StepScreen {
     @Composable
     override fun invoke(viewModel: OnBoardingViewModel, uiState: State<OnBoardingContract.State>) {
         TileCard {
-            TileLabel(text = "Train")
+            TileLabel(text = stringResource(R.string.train))
             TiledRow(elements = DefaultTraining.entries.map {
                 {
                     val selected = uiState.value.training.contains(it)
@@ -53,7 +55,7 @@ object TrainingStepScreen : StepScreen {
             
             TileSeparator()
             
-            TileLabel(text = "Workout Days")
+            TileLabel(text = stringResource(R.string.workout_days))
             TiledRow(
                 itemsPerRow = 7,
                 height = 40.dp,
