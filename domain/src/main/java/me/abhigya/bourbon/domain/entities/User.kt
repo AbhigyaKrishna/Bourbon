@@ -28,6 +28,13 @@ data class UserData(
     val mealFrequency: Int = 1,
     val equipments: Set<String> = mutableSetOf(),
     val location: String = "",
+    val favourite: Favourite = Favourite(),
+)
+
+@Serializable
+data class Favourite(
+    val exercises: Set<String> = emptySet(),
+    val recipes: Set<String> = emptySet(),
 )
 
 @Serializable

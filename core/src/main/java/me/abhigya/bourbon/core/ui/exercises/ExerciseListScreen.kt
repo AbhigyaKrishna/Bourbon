@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -51,6 +52,7 @@ import me.abhigya.bourbon.domain.UserRepository
 import me.abhigya.bourbon.domain.entities.Exercise
 import me.abhigya.bourbon.domain.entities.ExerciseData
 import me.abhigya.bourbon.domain.entities.Rest
+import me.abhigya.bourbon.domain.entities.User
 import org.koin.core.component.get
 import org.koin.core.parameter.parametersOf
 
@@ -73,6 +75,7 @@ class ExerciseListScreen(
 
         Content(
             uiState.shownIndex,
+            userState!!,
             exercises,
             exerciseData,
         {
@@ -85,6 +88,7 @@ class ExerciseListScreen(
     @Composable
     internal fun Content(
         index: Int,
+        user: User,
         exercises: List<Exercise>,
         exerciseData: Map<String, ExerciseData>,
         onNext: () -> Unit,
@@ -168,7 +172,13 @@ class ExerciseListScreen(
                     }
                     IconButton(
                         onClick = {
-                            // TODO
+                            get<UserRepository>().updateData {
+                                it.copy(favourite = it.favourite.copy(exercises = if (exercises[index].id in it.favourite.exercises) {
+                                    it.favourite.exercises - exercises[index].id
+                                } else {
+                                    it.favourite.exercises + exercises[index].id
+                                }))
+                            }
                         },
                         modifier = Modifier
                             .padding(horizontal = 16.dp)
@@ -177,7 +187,7 @@ class ExerciseListScreen(
                             .background(MaterialTheme.colorScheme.secondary)
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Favorite,
+                            imageVector = if (exercises[index].id in user.data.favourite.exercises) Icons.Default.Favorite else Icons.Outlined.Favorite,
                             contentDescription = null,
                             tint = Color.Red,
                             modifier = Modifier.size(36.dp)

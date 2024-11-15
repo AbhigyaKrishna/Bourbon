@@ -30,6 +30,8 @@ interface UserRepository {
 
     fun loadUserData(user: User): Flow<Result<UserData>>
 
+    fun updateData(transformer: (UserData) -> UserData): Flow<Result<Unit>>
+
     fun saveData(user: User): Flow<Result<Unit>>
 
     fun saveExercises(user: User): Flow<Result<Unit>>
